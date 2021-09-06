@@ -1,0 +1,25 @@
+
+.scoresTypeSelectButton{
+    font-size: 20px;
+    border-radius: 15px;
+    width: 100%;
+    margin-top:3%;
+    
+}
+.scoreCard {
+    background-color: white;
+    color: black;
+
+    margin-top: 1%;
+    border-radius: 15px;
+}
+
+#btnReplayGame {
+    border-radius: 15px;
+    font-size: 16px;
+}
+
+.scoreBadge {
+    padding: 1%;
+    font-size: 16px;
+}

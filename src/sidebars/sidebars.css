@@ -1,0 +1,54 @@
+.signInSidebar {
+    background-color: white;
+    color: black;
+    border-radius: 15px;
+    float: right;
+    margin-top: 3%;
+    width: 100%;
+}
+
+.signInSidebarTextBox {
+    width: 100%;
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    text-align: left;
+}
+
+.newsSidebar {
+    background-color: white;
+    color: black;
+    border-radius: 15px;
+    float: left;
+    margin-top: 3%;
+    width: 100%;
+}
+
+#btnSideBarSignIn {
+    font-size: 16px;
+    width: 100%;
+    margin: 1%;
+}
+
+#btnSideBarPasswordRecovery {
+    font-size: 16px;
+    width: 100%;
+    margin: 1%;
+}
+
+.playerInfoSideBar {
+    background-color: white;
+    color: black;
+    border-radius: 15px;
+    float: right;
+    margin-top: 3%;
+    width: 100%;
+}
+
+.playerAvatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    float: center;
+    margin: auto;
+}

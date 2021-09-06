@@ -1,0 +1,7 @@
+{
+    "serverRoot": "https://t3dweb.herokuapp.com",
+    "localRoot": "http://localhost:4000",
+    "signupRoute": "signup",
+    "signinRoute": "signin",
+    "usersRoute": "users"
+}

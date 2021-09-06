@@ -1,0 +1,49 @@
+.signUpCard {
+    background-color: white;
+    color: black;
+    /*max-width: 18rem;*/
+    /* find a way to prevent NavigationBar overlap on its below items */
+    width: 50%;
+    border-radius: 15px;
+    padding: 2%;
+    text-align: center;
+    margin: auto;
+    margin-top: 3%;
+}
+
+@media only screen and (max-width: 1200px) {
+    .signUpCard {
+        width: 60%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .signUpCard {
+        width: 100%;
+    }
+}
+
+.signUpTextBox {
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    text-align: left;
+    margin-top: 2%;
+}
+
+:invalid {
+    border-color: red !important;
+}
+
+.controlPanelCard {
+    background-color: white;
+    color: black;
+    /*max-width: 18rem;*/
+    /* find a way to prevent NavigationBar overlap on its below items */
+    width: 50%;
+    border-radius: 15px;
+    padding: 2%;
+    text-align: center;
+    margin: auto;
+    margin-top: 3%;
+}
