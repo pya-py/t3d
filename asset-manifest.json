@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/github.io/t3d/static/css/main.6d667523.chunk.css",
-    "main.js": "/github.io/t3d/static/js/main.19812b9a.chunk.js",
-    "main.js.map": "/github.io/t3d/static/js/main.19812b9a.chunk.js.map",
-    "runtime-main.js": "/github.io/t3d/static/js/runtime-main.21eae572.js",
-    "runtime-main.js.map": "/github.io/t3d/static/js/runtime-main.21eae572.js.map",
-    "static/js/2.233fad3f.chunk.js": "/github.io/t3d/static/js/2.233fad3f.chunk.js",
-    "static/js/2.233fad3f.chunk.js.map": "/github.io/t3d/static/js/2.233fad3f.chunk.js.map",
-    "index.html": "/github.io/t3d/index.html",
-    "static/css/main.6d667523.chunk.css.map": "/github.io/t3d/static/css/main.6d667523.chunk.css.map",
-    "static/js/2.233fad3f.chunk.js.LICENSE.txt": "/github.io/t3d/static/js/2.233fad3f.chunk.js.LICENSE.txt",
-    "static/media/no-avatar.5e7c913e.png": "/github.io/t3d/static/media/no-avatar.5e7c913e.png"
+    "main.css": "/t3d/static/css/main.6d667523.chunk.css",
+    "main.js": "/t3d/static/js/main.19812b9a.chunk.js",
+    "main.js.map": "/t3d/static/js/main.19812b9a.chunk.js.map",
+    "runtime-main.js": "/t3d/static/js/runtime-main.cafd236f.js",
+    "runtime-main.js.map": "/t3d/static/js/runtime-main.cafd236f.js.map",
+    "static/js/2.233fad3f.chunk.js": "/t3d/static/js/2.233fad3f.chunk.js",
+    "static/js/2.233fad3f.chunk.js.map": "/t3d/static/js/2.233fad3f.chunk.js.map",
+    "index.html": "/t3d/index.html",
+    "static/css/main.6d667523.chunk.css.map": "/t3d/static/css/main.6d667523.chunk.css.map",
+    "static/js/2.233fad3f.chunk.js.LICENSE.txt": "/t3d/static/js/2.233fad3f.chunk.js.LICENSE.txt",
+    "static/media/no-avatar.5e7c913e.png": "/t3d/static/media/no-avatar.5e7c913e.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.21eae572.js",
+    "static/js/runtime-main.cafd236f.js",
     "static/js/2.233fad3f.chunk.js",
     "static/css/main.6d667523.chunk.css",
     "static/js/main.19812b9a.chunk.js"
