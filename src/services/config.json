@@ -1,7 +1,7 @@
 {
     "serverRoot": "https://t3dweb.herokuapp.com",
     "localRoot": "http://localhost:4000",
-    "webSocketRoot": "ws://t3dweb.herokuapp.com",
+    "webSocketRoot": "wss://t3dweb.herokuapp.com",
     "signupRoute": "signup",
     "signinRoute": "signin",
     "usersRoute": "users"
