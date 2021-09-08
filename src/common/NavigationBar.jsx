@@ -18,7 +18,7 @@ const NavigationBar = () => {
             <li className="nav-item">
               <NavLink
                 className="nav-link text-primary"
-                to="/"
+                to="t3d/"
                 exact
                 activeClassName="btn-outline-secondary text-dark"
               >
@@ -28,7 +28,8 @@ const NavigationBar = () => {
             <li className="nav-item ml-2">
               <NavLink
                 className="nav-link text-primary"
-                to="/gameDeck"
+                to="t3d/gameDeck"
+                exact
                 activeClassName="btn-outline-secondary text-dark"
               >
                 بازی ها
@@ -37,7 +38,8 @@ const NavigationBar = () => {
             <li className="nav-item ml-2">
               <NavLink
                 className="nav-link text-primary"
-                to="/ranking"
+                to="t3d/ranking"
+                exact
                 activeClassName="btn-outline-secondary text-dark"
               >
                 رنکینگ
@@ -46,7 +48,8 @@ const NavigationBar = () => {
             <li className="nav-item ml-2">
               <NavLink
                 className="nav-link text-primary"
-                to="/gameRules"
+                to="t3d/gameRules"
+                exact
                 activeClassName="btn-outline-secondary text-dark"
               >
                 قوانین
@@ -55,7 +58,8 @@ const NavigationBar = () => {
             <li className="nav-item ml-2">
               <NavLink
                 className="nav-link text-primary"
-                to="/contactInfo"
+                to="t3d/contactInfo"
+                exact
                 activeClassName="btn-outline-secondary text-dark"
               >
                 تماس با ما
@@ -69,7 +73,8 @@ const NavigationBar = () => {
         <NavLink
           style={{ float: "left" }}
           className="navItems nav-link btn btn-outline-success btn-sm"
-          to="/controlPanel"
+          to="t3d/controlPanel"
+          exact
         >
           کنترل پنل
         </NavLink>
@@ -77,7 +82,8 @@ const NavigationBar = () => {
         <NavLink
           style={{ float: "left" }}
           className="navItems nav-link btn btn-outline-success btn-sm"
-          to="/signUp"
+          to="t3d/signUp"
+          exact
         >
           ثبت نام
         </NavLink>
