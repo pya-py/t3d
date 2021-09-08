@@ -26,8 +26,8 @@ const SmartPhoneNavigationBar = () => {
               <li className="nav-item ml-2">
                 <NavLink
                   className="nav-link text-primary"
-                  to="t3d/gameDeck"
-                  exact
+                  to="/gameDeck"
+                  
                   activeClassName="btn-outline-secondary text-dark"
                 >
                   بازی ها
@@ -36,8 +36,8 @@ const SmartPhoneNavigationBar = () => {
               <li className="nav-item ml-2">
                 <NavLink
                   className="nav-link text-primary"
-                  to="t3d/ranking"
-                  exact
+                  to="/ranking"
+                  
                   activeClassName="btn-outline-secondary text-dark"
                 >
                   رنکینگ
@@ -51,8 +51,8 @@ const SmartPhoneNavigationBar = () => {
               <li className="nav-item ml-2">
                 <NavLink
                   className="nav-link text-primary"
-                  to="t3d/gameRules"
-                  exact
+                  to="/gameRules"
+                  
                   activeClassName="btn-outline-secondary text-dark"
                 >
                   قوانین
@@ -61,8 +61,8 @@ const SmartPhoneNavigationBar = () => {
               <li className="nav-item ml-2">
                 <NavLink
                   className="nav-link text-primary"
-                  to="t3d/contactInfo"
-                  exact
+                  to="/contactInfo"
+                  
                   activeClassName="btn-outline-secondary text-dark"
                 >
                   تماس با ما
@@ -72,16 +72,16 @@ const SmartPhoneNavigationBar = () => {
                 {context.player ? (
                   <NavLink
                     className="navItems nav-link btn btn-outline-success btn-block mt-1 mr-lg-5"
-                    to="t3d/controlPanel"
-                    exact
+                    to="/controlPanel"
+                    
                   >
                     کنترل پنل
                   </NavLink>
                 ) : (
                   <NavLink
                     className="navItems nav-link btn btn-outline-success btn-block mt-1 mr-lg-5"
-                    to="t3d/signUp"
-                    exact
+                    to="/signUp"
+                    
                   >
                     ثبت نام
                   </NavLink>
