@@ -28,7 +28,7 @@ const NavigationBar = () => {
             <li className="nav-item ml-2">
               <NavLink
                 className="nav-link text-primary"
-                to="/gameDeck"
+                to="t3d/gameDeck"
                 activeClassName="btn-outline-secondary text-dark"
               >
                 بازی ها
@@ -37,7 +37,7 @@ const NavigationBar = () => {
             <li className="nav-item ml-2">
               <NavLink
                 className="nav-link text-primary"
-                to="/ranking"
+                to="t3d/ranking"
                 activeClassName="btn-outline-secondary text-dark"
               >
                 رنکینگ
@@ -46,7 +46,7 @@ const NavigationBar = () => {
             <li className="nav-item ml-2">
               <NavLink
                 className="nav-link text-primary"
-                to="/gameRules"
+                to="t3d/gameRules"
                 activeClassName="btn-outline-secondary text-dark"
               >
                 قوانین
@@ -55,7 +55,7 @@ const NavigationBar = () => {
             <li className="nav-item ml-2">
               <NavLink
                 className="nav-link text-primary"
-                to="/contactInfo"
+                to="t3d/contactInfo"
                 activeClassName="btn-outline-secondary text-dark"
               >
                 تماس با ما
@@ -69,7 +69,7 @@ const NavigationBar = () => {
         <NavLink
           style={{ float: "left" }}
           className="navItems nav-link btn btn-outline-success btn-sm"
-          to="/controlPanel"
+          to="t3d/controlPanel"
         >
           کنترل پنل
         </NavLink>
@@ -77,7 +77,7 @@ const NavigationBar = () => {
         <NavLink
           style={{ float: "left" }}
           className="navItems nav-link btn btn-outline-success btn-sm"
-          to="/signUp"
+          to="t3d/signUp"
         >
           ثبت نام
         </NavLink>
