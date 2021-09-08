@@ -49,13 +49,13 @@ const MainLayout = (props) => {
     let pageLeftSideBars = <NewsSideBar />;
     let pageRightSideBar = player ? <PlayerInfoSideBar /> : <SignInSideBar />; // in case login hassnt been made
 
-    if (pathname === "/signUp") {
+    if (pathname === "t3d/signUp") {
         // || pathname === '/competitions'){ // this condition MUST change later
         pageLeftSideBars = null; //change later
         pageRightSideBar = null; // change then
     }
 
-    if (pathname === "/gameDeck") {
+    if (pathname === "t3d/gameDeck") {
         // left sidebar must be opponents playerInfo
 
         if (deviceIsSmartPhone) { //this is temprory
