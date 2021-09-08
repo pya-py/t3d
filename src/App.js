@@ -16,13 +16,13 @@ class App extends Component {
         return (
             <MainLayout>
                 <Switch>
-                    <Route path="t3d/signUp" component={SignUp} />
-                    <Route path="t3d/gameDeck" component={GameDeck} />
-                    <Route path="t3d/ranking" component={Ranking} />
-                    <Route path="t3d/gameRules" component={GameRules} />
-                    <Route path="t3d/contactInfo" component={ContactInfo} />
-                    <Route path="t3d/controlPanel" component={ControlPanel} />
-                    <Route path="t3d/" exact component={ScoresTable} />
+                    <Route path="/signUp" component={SignUp} />
+                    <Route path="/gameDeck" component={GameDeck} />
+                    <Route path="/ranking" component={Ranking} />
+                    <Route path="/gameRules" component={GameRules} />
+                    <Route path="/contactInfo" component={ContactInfo} />
+                    <Route path="/controlPanel" component={ControlPanel} />
+                    <Route path="/" exact component={ScoresTable} />
                     
                 </Switch>
             </MainLayout>

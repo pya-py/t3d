@@ -18,8 +18,8 @@ const NavigationBar = () => {
             <li className="nav-item">
               <NavLink
                 className="nav-link text-primary"
-                to="t3d/"
-                
+                to="/"
+                exact
                 activeClassName="btn-outline-secondary text-dark"
               >
                 صفحه اصلی
@@ -28,7 +28,7 @@ const NavigationBar = () => {
             <li className="nav-item ml-2">
               <NavLink
                 className="nav-link text-primary"
-                to="t3d/gameDeck"
+                to="/gameDeck"
                 activeClassName="btn-outline-secondary text-dark"
               >
                 بازی ها
@@ -37,7 +37,7 @@ const NavigationBar = () => {
             <li className="nav-item ml-2">
               <NavLink
                 className="nav-link text-primary"
-                to="t3d/ranking"
+                to="/ranking"
                 activeClassName="btn-outline-secondary text-dark"
               >
                 رنکینگ
@@ -46,7 +46,7 @@ const NavigationBar = () => {
             <li className="nav-item ml-2">
               <NavLink
                 className="nav-link text-primary"
-                to="t3d/gameRules"
+                to="/gameRules"
                 activeClassName="btn-outline-secondary text-dark"
               >
                 قوانین
@@ -55,7 +55,7 @@ const NavigationBar = () => {
             <li className="nav-item ml-2">
               <NavLink
                 className="nav-link text-primary"
-                to="t3d/contactInfo"
+                to="/contactInfo"
                 activeClassName="btn-outline-secondary text-dark"
               >
                 تماس با ما
@@ -69,7 +69,7 @@ const NavigationBar = () => {
         <NavLink
           style={{ float: "left" }}
           className="navItems nav-link btn btn-outline-success btn-sm"
-          to="t3d/controlPanel"
+          to="/controlPanel"
         >
           کنترل پنل
         </NavLink>
@@ -77,7 +77,7 @@ const NavigationBar = () => {
         <NavLink
           style={{ float: "left" }}
           className="navItems nav-link btn btn-outline-success btn-sm"
-          to="t3d/signUp"
+          to="/signUp"
         >
           ثبت نام
         </NavLink>

@@ -16,8 +16,8 @@ const SmartPhoneNavigationBar = () => {
               <li className="nav-item">
                 <NavLink
                   className="nav-link text-primary"
-                  to="t3d/"
-                  
+                  to="/"
+                  exact
                   activeClassName="btn-outline-secondary text-dark"
                 >
                   صفحه اصلی
@@ -26,7 +26,7 @@ const SmartPhoneNavigationBar = () => {
               <li className="nav-item ml-2">
                 <NavLink
                   className="nav-link text-primary"
-                  to="t3d/gameDeck"
+                  to="/gameDeck"
                   
                   activeClassName="btn-outline-secondary text-dark"
                 >
@@ -36,7 +36,7 @@ const SmartPhoneNavigationBar = () => {
               <li className="nav-item ml-2">
                 <NavLink
                   className="nav-link text-primary"
-                  to="t3d/ranking"
+                  to="/ranking"
                   
                   activeClassName="btn-outline-secondary text-dark"
                 >
@@ -51,7 +51,7 @@ const SmartPhoneNavigationBar = () => {
               <li className="nav-item ml-2">
                 <NavLink
                   className="nav-link text-primary"
-                  to="t3d/gameRules"
+                  to="/gameRules"
                   
                   activeClassName="btn-outline-secondary text-dark"
                 >
@@ -61,7 +61,7 @@ const SmartPhoneNavigationBar = () => {
               <li className="nav-item ml-2">
                 <NavLink
                   className="nav-link text-primary"
-                  to="t3d/contactInfo"
+                  to="/contactInfo"
                   
                   activeClassName="btn-outline-secondary text-dark"
                 >
@@ -72,7 +72,7 @@ const SmartPhoneNavigationBar = () => {
                 {context.player ? (
                   <NavLink
                     className="navItems nav-link btn btn-outline-success btn-block mt-1 mr-lg-5"
-                    to="t3d/controlPanel"
+                    to="/controlPanel"
                     
                   >
                     کنترل پنل
@@ -80,7 +80,7 @@ const SmartPhoneNavigationBar = () => {
                 ) : (
                   <NavLink
                     className="navItems nav-link btn btn-outline-success btn-block mt-1 mr-lg-5"
-                    to="t3d/signUp"
+                    to="/signUp"
                     
                   >
                     ثبت نام
