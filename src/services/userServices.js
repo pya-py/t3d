@@ -14,8 +14,8 @@ const userServices = {
             JSON.stringify(user)
         );
     },
-    getPlayer: (userId) => {
-        return http.get(`${config.serverRoot}/${config.usersRoute}/${userId}`);
+    getPlayer: (userID) => {
+        return http.get(`${config.serverRoot}/${config.usersRoute}/${userID}`);
     },
     getAllPlayers: () => {
         return http.get(`${config.serverRoot}/${config.usersRoute}`);

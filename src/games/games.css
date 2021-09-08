@@ -23,3 +23,14 @@
     margin-bottom: 5%;
 
 }
+
+.singleCard {
+    background-color: white;
+    color: black;
+    /*max-width: 18rem;*/
+    margin: auto; 
+    margin-top: 2%;
+    
+    border-radius: 15px;
+    width: 95%;
+}

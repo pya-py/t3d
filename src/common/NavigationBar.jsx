@@ -28,7 +28,7 @@ const NavigationBar = () => {
             <li className="nav-item ml-2">
               <NavLink
                 className="nav-link text-primary"
-                to="/theGame"
+                to="/gameDeck"
                 activeClassName="btn-outline-secondary text-dark"
               >
                 بازی ها

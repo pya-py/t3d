@@ -55,7 +55,7 @@ const MainLayout = (props) => {
         pageRightSideBar = null; // change then
     }
 
-    if (pathname === "/theGame") {
+    if (pathname === "/gameDeck") {
         // left sidebar must be opponents playerInfo
 
         if (deviceIsSmartPhone) { //this is temprory

@@ -1,8 +1,8 @@
 import { Component } from "react";
-import "./gamePlay.css";
+import "./games.css";
 import { toast } from "react-toastify";
 import MainContext from "../common/MainContext";
-import config from '../services/config.json';
+import config from "../services/config.json";
 
 class GamePlay extends Component {
     static contextType = MainContext;
@@ -28,7 +28,8 @@ class GamePlay extends Component {
         turn: 0, // start turn is decided by throwning dices
         tableDimension: 4,
         table: [],
-        yourTurn: -1
+        yourTurn: undefined, // change this
+        gameStarted: false,
     };
 
     constructor() {
@@ -37,33 +38,70 @@ class GamePlay extends Component {
         this.socketConnection = this.connectToWS();
     }
 
+    createSocketRequest = (request, roomName, playerID, msg) =>
+        JSON.stringify({
+            request,
+            roomName,
+            playerID,
+            msg,
+        });
+
     connectToWS = () => {
-        let wsConnection = new WebSocket(config.webSocketRoot);
-        wsConnection.onopen = () => {
-            // wsConnection.send("Client connected to WebSocket");
+        let socketConnection = new WebSocket(config.webSocketRoot);
+        socketConnection.onopen = () => {
+            const { roomName } = this.props;
+            const { player } = this.context;
+            // socketConnection.send("Client connected to WebSocket");
+            socketConnection.send(
+                this.createSocketRequest(
+                    "join",
+                    roomName,
+                    player.userID,
+                    "test"
+                )
+            );
         };
 
-        wsConnection.onerror = (error) => {
+        socketConnection.onerror = (error) => {
             console.log(`WebSocket error: ${error}`);
         };
 
-        wsConnection.onmessage = (e) => {
-            const {yourTurn, tableDimension} = this.state;
-            // catch exceptions
-            if(yourTurn === -1){
-                this.setState({yourTurn: Number(e.data)});
-                return;
+        socketConnection.onmessage = (response) => {
+            const { data } = response;
+            const { command, msg } = JSON.parse(data);
+            if (command === "SET_TURN") {
+                // console.log(turn);
+                this.setState({ yourTurn: Number(msg) });
+                // console.log(this.state.yourTurn);
+            } else if (command === "START") {
+                this.setState({ gameStarted: true });
+                toast.info("هر دو بازیکن متصل شدند");
+                if (this.state.yourTurn === this.state.turn)
+                    toast.warn("شروع حرکت با شما");
+                // edit this part, code is temp
+            } else if (command === "MOVE") {
+                const { tableDimension } = this.state;
+                //******** */ catch exceptions
+                const cellID = Number(msg);
+                const cell = this.getCellCoordinates(cellID, tableDimension);
+                this.verifyAndApplyTheMove(cell, this.cellButtons[cellID]);
             }
-            
-            const cellID = Number(e.data);
-            const cell = this.getCellCoordinates(cellID, tableDimension);
-            this.verifyAndApplyTheMove(cell, this.cellButtons[cellID]);
         };
 
-        wsConnection.onclose = () => {
-            wsConnection = null;
+        socketConnection.onclose = () => {
+            // this peace of code is for when a player leaves or game ends ( probably neddnt be here )
+            // socketConnection.send(JSON.stringify(
+            //     {
+            //         request: "leave",
+            //         roomName: "currecttest",
+            //         playerID: "whatever",
+            //         msg: "test"
+            //     }
+            // ));
+
+            socketConnection = null;
         };
-        return wsConnection;
+        return socketConnection;
     };
 
     updateMarginParameters = (divTableBlock) => {
@@ -114,21 +152,31 @@ class GamePlay extends Component {
         return { floor: cellFloor, row: cellRow, column: cellColumn };
     };
     onEachCellClick = (event) => {
-        const { tableDimension } = this.state;
-        const selectedCellButton = event.target;
+        const { gameStarted, tableDimension } = this.state;
+        const { roomName } = this.props;
+        const { player } = this.context;
+        if (gameStarted) {
+            const selectedCellButton = event.target;
 
-        if(this.state.turn !== this.state.yourTurn) return;
+            if (this.state.turn !== this.state.yourTurn) return;
 
-        const cell = this.getCellCoordinates(
-            selectedCellButton.id,
-            tableDimension
-        );
+            const cell = this.getCellCoordinates(
+                selectedCellButton.id,
+                tableDimension
+            );
 
-        this.verifyAndApplyTheMove(cell, selectedCellButton);
-        //send move to WebSocket Server
-        this.socketConnection.send(
-            `${selectedCellButton.id}`
-        );
+            if (this.verifyAndApplyTheMove(cell, selectedCellButton)) {
+                //send move to WebSocket Server
+                this.socketConnection.send(
+                    this.createSocketRequest(
+                        "move",
+                        roomName,
+                        player.userID,
+                        selectedCellButton.id
+                    )
+                );
+            }
+        }
     };
 
     verifyAndApplyTheMove = (cell, cellButton) => {
@@ -145,8 +193,9 @@ class GamePlay extends Component {
             });
             // time to inspect the new cell:
             this.inspectTableAroundTheCell(cell.floor, cell.row, cell.column);
-
+            return true;
         }
+        return false;
     };
     inspectTableAroundTheCell = (floor, row, column) => {
         // inpect the table in all ways around a selected cell (new selected one), to update points and color the score routes
