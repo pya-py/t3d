@@ -24,7 +24,7 @@ class GameDeck extends Component {
         const { roomName, startGame } = this.state;
 
         return (
-            <div>
+            <div className="w-100">
                 {!startGame && (
                     <div className="card border-warning mb-3 singleCard">
                         <div className="card-header text-center border-warning">
