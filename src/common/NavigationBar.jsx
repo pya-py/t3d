@@ -19,7 +19,7 @@ const NavigationBar = () => {
               <NavLink
                 className="nav-link text-primary"
                 to="t3d/"
-                exact
+                
                 activeClassName="btn-outline-secondary text-dark"
               >
                 صفحه اصلی
@@ -29,7 +29,6 @@ const NavigationBar = () => {
               <NavLink
                 className="nav-link text-primary"
                 to="t3d/gameDeck"
-                exact
                 activeClassName="btn-outline-secondary text-dark"
               >
                 بازی ها
@@ -39,7 +38,6 @@ const NavigationBar = () => {
               <NavLink
                 className="nav-link text-primary"
                 to="t3d/ranking"
-                exact
                 activeClassName="btn-outline-secondary text-dark"
               >
                 رنکینگ
@@ -49,7 +47,6 @@ const NavigationBar = () => {
               <NavLink
                 className="nav-link text-primary"
                 to="t3d/gameRules"
-                exact
                 activeClassName="btn-outline-secondary text-dark"
               >
                 قوانین
@@ -59,7 +56,6 @@ const NavigationBar = () => {
               <NavLink
                 className="nav-link text-primary"
                 to="t3d/contactInfo"
-                exact
                 activeClassName="btn-outline-secondary text-dark"
               >
                 تماس با ما
@@ -74,7 +70,6 @@ const NavigationBar = () => {
           style={{ float: "left" }}
           className="navItems nav-link btn btn-outline-success btn-sm"
           to="t3d/controlPanel"
-          exact
         >
           کنترل پنل
         </NavLink>
@@ -83,7 +78,6 @@ const NavigationBar = () => {
           style={{ float: "left" }}
           className="navItems nav-link btn btn-outline-success btn-sm"
           to="t3d/signUp"
-          exact
         >
           ثبت نام
         </NavLink>
