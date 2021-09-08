@@ -1,5 +1,5 @@
 import { Button, Form, Modal } from "react-bootstrap";
-import { Component } from "react";
+import { Component, Fragment } from "react";
 import userServices from "../services/userServices";
 import { withRouter } from "react-router-dom";
 import LoadingBar from "../common/LoadingBar";
@@ -21,7 +21,7 @@ class ModalSignIn extends Component {
         this.setState({ loading: true });
         const STATUS = { SUCCESSFULL: 200, AUTHENTICATION_INVALID: 401 };
         const { studentID, password } = this.state;
-        const user = { studentID, password: Number(password) };
+        const user = { studentID: Number(studentID), password};
         try {
             const { status, data } = await userServices.signIn(user);
             if (status === STATUS.SUCCESSFULL) {
@@ -42,7 +42,7 @@ class ModalSignIn extends Component {
         const { showModal, studentID, password, loading } = this.state;
 
         return (
-            <>
+            <Fragment>
                 <LoadingBar loading={loading} />
                 <Button variant="outline-primary" onClick={this.onShowClick}>
                     ورود کاربران
@@ -111,7 +111,7 @@ class ModalSignIn extends Component {
                         </Form>
                     </Modal.Body>
                 </Modal>
-            </>
+            </Fragment>
         );
     }
 }

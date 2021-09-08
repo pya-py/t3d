@@ -1,8 +1,9 @@
+import { Fragment } from "react";
 import Score from "./Score";
 
 const AllScores = ({scores}) => {
     return ( 
-        <div>
+        <Fragment>
             { scores.map(score => (
                 <Score key={score.id}
                     playerXName={score.playerXName}
@@ -11,7 +12,7 @@ const AllScores = ({scores}) => {
                     oScore={score.oScore}
                 ></Score>
             )) }
-        </div>
+        </Fragment>
      );
 };
  

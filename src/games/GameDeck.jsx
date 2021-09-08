@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component, Fragment } from "react";
 import { toast } from "react-toastify";
 import MainContext from "./../common/MainContext";
 import GamePlay from './GamePlay';
@@ -24,7 +24,7 @@ class GameDeck extends Component {
         const { roomName, startGame } = this.state;
 
         return (
-            <div className="w-100">
+            <Fragment>
                 {!startGame && (
                     <div className="card border-warning mb-3 singleCard">
                         <div className="card-header text-center border-warning">
@@ -63,7 +63,7 @@ class GameDeck extends Component {
                     </div>
                 )}
                 {startGame && <GamePlay roomName={roomName} />}
-            </div>
+            </Fragment>
         );
     }
 }

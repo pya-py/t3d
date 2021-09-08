@@ -1,4 +1,4 @@
-import './scoresTable.css';
+import './tables.css';
 import { Component } from 'react';
 import AllScores from './AllScores';
 

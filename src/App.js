@@ -21,9 +21,8 @@ class App extends Component {
                     <Route path="/ranking" component={Ranking} />
                     <Route path="/gameRules" component={GameRules} />
                     <Route path="/contactInfo" component={ContactInfo} />
-                    <Route path="/controlPanel" component={ControlPanel} />
                     <Route path="/" exact component={ScoresTable} />
-                    
+                    <Route path="/controlPanel" exact component={ControlPanel} />
                 </Switch>
             </MainLayout>
         );

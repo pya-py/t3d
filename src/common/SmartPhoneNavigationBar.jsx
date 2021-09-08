@@ -27,7 +27,6 @@ const SmartPhoneNavigationBar = () => {
                 <NavLink
                   className="nav-link text-primary"
                   to="/gameDeck"
-                  
                   activeClassName="btn-outline-secondary text-dark"
                 >
                   بازی ها
@@ -37,7 +36,6 @@ const SmartPhoneNavigationBar = () => {
                 <NavLink
                   className="nav-link text-primary"
                   to="/ranking"
-                  
                   activeClassName="btn-outline-secondary text-dark"
                 >
                   رنکینگ
@@ -52,7 +50,6 @@ const SmartPhoneNavigationBar = () => {
                 <NavLink
                   className="nav-link text-primary"
                   to="/gameRules"
-                  
                   activeClassName="btn-outline-secondary text-dark"
                 >
                   قوانین
@@ -62,7 +59,6 @@ const SmartPhoneNavigationBar = () => {
                 <NavLink
                   className="nav-link text-primary"
                   to="/contactInfo"
-                  
                   activeClassName="btn-outline-secondary text-dark"
                 >
                   تماس با ما
@@ -73,7 +69,6 @@ const SmartPhoneNavigationBar = () => {
                   <NavLink
                     className="navItems nav-link btn btn-outline-success btn-block mt-1 mr-lg-5"
                     to="/controlPanel"
-                    
                   >
                     کنترل پنل
                   </NavLink>
@@ -81,7 +76,6 @@ const SmartPhoneNavigationBar = () => {
                   <NavLink
                     className="navItems nav-link btn btn-outline-success btn-block mt-1 mr-lg-5"
                     to="/signUp"
-                    
                   >
                     ثبت نام
                   </NavLink>

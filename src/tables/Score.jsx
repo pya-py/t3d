@@ -1,4 +1,4 @@
-import './scoresTable.css';
+import './tables.css';
 
 const Score = ({playerXName, playerOName, xScore, oScore}) => {
     // format score text:

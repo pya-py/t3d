@@ -19,7 +19,7 @@ class SignInSideBar extends Component {
         this.setState({ loading: true });
         const STATUS = { SUCCESSFULL: 200 };
         const { studentID, password } = this.state;
-        const user = { studentID, password: Number(password) };
+        const user = { studentID: Number(studentID), password };
         try {
             const { status, data } = await userServices.signIn(user);
             if (status === STATUS.SUCCESSFULL) {

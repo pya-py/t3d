@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component, Fragment } from "react";
 import "./games.css";
 import { toast } from "react-toastify";
 import MainContext from "../common/MainContext";
@@ -88,17 +88,8 @@ class GamePlay extends Component {
             }
         };
 
-        socketConnection.onclose = () => {
-            // this peace of code is for when a player leaves or game ends ( probably neddnt be here )
-            // socketConnection.send(JSON.stringify(
-            //     {
-            //         request: "leave",
-            //         roomName: "currecttest",
-            //         playerID: "whatever",
-            //         msg: "test"
-            //     }
-            // ));
-
+        socketConnection.onclose = () => { 
+            // edit this
             socketConnection = null;
         };
         return socketConnection;
@@ -328,7 +319,7 @@ class GamePlay extends Component {
 
         // drawing the table and setting id s and click events
         return dimens.map((floor) => (
-            <div>
+            <Fragment>
                 {dimens.map((row) => (
                     <div style={{ marginLeft: `${row * rowMarginRatio}px` }}>
                         {dimens.map((column) => (
@@ -348,7 +339,7 @@ class GamePlay extends Component {
                     </div>
                 ))}
                 <br />
-            </div>
+            </Fragment>
         ));
     };
 }
