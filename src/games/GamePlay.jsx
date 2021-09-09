@@ -27,7 +27,7 @@ class GamePlay extends Component {
             },
         ], // maybe use player actual user name and change this item to an object of objects?
         turn: 0, // start turn is decided by throwning dices
-        tableDimension: 3,
+        tableDimension: 4,
         table: [],
         yourTurn: undefined, // change this
         gameStarted: false,
