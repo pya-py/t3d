@@ -2,6 +2,34 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
+axios.defaults.headers.put["Content-Type"] = "application/json";
+
+// put token in all request headers:
+axios.interceptors.request.use( config => {
+    const token = sessionStorage.getItem("token");
+    if (token)
+        config.headers.Authorization = `Bearer ${token}`;
+    else
+        config.headers.Authorization = null;
+    console.log(config.headers.Authorization);
+    return config;
+}, error => {
+    // what to do?
+    return Promise.reject(error);
+});
+// what the f should i do?
+// (() => {
+//     const token = sessionStorage.getItem("token");
+//     if (token)
+//         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+//     else {
+//         delete axios.defaults.headers.common["Authorization"];
+//         /*if setting null does not remove `Authorization` header then try     
+//               delete axios.defaults.headers.common['Authorization'];
+//             */
+//     }
+//     console.log("token", token);
+// })();
 
 axios.interceptors.response.use(null, (error) => {
     const STATUS = { AUTHENTICATION_INVALID: 401, INPUT_INVALID: 422 };

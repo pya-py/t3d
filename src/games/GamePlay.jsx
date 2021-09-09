@@ -3,6 +3,7 @@ import "./games.css";
 import { toast } from "react-toastify";
 import MainContext from "../common/MainContext";
 import config from "../services/config.json";
+import userServices from "./../services/userServices";
 
 class GamePlay extends Component {
     static contextType = MainContext;
@@ -26,7 +27,7 @@ class GamePlay extends Component {
             },
         ], // maybe use player actual user name and change this item to an object of objects?
         turn: 0, // start turn is decided by throwning dices
-        tableDimension: 4,
+        tableDimension: 3,
         table: [],
         yourTurn: undefined, // change this
         gameStarted: false,
@@ -88,8 +89,8 @@ class GamePlay extends Component {
             }
         };
 
-        socketConnection.onclose = () => { 
-            // edit this
+        socketConnection.onclose = () => {
+            // change
             socketConnection = null;
         };
         return socketConnection;
@@ -117,7 +118,13 @@ class GamePlay extends Component {
         let tempTable = dimens.map((floor) =>
             dimens.map((row) => dimens.map((column) => null))
         );
-        this.setState({ table: tempTable });
+        this.setState({
+            table: tempTable,
+        });
+
+        //************ after saving game state happened ==> the table is not empty but remainingCellsCount variable is reset
+        this.remainingCellsCount =
+            tableDimension * tableDimension * tableDimension; //edit this code
 
         let divTableBlock = document.getElementById("divTableBlock");
         this.updateMarginParameters(divTableBlock);
@@ -142,10 +149,11 @@ class GamePlay extends Component {
         // just test a random id to see how above formula works!
         return { floor: cellFloor, row: cellRow, column: cellColumn };
     };
-    onEachCellClick = (event) => {
+    onEachCellClick = async (event) => {
         const { gameStarted, tableDimension } = this.state;
         const { roomName } = this.props;
         const { player } = this.context;
+
         if (gameStarted) {
             const selectedCellButton = event.target;
 
@@ -184,10 +192,14 @@ class GamePlay extends Component {
             });
             // time to inspect the new cell:
             this.inspectTableAroundTheCell(cell.floor, cell.row, cell.column);
+            // if all cells are filled ==> end game
+            // **** find a better algorythm to end game sooner
+            if (!(--this.remainingCellsCount)) this.endGame();
             return true;
         }
         return false;
     };
+
     inspectTableAroundTheCell = (floor, row, column) => {
         // inpect the table in all ways around a selected cell (new selected one), to update points and color the score routes
         // is it needed to write a inspectAll method ?
@@ -308,6 +320,17 @@ class GamePlay extends Component {
         return 0;
     };
 
+    endGame = async () => {
+        const { players, yourTurn } = this.state;
+        const opponent = Number(!yourTurn); // you: 1 => opponent: 0, you: 0 => opponent: 1
+        const deltaPoints = players[yourTurn].score - players[opponent].score; // difference between players points
+        const givenPoints = deltaPoints > 0 ? 3 : Number(!deltaPoints); // 3 for win, 1 for draw, 0 for lose
+        await userServices.updateRecords(
+            this.context.player.userID,
+            givenPoints
+        );
+        this.context.gatherPlayerData();
+    };
     drawGameTable = () => {
         // *****************note: when window size changes: table's selected cells are cleared
         // use this.state.table to load again*****************

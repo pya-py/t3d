@@ -16,7 +16,7 @@ const MainLayout = (props) => {
     const deviceIsSmartPhone = useMediaQuery({ query: "(max-width: 768px)" });
     const deviceIsTablet =
         !deviceIsDesktop && !deviceIsSmartPhone ? true : false;
-    const [player, setPlayer] = useState("");
+    const [player, setPlayer] = useState(null);
     // this method is for temporary use and for finding items that cause horizontal overflow causing horizontal scrollbar
     const findHorizontalOverflow = () => {
         let docWidth = document.documentElement.offsetWidth;
@@ -27,24 +27,34 @@ const MainLayout = (props) => {
         });
     };
 
+    // get player records
+    const gatherPlayerData = () => {
+        (async () => {
+            const STATUS = { SUCCESSFULL: 200 };
+            const userID = userServices.readUserID();
+            if (userID) {
+                const { data, status } = await userServices.getPlayer(userID);
+                if (status === STATUS.SUCCESSFULL) return data.player;
+            }
+            return null;
+        })()
+            .then((result) => {
+                console.log("auth called");
+                setPlayer(result);
+            })
+            .catch((err) => {
+                // handle error
+                setPlayer(null);
+            });
+    };
     // use an anonymous function to check wether a reliable sign in has been made or not
     // using await causes all 'return' to return a promise. so it must be handles by .then .catch
-    (async () => {
-        const STATUS = { SUCCESSFULL: 200 };
-        const userID = userServices.readUserID();
-        if (userID) {
-            const { data, status } = await userServices.getPlayer(userID);
-            if (status === STATUS.SUCCESSFULL) return data.player;
-        }
-        return null;
-    })()
-        .then((result) => {
-            setPlayer(result);
-        })
-        .catch((err) => {
-            // handle error
-            setPlayer(null);
-        });
+    if (!player) gatherPlayerData();
+
+    const signOutPlayer = () => {
+        sessionStorage.clear();
+        setPlayer(null);
+    };
 
     let pageLeftSideBars = <NewsSideBar />;
     let pageRightSideBar = player ? <PlayerInfoSideBar /> : <SignInSideBar />; // in case login hassnt been made
@@ -58,15 +68,16 @@ const MainLayout = (props) => {
     if (pathname === "/gameDeck") {
         // left sidebar must be opponents playerInfo
 
-        if (deviceIsSmartPhone) { //this is temprory
-          // find a way for showing result in smartphone, without causing vertical scroll
+        if (deviceIsSmartPhone) {
+            //this is temprory
+            // find a way for showing result in smartphone, without causing vertical scroll
             pageLeftSideBars = null; //change later
             pageRightSideBar = null; // change then
         }
     }
 
     return (
-        <MainContext.Provider value={{ player }}>
+        <MainContext.Provider value={{ player, signOutPlayer, gatherPlayerData }}>
             <ToastContainer />
             {deviceIsDesktop || deviceIsTablet ? (
                 <NavigationBar />

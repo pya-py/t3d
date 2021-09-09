@@ -1,8 +1,10 @@
 import { Component } from "react";
+import MainContext from './../common/MainContext';
 
 class ControlPanel extends Component {
-    onSignOutClick = () => {
-        sessionStorage.clear();
+    static contextType = MainContext;
+    onSignOutClick = async () => {
+        this.context.signOutPlayer();
     }
     render() {
         return (
