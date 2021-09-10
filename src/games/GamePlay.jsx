@@ -52,7 +52,7 @@ class GamePlay extends Component {
         });
 
     connectToWS = () => {
-        let socketConnection = new WebSocket(config.webSocketLocalRoot);
+        let socketConnection = new WebSocket(config.webSocketRoot);
         socketConnection.onopen = () => {
             const { roomName } = this.props;
             const { player } = this.context;
