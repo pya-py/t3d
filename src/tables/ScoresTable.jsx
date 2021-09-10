@@ -1,22 +1,37 @@
 import './tables.css';
 import { Component } from 'react';
 import AllScores from './AllScores';
+import gameServices from './../services/gameServices';
 
 
 class ScoresTable extends Component {
     state = { 
-        liveScores: [ {id:0, playerXName: 'سهند علی زاده', playerOName: 'علی رضا قربانی', xScore: 10, oScore: 6},
-                         {id:1 ,playerXName: 'paya', playerOName: 'whatever', xScore: 15, oScore: 1},
-                         {id:2 ,playerXName: 'مجید نویدزاده', playerOName: 'علی یاری', xScore: 8, oScore: 8},
-                         {id:3 ,playerXName: 'مجتبی حسینی', playerOName: 'مصطفی علی مردانی', xScore: 2, oScore: 14},
-                         {id:4 ,playerXName: 'مجتبی حسینی', playerOName: 'مصطفی علی مردانی', xScore: 2, oScore: 14},
-                         {id:5 ,playerXName: 'مجتبی حسینی', playerOName: 'مصطفی علی مردانی', xScore: 2, oScore: 14} ],
-        finalScores: [ {id:0, playerXName: 'نوید بختیاری', playerOName: 'محسن رضایی', xScore: 0, oScore: 6},
-                        {id:1 ,playerXName: 'پرهام کبیری', playerOName: 'سمانه سماوی', xScore: 2, oScore: 4},
-                        {id:2 ,playerXName: 'مجید داورخواه', playerOName: 'زهرا فنایی', xScore: 4, oScore: 12},
-                        {id:3 ,playerXName: 'امیر صفوی نسب', playerOName: 'paya', xScore: 3, oScore: 3} ],
-        showLiveOnes: true
+        liveScores: [ ],
+        finalScores: [ ],
+        showLiveOnes: false,
+        loading: false
      };
+
+     componentDidMount() {
+         // get all game results , live or final, handling promises
+         // client and server side for this Module seriously need to be edited
+        (async () => {
+            this.setState({ loading: true }); // use preloader here?
+            const STATUS = { SUCCESSFULL: 200 };
+            const { data, status } = await gameServices.getAllResults();
+            if (status === STATUS.SUCCESSFULL) return data.gameResults;
+            return [];
+        })()
+            .then((result) => {
+                this.setState({liveScores: result.filter(game => game.isLive), finalScores: result.filter(game => !game.isLive), loading: false});
+                //EDIT EDIT EDIT
+            })
+            .catch((err) => {
+                //******* handle errors */
+                // console.log(err);
+                this.setState({ finalScores: [], loading: false });
+            });
+    }
 
     btnShowLiveScores = () => {
         this.setState({showLiveOnes: true});

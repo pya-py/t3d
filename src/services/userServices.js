@@ -4,25 +4,25 @@ import config from "./config.json";
 const userServices = {
     signUp: (user) => {
         return http.post(
-            `${config.serverRoot}/${config.usersRoute}/${config.signupRoute}`,
+            `${config.localRoot}/${config.usersRoute}/${config.signupRoute}`,
             JSON.stringify(user)
         );
     },
     signIn: (user) => {
         return http.post(
-            `${config.serverRoot}/${config.usersRoute}/${config.signinRoute}`,
+            `${config.localRoot}/${config.usersRoute}/${config.signinRoute}`,
             JSON.stringify(user)
         );
     },
     getPlayer: (userID) => {
-        return http.get(`${config.serverRoot}/${config.usersRoute}/${userID}`);
+        return http.get(`${config.localRoot}/${config.usersRoute}/${userID}`);
     },
     getAllPlayers: () => {
-        return http.get(`${config.serverRoot}/${config.usersRoute}`);
+        return http.get(`${config.localRoot}/${config.usersRoute}`);
     },
     updateRecords: (userID, gameStatus) => {
         return http.put(
-            `${config.serverRoot}/${config.usersRoute}/${userID}`,
+            `${config.localRoot}/${config.usersRoute}/${userID}`,
             JSON.stringify({gameStatus})
         );
     },

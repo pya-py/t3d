@@ -5,5 +5,7 @@
     "webSocketLocalRoot": "ws://localhost:4000",
     "signupRoute": "signup",
     "signinRoute": "signin",
-    "usersRoute": "users"
+    "usersRoute": "users",
+    "gamesRoute": "games",
+    "gameSaveRoute": "save"
 }

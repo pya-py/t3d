@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import MainContext from "../common/MainContext";
 import config from "../services/config.json";
 import userServices from "./../services/userServices";
+import gameServices from './../services/gameServices';
 
 class GamePlay extends Component {
     static contextType = MainContext;
@@ -14,12 +15,14 @@ class GamePlay extends Component {
         rowMarginRatio: 0,
         players: [
             {
+                // ID: '',
                 shape: "X",
                 color: "cyan",
                 lineColor: "btn btn-primary",
                 score: 0,
             },
             {
+                // ID: '',
                 shape: "O",
                 color: "darkred",
                 lineColor: "btn btn-danger",
@@ -27,9 +30,10 @@ class GamePlay extends Component {
             },
         ], // maybe use player actual user name and change this item to an object of objects?
         turn: 0, // start turn is decided by throwning dices
-        tableDimension: 4,
+        tableDimension: 3,
         table: [],
         yourTurn: undefined, // change this
+        opponentID: null,
         gameStarted: false,
     };
 
@@ -48,7 +52,7 @@ class GamePlay extends Component {
         });
 
     connectToWS = () => {
-        let socketConnection = new WebSocket(config.webSocketRoot);
+        let socketConnection = new WebSocket(config.webSocketLocalRoot);
         socketConnection.onopen = () => {
             const { roomName } = this.props;
             const { player } = this.context;
@@ -76,6 +80,10 @@ class GamePlay extends Component {
                 // console.log(this.state.yourTurn);
             } else if (command === "START") {
                 this.setState({ gameStarted: true });
+                const {yourTurn} = this.state;
+                const opponentIndex = Number(!yourTurn);
+                this.setState({opponentID: msg[opponentIndex]});
+
                 toast.info("هر دو بازیکن متصل شدند");
                 if (this.state.yourTurn === this.state.turn)
                     toast.warn("شروع حرکت با شما");
@@ -320,16 +328,32 @@ class GamePlay extends Component {
         return 0;
     };
 
-    endGame = async () => {
-        const { players, yourTurn } = this.state;
+    endGame = async () => { //*******************important: 
+        //ADD TRY CATCH
+        const { players, yourTurn, opponentID } = this.state;
+        const {userID} = this.context.player
         const opponent = Number(!yourTurn); // you: 1 => opponent: 0, you: 0 => opponent: 1
         const deltaPoints = players[yourTurn].score - players[opponent].score; // difference between players points
         const givenPoints = deltaPoints > 0 ? 3 : Number(!deltaPoints); // 3 for win, 1 for draw, 0 for lose
         await userServices.updateRecords(
-            this.context.player.userID,
+            userID,
             givenPoints
         );
         this.context.gatherPlayerData();
+        
+        // toast for telling the edn result
+        // x (yourTurn===0) always saves the game result 
+        if(!yourTurn){
+            await gameServices.saveGame({
+                xID: userID,
+                oID: opponentID,
+                xScores: players[0].score,
+                oScores: players[1].score,
+                isLive: false
+            });
+            //toast for saving succefully
+        }
+
     };
     drawGameTable = () => {
         // *****************note: when window size changes: table's selected cells are cleared
