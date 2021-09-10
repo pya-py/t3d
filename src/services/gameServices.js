@@ -4,12 +4,12 @@ import http from './httpService';
 const gameServices = {
     saveGame: newGame => {
         return http.post(
-            `${config.localRoot}/${config.gamesRoute}/${config.gameSaveRoute}`,
+            `${config.serverRoot}/${config.gamesRoute}/${config.gameSaveRoute}`,
             JSON.stringify(newGame)
         );
     },
     getAllResults: () => {
-        return http.get(`${config.localRoot}/${config.gamesRoute}`);
+        return http.get(`${config.serverRoot}/${config.gamesRoute}`);
     },
 };
 
