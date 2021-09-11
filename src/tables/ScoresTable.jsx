@@ -66,8 +66,6 @@ class ScoresTable extends Component {
                         <AllScores scores={showLiveOnes? liveScores : finalScores} />
                     </div>
                 </div>
-                
-
             </div>
         );
     }

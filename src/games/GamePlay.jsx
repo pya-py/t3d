@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import MainContext from "../common/MainContext";
 import config from "../services/config.json";
 import userServices from "./../services/userServices";
-import gameServices from './../services/gameServices';
-
+import gameServices from "./../services/gameServices";
+import socketServices from "../services/socketServices";
 class GamePlay extends Component {
     static contextType = MainContext;
     // **** noticed: gameplay needs a seperate layout
@@ -40,68 +40,55 @@ class GamePlay extends Component {
     constructor() {
         super();
         this.cellButtons = [];
-        this.socketConnection = this.connectToWS();
+        this.socketConnection = undefined;
+        
     }
 
-    createSocketRequest = (request, roomName, playerID, msg) =>
-        JSON.stringify({
-            request,
-            roomName,
-            playerID,
-            msg,
-        });
+    socketOnMessage = (response) => {
+        const { data } = response;
+        const { command, msg } = JSON.parse(data);
+        if (command === "SET_TURN") {
+            // console.log(turn);
+            this.setState({ yourTurn: Number(msg) });
+            // console.log(this.state.yourTurn);
+        } else if (command === "START") {
+            this.setState({ gameStarted: true });
+            const { yourTurn } = this.state;
+            const opponentIndex = Number(!yourTurn);
+            this.setState({ opponentID: msg[opponentIndex] });
 
-    connectToWS = () => {
-        let socketConnection = new WebSocket(config.webSocketRoot);
-        socketConnection.onopen = () => {
-            const { roomName } = this.props;
-            const { player } = this.context;
-            // socketConnection.send("Client connected to WebSocket");
-            socketConnection.send(
-                this.createSocketRequest(
-                    "join",
-                    roomName,
-                    player.userID,
-                    "test"
-                )
+            // toast.info("هر دو بازیکن متصل شدند");
+            // if (this.state.yourTurn === this.state.turn)
+            //     toast.warn("شروع حرکت با شما");
+            // edit this part, code is temp
+        } else if (command === "MOVE") {
+            const { tableDimension } = this.state;
+            //******** */ catch exceptions
+            const cellID = Number(msg);
+            const cell = this.getCellCoordinates(cellID, tableDimension);
+            this.verifyAndApplyTheMove(cell, this.cellButtons[cellID]);
+        }
+    };
+
+    forceConnectToWebSocket = async (nextJob) => {
+        const { roomName } = this.props;
+        const { player } = this.context;
+        console.log(roomName);
+        try {
+            this.socketConnection = await socketServices.connect(
+                roomName,
+                player.userID
             );
-        };
+            this.socketConnection.onmessage = this.socketOnMessage;
+            if (nextJob) nextJob();
+        } catch (err) {
+            console.log(err);
+            
+            setTimeout(() => {
+                this.forceConnectToWebSocket(nextJob);
+            }, 1000);
+        }
 
-        socketConnection.onerror = (error) => {
-            console.log(`WebSocket error: ${error}`);
-        };
-
-        socketConnection.onmessage = (response) => {
-            const { data } = response;
-            const { command, msg } = JSON.parse(data);
-            if (command === "SET_TURN") {
-                // console.log(turn);
-                this.setState({ yourTurn: Number(msg) });
-                // console.log(this.state.yourTurn);
-            } else if (command === "START") {
-                this.setState({ gameStarted: true });
-                const {yourTurn} = this.state;
-                const opponentIndex = Number(!yourTurn);
-                this.setState({opponentID: msg[opponentIndex]});
-
-                toast.info("هر دو بازیکن متصل شدند");
-                if (this.state.yourTurn === this.state.turn)
-                    toast.warn("شروع حرکت با شما");
-                // edit this part, code is temp
-            } else if (command === "MOVE") {
-                const { tableDimension } = this.state;
-                //******** */ catch exceptions
-                const cellID = Number(msg);
-                const cell = this.getCellCoordinates(cellID, tableDimension);
-                this.verifyAndApplyTheMove(cell, this.cellButtons[cellID]);
-            }
-        };
-
-        socketConnection.onclose = () => {
-            // change
-            socketConnection = null;
-        };
-        return socketConnection;
     };
 
     updateMarginParameters = (divTableBlock) => {
@@ -139,9 +126,13 @@ class GamePlay extends Component {
         divTableBlock.addEventListener("resize", (event) =>
             this.onTableBlockResize(event)
         );
+        // this.forceConnectToWebSocket(null);
     }
 
     render() {
+        if(!this.socketConnection || this.socketConnection.readyState !== WebSocket.OPEN) //connection is lost and game's not edned
+            this.forceConnectToWebSocket();
+
         return (
             <div id="divTableBlock" className="card border-dark gameBorderCard">
                 {this.drawGameTable()}
@@ -157,7 +148,7 @@ class GamePlay extends Component {
         // just test a random id to see how above formula works!
         return { floor: cellFloor, row: cellRow, column: cellColumn };
     };
-    onEachCellClick = async (event) => {
+    onEachCellClick = (event) => {
         const { gameStarted, tableDimension } = this.state;
         const { roomName } = this.props;
         const { player } = this.context;
@@ -174,14 +165,16 @@ class GamePlay extends Component {
 
             if (this.verifyAndApplyTheMove(cell, selectedCellButton)) {
                 //send move to WebSocket Server
-                this.socketConnection.send(
-                    this.createSocketRequest(
-                        "move",
-                        roomName,
-                        player.userID,
-                        selectedCellButton.id
-                    )
-                );
+                this.forceConnectToWebSocket(() => {
+                    this.socketConnection.send(
+                        socketServices.createSocketRequest(
+                            "move",
+                            roomName,
+                            player.userID,
+                            selectedCellButton.id
+                        )
+                    );
+                });
             }
         }
     };
@@ -202,7 +195,7 @@ class GamePlay extends Component {
             this.inspectTableAroundTheCell(cell.floor, cell.row, cell.column);
             // if all cells are filled ==> end game
             // **** find a better algorythm to end game sooner
-            if (!(--this.remainingCellsCount)) this.endGame();
+            if (!--this.remainingCellsCount) this.endGame();
             return true;
         }
         return false;
@@ -328,32 +321,30 @@ class GamePlay extends Component {
         return 0;
     };
 
-    endGame = async () => { //*******************important: 
-        //ADD TRY CATCH
+    endGame = async () => {
+        //*******************important:
+        //ADD TRY CATCHimport socketServices from './../services/socketServices';
+
         const { players, yourTurn, opponentID } = this.state;
-        const {userID} = this.context.player
+        const { userID } = this.context.player;
         const opponent = Number(!yourTurn); // you: 1 => opponent: 0, you: 0 => opponent: 1
         const deltaPoints = players[yourTurn].score - players[opponent].score; // difference between players points
         const givenPoints = deltaPoints > 0 ? 3 : Number(!deltaPoints); // 3 for win, 1 for draw, 0 for lose
-        await userServices.updateRecords(
-            userID,
-            givenPoints
-        );
+        await userServices.updateRecords(userID, givenPoints);
         this.context.gatherPlayerData();
-        
+
         // toast for telling the edn result
-        // x (yourTurn===0) always saves the game result 
-        if(!yourTurn){
+        // x (yourTurn===0) always saves the game result
+        if (!yourTurn) {
             await gameServices.saveGame({
                 xID: userID,
                 oID: opponentID,
                 xScores: players[0].score,
                 oScores: players[1].score,
-                isLive: false
+                isLive: false,
             });
             //toast for saving succefully
         }
-
     };
     drawGameTable = () => {
         // *****************note: when window size changes: table's selected cells are cleared
