@@ -205,7 +205,7 @@ class GamePlay extends Component {
             this.onTableBlockResize(event)
         );
         this.forceConnectToWebSocket(null);
-
+        toast('new-ver');
         this.initiateGameTimer();
     }
 
