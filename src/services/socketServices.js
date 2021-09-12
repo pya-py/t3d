@@ -10,7 +10,7 @@ const createSocketRequest = (request, roomName, playerID, msg) =>
 
 const connect = (roomName, playerID) => {
     return new Promise((resolve, reject) => {
-        var server = new WebSocket(config.webSocketRoot);
+        var server = new WebSocket(config.webSocketLocalRoot);
         server.onopen = () => {
             server.send(createSocketRequest("join", roomName, playerID, null));
             resolve(server);
@@ -18,17 +18,18 @@ const connect = (roomName, playerID) => {
 
         server.onerror = (error) => {
             // console.log(`WebSocket error: ${error}`);
-            //server.close();
+            server.close();
             reject(error);
         };
 
         server.onclose = () => {
             // change
-            setTimeout( () => {
-                connect(roomName, playerID);
-                console.log('reconnecting from onClose');
-            }, 1000)
-            resolve(server);
+            // setTimeout( () => {
+            //     connect(roomName, playerID);
+            //     console.log('reconnecting from onClose');
+            // }, 1000)
+            resolve(null);
+            // this part needs editing ? maybe not
         };
     });
 };
