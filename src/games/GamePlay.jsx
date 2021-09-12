@@ -178,7 +178,7 @@ class GamePlay extends Component {
                 failure();
             }
         };
-        xhr.open("GET", "anypage.php", true);
+        xhr.open("GET", "/", true);
         xhr.send();
     };
 
