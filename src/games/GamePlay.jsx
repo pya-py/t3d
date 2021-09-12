@@ -138,17 +138,47 @@ class GamePlay extends Component {
             //         console.log("dissconnected");
             //         this.connectionLost = true;
             //     });
-            if (window.navigator.onLine) {
-                if (this.connectionLost) {
-                    console.log("connected");
-                    this.connectionLost = false;
-                    this.forceConnectToWebSocket(null);
+            // if (window.navigator.onLine) {
+            //     if (this.connectionLost) {
+            //         console.log("connected");
+            //         this.connectionLost = false;
+            //         this.forceConnectToWebSocket(null);
+            //     }
+            // } else {
+            //     console.log("dissconnected");
+            //     this.connectionLost = true;
+            // }
+            this.isOnline(
+                () => {
+                    if (this.connectionLost) {
+                        console.log("connected");
+                        this.connectionLost = false;
+                        this.forceConnectToWebSocket(null);
+                    }
+                },
+                () => {
+                    console.log("dissconnected");
+                    this.connectionLost = true;
                 }
-            } else {
-                console.log("dissconnected");
-                this.connectionLost = true;
-            }
+            );
         }, 1000);
+    };
+    isOnline = (yes, no) => {
+        var xhr = XMLHttpRequest
+            ? new XMLHttpRequest()
+            : new window.ActiveXObject("Microsoft.XMLHttp");
+        xhr.onload = function () {
+            if (yes instanceof Function) {
+                yes();
+            }
+        };
+        xhr.onerror = function () {
+            if (no instanceof Function) {
+                no();
+            }
+        };
+        xhr.open("GET", "anypage.php", true);
+        xhr.send();
     };
 
     componentDidMount() {
