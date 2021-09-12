@@ -240,7 +240,7 @@ class GamePlay extends Component {
             const selectedCellButton = event.target;
 
             if (this.state.turn !== this.state.yourTurn) {
-                this.forceConnectToWebSocket();
+                this.forceConnectToWebSocket(null);
                 return;
             }
 
