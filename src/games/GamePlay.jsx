@@ -147,19 +147,19 @@ class GamePlay extends Component {
             //     console.log("dissconnected");
             //     this.connectionLost = true;
             // }
-            // this.isOnline(
-            //     () => {
-            //         if (this.connectionLost) {
-            //             console.log("connected");
-            //             this.connectionLost = false;
-            //             this.forceConnectToWebSocket(null);
-            //         }
-            //     },
-            //     () => {
-            //         console.log("dissconnected");
-            //         this.connectionLost = true;
-            //     }
-            // );
+            this.isOnline(
+                () => {
+                    if (this.connectionLost) {
+                        console.log("connected");
+                        this.connectionLost = false;
+                        this.forceConnectToWebSocket(null);
+                    }
+                },
+                () => {
+                    console.log("dissconnected");
+                    this.connectionLost = true;
+                }
+            );
         }, 1000);
     };
 
@@ -177,7 +177,7 @@ class GamePlay extends Component {
                 failure();
             }
         };
-         xhr.open("GET", "http://google.com", true);
+         xhr.open("GET", "https://t3dweb.herokuapp.com/users", true);//edit this ******************************
          xhr.send();
     };
 
@@ -204,7 +204,7 @@ class GamePlay extends Component {
             this.onTableBlockResize(event)
         );
         this.forceConnectToWebSocket(null);
-        toast('new-ver22');
+        toast('new-ver3');
         this.initiateGameTimer();
     }
 
