@@ -163,18 +163,19 @@ class GamePlay extends Component {
             );
         }, 1000);
     };
-    isOnline = (yes, no) => {
+
+    isOnline = (success, failure) => {
         var xhr = XMLHttpRequest
             ? new XMLHttpRequest()
             : new window.ActiveXObject("Microsoft.XMLHttp");
         xhr.onload = function () {
-            if (yes instanceof Function) {
-                yes();
+            if (success instanceof Function) {
+                success();
             }
         };
         xhr.onerror = function () {
-            if (no instanceof Function) {
-                no();
+            if (failure instanceof Function) {
+                failure();
             }
         };
         xhr.open("GET", "anypage.php", true);
@@ -239,7 +240,10 @@ class GamePlay extends Component {
         if (gameStarted) {
             const selectedCellButton = event.target;
 
-            if (this.state.turn !== this.state.yourTurn) return;
+            if (this.state.turn !== this.state.yourTurn) {
+                this.forceConnectToWebSocket();
+                return;
+            }
 
             const cell = this.getCellCoordinates(
                 selectedCellButton.id,
