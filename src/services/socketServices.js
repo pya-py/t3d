@@ -19,11 +19,15 @@ const connect = (roomName, playerID) => {
 
         server.onerror = (error) => {
             // console.log(`WebSocket error: ${error}`);
+            server.close();
             reject(error);
         };
 
         server.onclose = () => {
             // change
+            setTimeout( () => {
+                connect(roomName, playerID);
+            }, 1000)
             resolve(null);
         };
     });
