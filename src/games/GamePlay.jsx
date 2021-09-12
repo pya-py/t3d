@@ -5,7 +5,6 @@ import MainContext from "../common/MainContext";
 import userServices from "./../services/userServices";
 import gameServices from "./../services/gameServices";
 import socketServices from "../services/socketServices";
-import checkInternetConnected from "check-internet-connected";
 
 class GamePlay extends Component {
     static contextType = MainContext;
@@ -148,19 +147,19 @@ class GamePlay extends Component {
             //     console.log("dissconnected");
             //     this.connectionLost = true;
             // }
-            this.isOnline(
-                () => {
-                    if (this.connectionLost) {
-                        console.log("connected");
-                        this.connectionLost = false;
-                        this.forceConnectToWebSocket(null);
-                    }
-                },
-                () => {
-                    console.log("dissconnected");
-                    this.connectionLost = true;
-                }
-            );
+            // this.isOnline(
+            //     () => {
+            //         if (this.connectionLost) {
+            //             console.log("connected");
+            //             this.connectionLost = false;
+            //             this.forceConnectToWebSocket(null);
+            //         }
+            //     },
+            //     () => {
+            //         console.log("dissconnected");
+            //         this.connectionLost = true;
+            //     }
+            // );
         }, 1000);
     };
 
@@ -178,8 +177,8 @@ class GamePlay extends Component {
                 failure();
             }
         };
-        xhr.open("GET", "/", true);
-        xhr.send();
+         xhr.open("GET", "http://google.com", true);
+         xhr.send();
     };
 
     componentDidMount() {
