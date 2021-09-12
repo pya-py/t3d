@@ -28,7 +28,7 @@ const connect = (roomName, playerID) => {
                 connect(roomName, playerID);
                 console.log('reconnecting from onClose');
             }, 1000)
-            resolve(null);
+            resolve(server);
         };
     });
 };
