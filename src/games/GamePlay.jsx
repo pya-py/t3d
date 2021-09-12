@@ -135,7 +135,7 @@ class GamePlay extends Component {
                 })
                 .catch((err) => {
                     // connection error
-                    //console.log(err);
+                    console.log(err);
                     console.log("dissconnected");
                     this.connectionLost = true;
                 });
