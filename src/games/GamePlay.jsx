@@ -62,16 +62,20 @@ class GamePlay extends Component {
             // edit this part, code is temp
         } else if (command === "MOVE") {
             const { tableDimension } = this.state;
+            const { roomName } = this.props;
+            const { player } = this.context;
             //******** */ catch exceptions
             const cellID = Number(msg);
-            this.socketConnection.emit('moveRecieved', JSON.stringify({
-                recieved: true,
-                roomName: this.props.roomName
-            }));
-            
+            this.socketConnection.send(
+                socketServices.createSocketRequest(
+                    "moveRecieved",
+                    roomName,
+                    player.userID,
+                    true
+                )
+            );
             const cell = this.getCellCoordinates(cellID, tableDimension);
             this.verifyAndApplyTheMove(cell, this.cellButtons[cellID]);
-
         }
     };
 
