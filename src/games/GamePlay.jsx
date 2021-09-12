@@ -2,16 +2,18 @@ import { Component, Fragment } from "react";
 import "./games.css";
 import { toast } from "react-toastify";
 import MainContext from "../common/MainContext";
-import config from "../services/config.json";
 import userServices from "./../services/userServices";
 import gameServices from "./../services/gameServices";
 import socketServices from "../services/socketServices";
+import checkInternetConnected from "check-internet-connected";
+
 class GamePlay extends Component {
     static contextType = MainContext;
     // **** noticed: gameplay needs a seperate layout
     //**** game resets on device change. fix it */
     // note: sidebars must change to ==> right-side: my-profile / left-side: opponent profile
     state = {
+        forceConnectTriggerIsNeeded: false,
         rowMarginRatio: 0,
         players: [
             {
@@ -39,6 +41,7 @@ class GamePlay extends Component {
 
     constructor() {
         super();
+        this.connectionLost = false;
         this.cellButtons = [];
         this.socketConnection = undefined;
     }
@@ -113,6 +116,32 @@ class GamePlay extends Component {
         this.updateMarginParameters(event.target);
     };
 
+    initiateGameTimer = () => {
+        // const connectionConfig = {
+            //     timeout: 5000, //timeout connecting to each server, each try
+            //     retries: 5, //number of retries to do before failing
+            //     domain: config.localRoot, //the domain to check DNS record of
+            // };
+        setInterval(() => {
+            
+            checkInternetConnected()
+                .then((result) => {
+                    // connection successfull
+                    if (this.connectionLost) {
+                        console.log("connected");
+                        this.connectionLost = false;
+                        this.forceConnectToWebSocket(null);
+                    }
+                })
+                .catch((err) => {
+                    // connection error
+                    //console.log(err);
+                    console.log("dissconnected");
+                    this.connectionLost = true;
+                });
+        }, 1000);
+    };
+
     componentDidMount() {
         this.cellButtons = document.getElementsByClassName("gameTableCells"); // pay attension to searched className! may cause an error
         // init this.state.table array
@@ -135,17 +164,19 @@ class GamePlay extends Component {
         divTableBlock.addEventListener("resize", (event) =>
             this.onTableBlockResize(event)
         );
-        // this.forceConnectToWebSocket(null);
+        this.forceConnectToWebSocket(null);
+
+        this.initiateGameTimer();
     }
 
     render() {
-        if (
-            !this.socketConnection ||
-            this.socketConnection.readyState !== WebSocket.OPEN
-        )
-            //connection is lost and game's not edned
-            this.forceConnectToWebSocket();
-
+        // if (
+        //     !this.socketConnection ||
+        //     this.socketConnection.readyState !== WebSocket.OPEN
+        // ) {
+        //     //connection is lost and game's not edned
+        //     this.forceConnectToWebSocket();
+        // }
         return (
             <div id="divTableBlock" className="card border-dark gameBorderCard">
                 {this.drawGameTable()}
