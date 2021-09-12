@@ -41,7 +41,6 @@ class GamePlay extends Component {
         super();
         this.cellButtons = [];
         this.socketConnection = undefined;
-        
     }
 
     socketOnMessage = (response) => {
@@ -65,8 +64,14 @@ class GamePlay extends Component {
             const { tableDimension } = this.state;
             //******** */ catch exceptions
             const cellID = Number(msg);
+            this.socketConnection.emit('moveRecieved', JSON.stringify({
+                recieved: true,
+                roomName: this.props.roomName
+            }));
+            
             const cell = this.getCellCoordinates(cellID, tableDimension);
             this.verifyAndApplyTheMove(cell, this.cellButtons[cellID]);
+
         }
     };
 
@@ -83,12 +88,12 @@ class GamePlay extends Component {
             if (nextJob) nextJob();
         } catch (err) {
             console.log(err);
-            
+
             setTimeout(() => {
+                console.log("rconnecting from GamePlay");
                 this.forceConnectToWebSocket(nextJob);
             }, 1000);
         }
-
     };
 
     updateMarginParameters = (divTableBlock) => {
@@ -130,7 +135,11 @@ class GamePlay extends Component {
     }
 
     render() {
-        if(!this.socketConnection || this.socketConnection.readyState !== WebSocket.OPEN) //connection is lost and game's not edned
+        if (
+            !this.socketConnection ||
+            this.socketConnection.readyState !== WebSocket.OPEN
+        )
+            //connection is lost and game's not edned
             this.forceConnectToWebSocket();
 
         return (
