@@ -118,27 +118,36 @@ class GamePlay extends Component {
 
     initiateGameTimer = () => {
         // const connectionConfig = {
-            //     timeout: 5000, //timeout connecting to each server, each try
-            //     retries: 5, //number of retries to do before failing
-            //     domain: config.localRoot, //the domain to check DNS record of
-            // };
+        //     timeout: 5000, //timeout connecting to each server, each try
+        //     retries: 5, //number of retries to do before failing
+        //     domain: config.localRoot, //the domain to check DNS record of
+        // };
         setInterval(() => {
-            
-            checkInternetConnected()
-                .then((result) => {
-                    // connection successfull
-                    if (this.connectionLost) {
-                        console.log("connected");
-                        this.connectionLost = false;
-                        this.forceConnectToWebSocket(null);
-                    }
-                })
-                .catch((err) => {
-                    // connection error
-                    console.log(err);
-                    console.log("dissconnected");
-                    this.connectionLost = true;
-                });
+            // checkInternetConnected()
+            //     .then((result) => {
+            //         // connection successfull
+            //         if (this.connectionLost) {
+            //             console.log("connected");
+            //             this.connectionLost = false;
+            //             this.forceConnectToWebSocket(null);
+            //         }
+            //     })
+            //     .catch((err) => {
+            //         // connection error
+            //         console.log(err);
+            //         console.log("dissconnected");
+            //         this.connectionLost = true;
+            //     });
+            if (window.navigator.onLine) {
+                if (this.connectionLost) {
+                    console.log("connected");
+                    this.connectionLost = false;
+                    this.forceConnectToWebSocket(null);
+                }
+            } else {
+                console.log("dissconnected");
+                this.connectionLost = true;
+            }
         }, 1000);
     };
 
