@@ -66,6 +66,7 @@ class GamePlay extends Component {
             const { tableDimension } = this.state;
             const { roomName } = this.props;
             const { player } = this.context;
+            toast.warn('new-move-recieved');
             //******** */ catch exceptions
             const cellID = Number(msg);
             this.socketConnection.send(
