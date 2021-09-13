@@ -66,7 +66,7 @@ class GamePlay extends Component {
             const { tableDimension } = this.state;
             const { roomName } = this.props;
             const { player } = this.context;
-            toast.warn('new-move-recieved');
+            // toast.warn('new-move-recieved');
             //******** */ catch exceptions
             const cellID = Number(msg);
             this.socketConnection.send(
@@ -138,49 +138,49 @@ class GamePlay extends Component {
             //         console.log("dissconnected");
             //         this.connectionLost = true;
             //     });
-            // if (window.navigator.onLine) {
-            //     if (this.connectionLost) {
-            //         console.log("connected");
-            //         this.connectionLost = false;
-            //         this.forceConnectToWebSocket(null);
-            //     }
-            // } else {
-            //     console.log("dissconnected");
-            //     this.connectionLost = true;
-            // }
-            this.isOnline(
-                () => {
-                    if (this.connectionLost) {
-                        console.log("connected");
-                        this.connectionLost = false;
-                        this.forceConnectToWebSocket(null);
-                    }
-                },
-                () => {
-                    console.log("dissconnected");
-                    this.connectionLost = true;
+            if (window.navigator.onLine) {
+                if (this.connectionLost) {
+                    console.log("connected");
+                    this.connectionLost = false;
+                    this.forceConnectToWebSocket(null);
                 }
-            );
+            } else {
+                console.log("dissconnected");
+                this.connectionLost = true;
+            }
+            // this.isOnline(
+            //     () => {
+            //         if (this.connectionLost) {
+            //             console.log("connected");
+            //             this.connectionLost = false;
+            //             this.forceConnectToWebSocket(null);
+            //         }
+            //     },
+            //     () => {
+            //         console.log("dissconnected");
+            //         this.connectionLost = true;
+            //     }
+            // );
         }, 1000);
     };
 
-    isOnline = (success, failure) => {
-        var xhr = XMLHttpRequest
-            ? new XMLHttpRequest()
-            : new window.ActiveXObject("Microsoft.XMLHttp");
-        xhr.onload = function () {
-            if (success instanceof Function) {
-                success();
-            }
-        };
-        xhr.onerror = function () {
-            if (failure instanceof Function) {
-                failure();
-            }
-        };
-         xhr.open("GET", "https://t3dweb.herokuapp.com/users", true);//edit this ******************************
-         xhr.send();
-    };
+    // isOnline = (success, failure) => {
+    //     var xhr = XMLHttpRequest
+    //         ? new XMLHttpRequest()
+    //         : new window.ActiveXObject("Microsoft.XMLHttp");
+    //     xhr.onload = function () {
+    //         if (success instanceof Function) {
+    //             success();
+    //         }
+    //     };
+    //     xhr.onerror = function () {
+    //         if (failure instanceof Function) {
+    //             failure();
+    //         }
+    //     };
+    //      xhr.open("GET", "https://t3dweb.herokuapp.com/users", true);//edit this ******************************
+    //      xhr.send();
+    // };
 
     componentDidMount() {
         this.cellButtons = document.getElementsByClassName("gameTableCells"); // pay attension to searched className! may cause an error
@@ -205,7 +205,7 @@ class GamePlay extends Component {
             this.onTableBlockResize(event)
         );
         this.forceConnectToWebSocket(null);
-        toast('new-ver3');
+        toast('new-ver4');
         this.initiateGameTimer();
     }
 
