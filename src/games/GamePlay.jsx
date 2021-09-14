@@ -35,7 +35,7 @@ class GamePlay extends Component {
         table: [],
         yourTurn: undefined, // change this
         opponentID: null,
-        gameStarted: false,
+        gameID: null,
     };
 
     constructor() {
@@ -53,7 +53,6 @@ class GamePlay extends Component {
             this.setState({ yourTurn: Number(msg) });
             // console.log(this.state.yourTurn);
         } else if (command === "START") {
-            this.setState({ gameStarted: true });
             const { yourTurn } = this.state;
             const opponentIndex = Number(!yourTurn);
             this.setState({ opponentID: msg[opponentIndex] });
@@ -79,6 +78,8 @@ class GamePlay extends Component {
             );
             const cell = this.getCellCoordinates(cellID, tableDimension);
             this.verifyAndApplyTheMove(cell, this.cellButtons[cellID]);
+        } else if(command === "END"){
+            this.endGame();
         }
     };
 
@@ -210,13 +211,7 @@ class GamePlay extends Component {
     }
 
     render() {
-        // if (
-        //     !this.socketConnection ||
-        //     this.socketConnection.readyState !== WebSocket.OPEN
-        // ) {
-        //     //connection is lost and game's not edned
-        //     this.forceConnectToWebSocket();
-        // }
+        
         return (
             <div id="divTableBlock" className="card border-dark gameBorderCard">
                 {this.drawGameTable()}
@@ -233,11 +228,11 @@ class GamePlay extends Component {
         return { floor: cellFloor, row: cellRow, column: cellColumn };
     };
     onEachCellClick = (event) => {
-        const { gameStarted, tableDimension } = this.state;
+        const { opponentID, tableDimension } = this.state;
         const { roomName } = this.props;
         const { player } = this.context;
 
-        if (gameStarted) {
+        if (opponentID) {
             const selectedCellButton = event.target;
 
             if (this.state.turn !== this.state.yourTurn) {
@@ -280,9 +275,7 @@ class GamePlay extends Component {
             });
             // time to inspect the new cell:
             this.inspectTableAroundTheCell(cell.floor, cell.row, cell.column);
-            // if all cells are filled ==> end game
-            // **** find a better algorythm to end game sooner
-            if (!--this.remainingCellsCount) this.endGame();
+            
             return true;
         }
         return false;
@@ -420,10 +413,13 @@ class GamePlay extends Component {
         await userServices.updateRecords(userID, givenPoints);
         this.context.gatherPlayerData();
 
+        //temp: fuck clients: winner must be decided in the server
+        toast.success("GAME ENDED")
+        toast.warn(`YOU ACHIEVED ${givenPoints} POINTS`);
         // toast for telling the edn result
         // x (yourTurn===0) always saves the game result
         if (!yourTurn) {
-            await gameServices.saveGame({
+            await gameServices.createGame({
                 xID: userID,
                 oID: opponentID,
                 xScores: players[0].score,
