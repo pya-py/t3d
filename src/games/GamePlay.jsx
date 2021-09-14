@@ -54,6 +54,7 @@ class GamePlay extends Component {
             // console.log(this.state.yourTurn);
         } else if (command === "START") {
             const { yourTurn } = this.state;
+            toast(yourTurn);
             const opponentIndex = Number(!yourTurn);
             this.setState({ opponentID: msg[opponentIndex] });
 
@@ -206,7 +207,7 @@ class GamePlay extends Component {
             this.onTableBlockResize(event)
         );
         this.forceConnectToWebSocket(null);
-        toast('new-ver4');
+        toast('new-ver5');
         this.initiateGameTimer();
     }
 
@@ -419,7 +420,7 @@ class GamePlay extends Component {
         // toast for telling the edn result
         // x (yourTurn===0) always saves the game result
         if (!yourTurn) {
-            await gameServices.createGame({
+            await gameServices.saveGame({
                 xID: userID,
                 oID: opponentID,
                 xScores: players[0].score,
