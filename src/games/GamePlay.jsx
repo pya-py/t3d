@@ -54,7 +54,6 @@ class GamePlay extends Component {
             // console.log(this.state.yourTurn);
         } else if (command === "START") {
             const { yourTurn } = this.state;
-            toast(yourTurn);
             const opponentIndex = Number(!yourTurn);
             this.setState({ opponentID: msg[opponentIndex] });
 
@@ -207,7 +206,7 @@ class GamePlay extends Component {
             this.onTableBlockResize(event)
         );
         this.forceConnectToWebSocket(null);
-        toast('new-ver5');
+        toast('new-ver6');
         this.initiateGameTimer();
     }
 
