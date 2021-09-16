@@ -32,7 +32,7 @@ class GamePlay extends Component {
         ], // maybe use player actual user name and change this item to an object of objects?
         turn: 0, // start turn is decided by throwning dices
         tableDimension: 4,
-        table: [],
+        table: null,
         yourTurn: undefined, // change this
         opponentID: null,
         gameID: null,
@@ -43,15 +43,14 @@ class GamePlay extends Component {
         this.connectionLost = false;
         this.cellButtons = [];
         this.socketConnection = undefined;
+        this.clicked = false; //very temppppppppp
     }
 
     socketOnMessage = (response) => {
         const { data } = response;
         const { command, msg } = JSON.parse(data);
         if (command === "SET_TURN") {
-            // console.log(turn);
             this.setState({ yourTurn: Number(msg) });
-            // console.log(this.state.yourTurn);
         } else if (command === "START") {
             const { yourTurn } = this.state;
             const opponentIndex = Number(!yourTurn);
@@ -61,13 +60,34 @@ class GamePlay extends Component {
             // if (this.state.yourTurn === this.state.turn)
             //     toast.warn("شروع حرکت با شما");
             // edit this part, code is temp
-        } else if (command === "MOVE") {
-            const { tableDimension } = this.state;
+        } else if (command === "LOAD") {
+            const { table, xScore, oScore, turn } = msg;
+            const players = [...this.state.players];
+            players[0].score = xScore;
+            players[1].score = oScore;
+            this.setState({
+                table,
+                players,
+                turn
+            });
+        } else if (command === "UPDATE") {
             const { roomName } = this.props;
             const { player } = this.context;
             // toast.warn('new-move-recieved');
             //******** */ catch exceptions
-            const cellID = Number(msg);
+            // ****** UPDATE THIS PART **************************************//
+            const { newMove, cell, xScore, oScore } = msg; //is table needed to be sent every time to clients?
+
+            const cellID = Number(newMove);
+
+            //wrap it up this part of UPDATE and LOAD in a method
+            const players = [...this.state.players];
+            players[0].score = xScore;
+            players[1].score = oScore;
+            this.setState({
+                players,
+            });
+
             this.socketConnection.send(
                 socketServices.createSocketRequest(
                     "moveRecieved",
@@ -76,9 +96,8 @@ class GamePlay extends Component {
                     true
                 )
             );
-            const cell = this.getCellCoordinates(cellID, tableDimension);
             this.verifyAndApplyTheMove(cell, this.cellButtons[cellID]);
-        } else if(command === "END"){
+        } else if (command === "END") {
             this.endGame();
         }
     };
@@ -86,11 +105,11 @@ class GamePlay extends Component {
     forceConnectToWebSocket = async (nextJob) => {
         const { roomName } = this.props;
         const { player } = this.context;
-        console.log(roomName);
         try {
             this.socketConnection = await socketServices.connect(
                 roomName,
-                player.userID
+                player.userID,
+                this.state.tableDimension
             );
             this.socketConnection.onmessage = this.socketOnMessage;
             if (nextJob) nextJob();
@@ -118,27 +137,7 @@ class GamePlay extends Component {
     };
 
     initiateGameTimer = () => {
-        // const connectionConfig = {
-        //     timeout: 5000, //timeout connecting to each server, each try
-        //     retries: 5, //number of retries to do before failing
-        //     domain: config.localRoot, //the domain to check DNS record of
-        // };
         setInterval(() => {
-            // checkInternetConnected()
-            //     .then((result) => {
-            //         // connection successfull
-            //         if (this.connectionLost) {
-            //             console.log("connected");
-            //             this.connectionLost = false;
-            //             this.forceConnectToWebSocket(null);
-            //         }
-            //     })
-            //     .catch((err) => {
-            //         // connection error
-            //         console.log(err);
-            //         console.log("dissconnected");
-            //         this.connectionLost = true;
-            //     });
             if (window.navigator.onLine) {
                 if (this.connectionLost) {
                     console.log("connected");
@@ -149,56 +148,42 @@ class GamePlay extends Component {
                 console.log("dissconnected");
                 this.connectionLost = true;
             }
-            // this.isOnline(
-            //     () => {
-            //         if (this.connectionLost) {
-            //             console.log("connected");
-            //             this.connectionLost = false;
-            //             this.forceConnectToWebSocket(null);
-            //         }
-            //     },
-            //     () => {
-            //         console.log("dissconnected");
-            //         this.connectionLost = true;
-            //     }
-            // );
+            /*this.isOnline(
+                () => {
+                    if (this.connectionLost) {
+                        console.log("connected");
+                        this.connectionLost = false;
+                        this.forceConnectToWebSocket(null);
+                    }
+                },
+                () => {
+                    console.log("dissconnected");
+                    this.connectionLost = true;
+                }
+            );*/
         }, 1000);
     };
 
-    // isOnline = (success, failure) => {
-    //     var xhr = XMLHttpRequest
-    //         ? new XMLHttpRequest()
-    //         : new window.ActiveXObject("Microsoft.XMLHttp");
-    //     xhr.onload = function () {
-    //         if (success instanceof Function) {
-    //             success();
-    //         }
-    //     };
-    //     xhr.onerror = function () {
-    //         if (failure instanceof Function) {
-    //             failure();
-    //         }
-    //     };
-    //      xhr.open("GET", "https://t3dweb.herokuapp.com/users", true);//edit this ******************************
-    //      xhr.send();
-    // };
+    /*    isOnline = (success, failure) => {
+        var xhr = XMLHttpRequest
+            ? new XMLHttpRequest()
+            : new window.ActiveXObject("Microsoft.XMLHttp");
+        xhr.onload = function () {
+            if (success instanceof Function) {
+                success();
+            }
+        };
+        xhr.onerror = function () {
+            if (failure instanceof Function) {
+                failure();
+            }
+        };
+         xhr.open("GET", "https://t3dweb.herokuapp.com/users", true);//edit this ******************************
+         xhr.send();
+    }; */
 
     componentDidMount() {
         this.cellButtons = document.getElementsByClassName("gameTableCells"); // pay attension to searched className! may cause an error
-        // init this.state.table array
-        const { tableDimension } = this.state;
-        let dimens = [];
-        for (let i = 0; i < tableDimension; i++) dimens.push(i);
-        let tempTable = dimens.map((floor) =>
-            dimens.map((row) => dimens.map((column) => null))
-        );
-        this.setState({
-            table: tempTable,
-        });
-
-        //************ after saving game state happened ==> the table is not empty but remainingCellsCount variable is reset
-        this.remainingCellsCount =
-            tableDimension * tableDimension * tableDimension; //edit this code
 
         let divTableBlock = document.getElementById("divTableBlock");
         this.updateMarginParameters(divTableBlock);
@@ -206,14 +191,16 @@ class GamePlay extends Component {
             this.onTableBlockResize(event)
         );
         this.forceConnectToWebSocket(null);
-        toast('new-ver6');
         this.initiateGameTimer();
     }
 
     render() {
-        
         return (
             <div id="divTableBlock" className="card border-dark gameBorderCard">
+                <div className="form-inline w-100">
+                    <p style={{color:this.state.players[1].color}} className="w-50 text-center">{`O: ${this.state.players[1].score}`}</p>
+                    <p style={{color:this.state.players[0].color}} className="w-50 text-center">{`X: ${this.state.players[0].score}`}</p>
+                </div>
                 {this.drawGameTable()}
             </div>
         );
@@ -231,7 +218,7 @@ class GamePlay extends Component {
         const { opponentID, tableDimension } = this.state;
         const { roomName } = this.props;
         const { player } = this.context;
-
+        this.clicked = true;
         if (opponentID) {
             const selectedCellButton = event.target;
 
@@ -257,8 +244,20 @@ class GamePlay extends Component {
                         )
                     );
                 });
+
+                // this.forceConnectToWebSocket(() => {
+                //     this.socketConnection.send(
+                //         socketServices.createSocketRequest(
+                //             "load",
+                //             roomName,
+                //             player.userID,
+                //             null
+                //         )
+                //     );
+                // });
             }
         }
+        this.clicked = false;
     };
 
     verifyAndApplyTheMove = (cell, cellButton) => {
@@ -268,20 +267,19 @@ class GamePlay extends Component {
             tempTable[cell.floor][cell.row][cell.column] = turn; //maybe its better to use players actual Id huh?
             cellButton.innerHTML = players[turn].shape;
             cellButton.style.color = players[turn].color;
-
             this.setState({
                 turn: (turn + 1) % 2,
                 table: tempTable,
             });
             // time to inspect the new cell:
-            this.inspectTableAroundTheCell(cell.floor, cell.row, cell.column);
-            
+            this.inspectAreaAroundTheCell(cell.floor, cell.row, cell.column);
+
             return true;
         }
         return false;
     };
 
-    inspectTableAroundTheCell = (floor, row, column) => {
+    inspectAreaAroundTheCell = (floor, row, column) => {
         // inpect the table in all ways around a selected cell (new selected one), to update points and color the score routes
         // is it needed to write a inspectAll method ?
         const { players, table, tableDimension } = this.state;
@@ -315,7 +313,7 @@ class GamePlay extends Component {
         }
 
         // now inspect wether a line has been made and take action for it
-        let wholePoint =
+        let totalScores =
             this.connectTheScoreLines(
                 rowCount,
                 floor * tableDimension * tableDimension + row * tableDimension,
@@ -365,27 +363,28 @@ class GamePlay extends Component {
                 players[playerInTheCell],
                 tableDimension
             );
-        if (wholePoint) {
+        if (totalScores && this.clicked) {
             let tempPlayers = [...players];
-            tempPlayers[playerInTheCell].score += wholePoint;
+            tempPlayers[playerInTheCell].score += totalScores;
             this.setState({ players: tempPlayers });
-            //temp result show:
-
-            if (playerInTheCell === 0)
-                toast.info(
-                    players[playerInTheCell].shape +
-                        " : " +
-                        players[playerInTheCell].score,
-                    { position: "top-right" }
-                );
-            else
-                toast.error(
-                    players[playerInTheCell].shape +
-                        " : " +
-                        players[playerInTheCell].score,
-                    { position: "bottom-left" }
-                );
         }
+        //     //temp result show:
+
+        //     if (playerInTheCell === 0)
+        //         toast.info(
+        //             players[playerInTheCell].shape +
+        //                 " : " +
+        //                 players[playerInTheCell].score,
+        //             { position: "top-right" }
+        //         );
+        //     else
+        //         toast.error(
+        //             players[playerInTheCell].shape +
+        //                 " : " +
+        //                 players[playerInTheCell].score,
+        //             { position: "bottom-left" }
+        //         );
+        // }
     };
 
     // method below: checks each possible line(according to the condition that user gives it),
@@ -395,7 +394,12 @@ class GamePlay extends Component {
             for (let i = 0; i < dimension; i++) {
                 this.cellButtons[firstCell + i * step].className =
                     "gameTableCells " + player.lineColor;
+                setTimeout(() => {
+                    this.cellButtons[firstCell + i * step].className =
+                        "gameTableCells btn btn-outline-dark";
+                }, 1000 + i * 100);
             }
+
             return 1;
         }
         return 0;
@@ -414,7 +418,7 @@ class GamePlay extends Component {
         this.context.gatherPlayerData();
 
         //temp: fuck clients: winner must be decided in the server
-        toast.success("GAME ENDED")
+        toast.success("GAME ENDED");
         toast.warn(`YOU ACHIEVED ${givenPoints} POINTS`);
         // toast for telling the edn result
         // x (yourTurn===0) always saves the game result
@@ -434,34 +438,73 @@ class GamePlay extends Component {
         // use this.state.table to load again*****************
         const { rowMarginRatio, tableDimension } = this.state;
         // initialize rows columns floors
-
-        let dimens = [];
-        for (let i = 0; i < tableDimension; i++) dimens.push(i);
-
-        // drawing the table and setting id s and click events
-        return dimens.map((floor) => (
-            <Fragment>
-                {dimens.map((row) => (
-                    <div style={{ marginLeft: `${row * rowMarginRatio}px` }}>
-                        {dimens.map((column) => (
-                            <button
-                                type="button"
-                                className="gameTableCells btn btn-outline-dark"
-                                id={
-                                    floor * tableDimension * tableDimension +
-                                    row * tableDimension +
-                                    column
-                                }
-                                onClick={(event) => this.onEachCellClick(event)}
-                            >
-                                {" "}
-                            </button>
+        const { player } = this.context;
+        const { roomName } = this.props;
+        try {
+            if (!this.state.table) {
+                this.forceConnectToWebSocket(() => {
+                    this.socketConnection.send(
+                        socketServices.createSocketRequest(
+                            "load",
+                            roomName,
+                            player.userID,
+                            null
+                        )
+                    );
+                });
+                return "waiting";
+            } else {
+                let dimens = [];
+                for (let i = 0; i < tableDimension; i++) dimens.push(i);
+                const { table, players } = this.state;
+                // drawing the table and setting id s and click events
+                return dimens.map((floor) => (
+                    <Fragment>
+                        {dimens.map((row) => (
+                            <div
+                                style={{
+                                    marginLeft: `${row * rowMarginRatio}px`,
+                                }}>
+                                {dimens.map((column) => (
+                                    <button
+                                        type="button"
+                                        className="gameTableCells btn btn-outline-dark"
+                                        style={
+                                            table[floor][row][column] !== null
+                                                ? {
+                                                      color: players[
+                                                          table[floor][row][
+                                                              column
+                                                          ]
+                                                      ].color,
+                                                  }
+                                                : null
+                                        }
+                                        id={
+                                            floor *
+                                                tableDimension *
+                                                tableDimension +
+                                            row * tableDimension +
+                                            column
+                                        }
+                                        onClick={(event) =>
+                                            this.onEachCellClick(event)
+                                        }>
+                                        {table[floor][row][column] !== null &&
+                                            players[table[floor][row][column]]
+                                                .shape}
+                                    </button>
+                                ))}
+                            </div>
                         ))}
-                    </div>
-                ))}
-                <br />
-            </Fragment>
-        ));
+                        <br />
+                    </Fragment>
+                ));
+            }
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
     };
 }
 

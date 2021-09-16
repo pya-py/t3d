@@ -23,7 +23,7 @@ const userServices = {
     updateRecords: (userID, gameStatus) => {
         return http.put(
             `${config.serverRoot}/${config.usersRoute}/${userID}`,
-            JSON.stringify({gameStatus})
+            JSON.stringify({ gameStatus })
         );
     },
     saveUser: (id, token) => {

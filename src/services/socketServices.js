@@ -8,11 +8,11 @@ const createSocketRequest = (request, roomName, playerID, msg) =>
         msg,
     });
 
-const connect = (roomName, playerID) => {
+const connect = (roomName, playerID, gameType) => {
     return new Promise((resolve, reject) => {
         var server = new WebSocket(config.webSocketRoot);
         server.onopen = () => {
-            server.send(createSocketRequest("join", roomName, playerID, null));
+            server.send(createSocketRequest("join", roomName, playerID, gameType)); //temp
             resolve(server);
         };
 
