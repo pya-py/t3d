@@ -1,4 +1,4 @@
-import { Component, createRef, Fragment } from "react";
+import { Component, Fragment } from "react";
 import "./games.css";
 import { toast } from "react-toastify";
 import MainContext from "../common/contexts/MainContext";
@@ -43,7 +43,6 @@ class GamePlay extends Component {
         this.connectionLost = false;
         this.cellButtons = [];
         this.socketConnection = undefined;
-        this.refOnCells = [];
 
         this.clicked = false; //very temppppppppp
     }
@@ -99,7 +98,7 @@ class GamePlay extends Component {
                 )
             );
             this.verifyAndApplyTheMove(cell, this.cellButtons[cellID]);
-            this.refOnCells[newMove].current.focus();
+            this.cellButtons[cellID].focus();
         } else if (command === "END") {
             this.endGame();
         }
@@ -187,15 +186,6 @@ class GamePlay extends Component {
 
     componentDidMount() {
         this.cellButtons = document.getElementsByClassName("gameTableCells"); // pay attension to searched className! may cause an error
-        const { tableDimension } = this.state;
-        const cellButtonsNumber =
-            tableDimension * tableDimension * tableDimension;
-        for (
-            let i = 0;
-            i < cellButtonsNumber;
-            i++ //is this a fine way to do it?
-        )
-            this.refOnCells.push(createRef());
 
         let divTableBlock = document.getElementById("divTableBlock");
         this.updateMarginParameters(divTableBlock);
@@ -510,15 +500,7 @@ class GamePlay extends Component {
                                             row * tableDimension +
                                             column
                                         }
-                                        ref={
-                                            this.refOnCells[
-                                                floor *
-                                                    tableDimension *
-                                                    tableDimension +
-                                                    row * tableDimension +
-                                                    column
-                                            ]
-                                        }
+                                        
                                         onClick={(event) =>
                                             this.onEachCellClick(event)
                                         }>
