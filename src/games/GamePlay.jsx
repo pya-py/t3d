@@ -249,6 +249,14 @@ class GamePlay extends Component {
                             selectedCellButton.id
                         )
                     );
+                    this.socketConnection.send(
+                        socketServices.createSocketRequest(
+                            "load",
+                            roomName,
+                            player.userID,
+                            null
+                        )
+                    );
                 });
 
                 // this.forceConnectToWebSocket(() => {
