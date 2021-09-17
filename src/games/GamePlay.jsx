@@ -224,49 +224,44 @@ class GamePlay extends Component {
         const { roomName } = this.props;
         const { player } = this.context;
         if (opponentID) {
-            const selectedCellButton = event.target;
+            try {
+                const selectedCellButton = event.target;
 
-            if (this.state.turn !== this.state.yourTurn) {
-                this.forceConnectToWebSocket(null);
-                return;
-            }
+                if (this.state.turn !== this.state.yourTurn) {
+                    this.forceConnectToWebSocket(null);
+                    return;
+                }
 
-            const cell = this.getCellCoordinates(
-                selectedCellButton.id,
-                tableDimension
-            );
+                const cell = this.getCellCoordinates(
+                    selectedCellButton.id,
+                    tableDimension
+                );
 
-            if (this.verifyAndApplyTheMove(cell, selectedCellButton)) {
-                //send move to WebSocket Server
-                this.forceConnectToWebSocket(() => {
-                    this.socketConnection.send(
-                        socketServices.createSocketRequest(
-                            "move",
-                            roomName,
-                            player.userID,
-                            selectedCellButton.id
-                        )
-                    );
-                    this.socketConnection.send(
-                        socketServices.createSocketRequest(
-                            "load",
-                            roomName,
-                            player.userID,
-                            null
-                        )
-                    );
-                });
+                if (this.verifyAndApplyTheMove(cell, selectedCellButton)) {
+                    //send move to WebSocket Server
+                    this.forceConnectToWebSocket(() => {
+                        this.socketConnection.send(
+                            socketServices.createSocketRequest(
+                                "move",
+                                roomName,
+                                player.userID,
+                                selectedCellButton.id
+                            )
+                        );
+                    });
+                }
 
-                // this.forceConnectToWebSocket(() => {
-                //     this.socketConnection.send(
-                //         socketServices.createSocketRequest(
-                //             "load",
-                //             roomName,
-                //             player.userID,
-                //             null
-                //         )
-                //     );
-                // });
+                this.socketConnection.send(
+                    socketServices.createSocketRequest(
+                        "load",
+                        roomName,
+                        player.userID,
+                        null
+                    )
+                );
+            } catch (err) {
+                console.log(err);
+                //load again here?
             }
         }
     };
