@@ -44,7 +44,6 @@ class GamePlay extends Component {
         this.cellButtons = [];
         this.socketConnection = undefined;
 
-        this.clicked = false; //very temppppppppp
     }
 
     socketOnMessage = (response) => {
@@ -224,7 +223,6 @@ class GamePlay extends Component {
         const { opponentID, tableDimension } = this.state;
         const { roomName } = this.props;
         const { player } = this.context;
-        this.clicked = true;
         if (opponentID) {
             const selectedCellButton = event.target;
 
@@ -271,7 +269,6 @@ class GamePlay extends Component {
                 // });
             }
         }
-        this.clicked = false;
     };
 
     verifyAndApplyTheMove = (cell, cellButton) => {
@@ -377,28 +374,7 @@ class GamePlay extends Component {
                 players[playerInTheCell],
                 tableDimension
             );
-        if (totalScores && this.clicked) {
-            let tempPlayers = [...players];
-            tempPlayers[playerInTheCell].score += totalScores;
-            this.setState({ players: tempPlayers });
-        }
-        //     //temp result show:
 
-        //     if (playerInTheCell === 0)
-        //         toast.info(
-        //             players[playerInTheCell].shape +
-        //                 " : " +
-        //                 players[playerInTheCell].score,
-        //             { position: "top-right" }
-        //         );
-        //     else
-        //         toast.error(
-        //             players[playerInTheCell].shape +
-        //                 " : " +
-        //                 players[playerInTheCell].score,
-        //             { position: "bottom-left" }
-        //         );
-        // }
     };
 
     // method below: checks each possible line(according to the condition that user gives it),
