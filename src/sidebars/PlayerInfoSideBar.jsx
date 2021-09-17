@@ -1,5 +1,5 @@
 import { Component } from "react";
-import MainContext from "../common/MainContext";
+import MainContext from "../common/contexts/MainContext";
 import noAvatar from "./no-avatar.png"; // definitely must be changed bro!
 
 class PlayerInfoSideBar extends Component {
@@ -17,7 +17,7 @@ class PlayerInfoSideBar extends Component {
         <img
           className="card-img-top playerAvatar"
           src={noAvatar}
-          alt="No Images Found"
+          alt="مشکلی در بارگذاری تصویر پیش آمد"
         />
         <hr />
         <div className="card-body">

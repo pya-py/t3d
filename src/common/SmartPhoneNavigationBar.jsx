@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
-import MainContext from "./MainContext";
+import MainContext from "./contexts/MainContext";
 
 const SmartPhoneNavigationBar = () => {
   const context = useContext(MainContext);

@@ -7,7 +7,7 @@ import { useMediaQuery } from "react-responsive";
 import SmartPhoneNavigationBar from "./SmartPhoneNavigationBar";
 import PlayerInfoSideBar from "../sidebars/PlayerInfoSideBar";
 import userServices from "../services/userServices";
-import MainContext from "./MainContext";
+import MainContext from "./contexts/MainContext";
 import { useState } from "react";
 
 const MainLayout = (props) => {

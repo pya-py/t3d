@@ -1,7 +1,7 @@
-import { Component, Fragment } from "react";
+import { Component, createRef, Fragment } from "react";
 import "./games.css";
 import { toast } from "react-toastify";
-import MainContext from "../common/MainContext";
+import MainContext from "../common/contexts/MainContext";
 import userServices from "./../services/userServices";
 import gameServices from "./../services/gameServices";
 import socketServices from "../services/socketServices";
@@ -43,6 +43,8 @@ class GamePlay extends Component {
         this.connectionLost = false;
         this.cellButtons = [];
         this.socketConnection = undefined;
+        this.refOnCells = [];
+
         this.clicked = false; //very temppppppppp
     }
 
@@ -68,7 +70,7 @@ class GamePlay extends Component {
             this.setState({
                 table,
                 players,
-                turn
+                turn,
             });
         } else if (command === "UPDATE") {
             const { roomName } = this.props;
@@ -97,6 +99,7 @@ class GamePlay extends Component {
                 )
             );
             this.verifyAndApplyTheMove(cell, this.cellButtons[cellID]);
+            this.refOnCells[newMove].current.focus();
         } else if (command === "END") {
             this.endGame();
         }
@@ -184,6 +187,15 @@ class GamePlay extends Component {
 
     componentDidMount() {
         this.cellButtons = document.getElementsByClassName("gameTableCells"); // pay attension to searched className! may cause an error
+        const { tableDimension } = this.state;
+        const cellButtonsNumber =
+            tableDimension * tableDimension * tableDimension;
+        for (
+            let i = 0;
+            i < cellButtonsNumber;
+            i++ //is this a fine way to do it?
+        )
+            this.refOnCells.push(createRef());
 
         let divTableBlock = document.getElementById("divTableBlock");
         this.updateMarginParameters(divTableBlock);
@@ -198,8 +210,12 @@ class GamePlay extends Component {
         return (
             <div id="divTableBlock" className="card border-dark gameBorderCard">
                 <div className="form-inline w-100">
-                    <p style={{color:this.state.players[1].color}} className="w-50 text-center">{`O: ${this.state.players[1].score}`}</p>
-                    <p style={{color:this.state.players[0].color}} className="w-50 text-center">{`X: ${this.state.players[0].score}`}</p>
+                    <p
+                        style={{ color: this.state.players[1].color }}
+                        className="w-50 text-center">{`O: ${this.state.players[1].score}`}</p>
+                    <p
+                        style={{ color: this.state.players[0].color }}
+                        className="w-50 text-center">{`X: ${this.state.players[0].score}`}</p>
                 </div>
                 {this.drawGameTable()}
             </div>
@@ -467,6 +483,13 @@ class GamePlay extends Component {
                                 }}>
                                 {dimens.map((column) => (
                                     <button
+                                        key={
+                                            floor *
+                                                tableDimension *
+                                                tableDimension +
+                                            row * tableDimension +
+                                            column
+                                        }
                                         type="button"
                                         className="gameTableCells btn btn-outline-dark"
                                         style={
@@ -486,6 +509,15 @@ class GamePlay extends Component {
                                                 tableDimension +
                                             row * tableDimension +
                                             column
+                                        }
+                                        ref={
+                                            this.refOnCells[
+                                                floor *
+                                                    tableDimension *
+                                                    tableDimension +
+                                                    row * tableDimension +
+                                                    column
+                                            ]
                                         }
                                         onClick={(event) =>
                                             this.onEachCellClick(event)

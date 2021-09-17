@@ -1,5 +1,5 @@
 import { Component } from "react";
-import MainContext from './../common/MainContext';
+import MainContext from './../common/contexts/MainContext';
 
 class ControlPanel extends Component {
     static contextType = MainContext;

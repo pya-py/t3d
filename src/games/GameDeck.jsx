@@ -1,6 +1,6 @@
 import { Component, Fragment } from "react";
 import { toast } from "react-toastify";
-import MainContext from "./../common/MainContext";
+import MainContext from "../common/contexts/MainContext";
 import GamePlay from './GamePlay';
 
 class GameDeck extends Component {
