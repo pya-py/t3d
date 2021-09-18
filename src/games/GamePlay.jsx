@@ -250,7 +250,7 @@ class GamePlay extends Component {
                         );
                     });
                 }
-                console.table(this.state);
+                console.log(this.state);
                 this.socketConnection.send(
                     socketServices.createSocketRequest(
                         "load",
