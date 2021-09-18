@@ -443,9 +443,8 @@ class GamePlay extends Component {
 
         try {
             if (!this.state.table) {
-                return "waiting";
+                return "در حال اتصال";
             } else {
-                console.table(this.state.table);
                 let dimens = [];
                 for (let i = 0; i < tableDimension; i++) dimens.push(i);
                 const { table, players } = this.state;
