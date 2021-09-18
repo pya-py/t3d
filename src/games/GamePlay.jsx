@@ -43,7 +43,6 @@ class GamePlay extends Component {
         this.connectionLost = false;
         this.cellButtons = [];
         this.socketConnection = undefined;
-
     }
 
     socketOnMessage = (response) => {
@@ -191,7 +190,18 @@ class GamePlay extends Component {
         divTableBlock.addEventListener("resize", (event) =>
             this.onTableBlockResize(event)
         );
-        this.forceConnectToWebSocket(null);
+        const { player } = this.context;
+        const { roomName } = this.props;
+        this.forceConnectToWebSocket(() => {
+            this.socketConnection.send(
+                socketServices.createSocketRequest(
+                    "load",
+                    roomName,
+                    player.userID,
+                    null
+                )
+            );
+        });
         this.initiateGameTimer();
     }
 
@@ -248,18 +258,25 @@ class GamePlay extends Component {
                                 selectedCellButton.id
                             )
                         );
+                        this.socketConnection.send(
+                            socketServices.createSocketRequest(
+                                "load",
+                                roomName,
+                                player.userID,
+                                null
+                            )
+                        );
                     });
                 }
-                console.log(this.state);
-                console.table(this.state.table);
-                this.socketConnection.send(
-                    socketServices.createSocketRequest(
-                        "load",
-                        roomName,
-                        player.userID,
-                        null
-                    )
-                );
+
+                // this.socketConnection.send(
+                //     socketServices.createSocketRequest(
+                //         "load",
+                //         roomName,
+                //         player.userID,
+                //         null
+                //     )
+                // );
             } catch (err) {
                 console.log(err);
                 //load again here?
@@ -370,7 +387,6 @@ class GamePlay extends Component {
                 players[playerInTheCell],
                 tableDimension
             );
-
     };
 
     // method below: checks each possible line(according to the condition that user gives it),
@@ -424,22 +440,12 @@ class GamePlay extends Component {
         // use this.state.table to load again*****************
         const { rowMarginRatio, tableDimension } = this.state;
         // initialize rows columns floors
-        const { player } = this.context;
-        const { roomName } = this.props;
+
         try {
             if (!this.state.table) {
-                this.forceConnectToWebSocket(() => {
-                    this.socketConnection.send(
-                        socketServices.createSocketRequest(
-                            "load",
-                            roomName,
-                            player.userID,
-                            null
-                        )
-                    );
-                });
                 return "waiting";
             } else {
+                console.table(this.state.table);
                 let dimens = [];
                 for (let i = 0; i < tableDimension; i++) dimens.push(i);
                 const { table, players } = this.state;
@@ -480,7 +486,6 @@ class GamePlay extends Component {
                                             row * tableDimension +
                                             column
                                         }
-                                        
                                         onClick={(event) =>
                                             this.onEachCellClick(event)
                                         }>
