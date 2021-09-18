@@ -55,10 +55,6 @@ class GamePlay extends Component {
             const opponentIndex = Number(!yourTurn);
             this.setState({ opponentID: msg[opponentIndex] });
 
-            // toast.info("هر دو بازیکن متصل شدند");
-            // if (this.state.yourTurn === this.state.turn)
-            //     toast.warn("شروع حرکت با شما");
-            // edit this part, code is temp
         } else if (command === "LOAD") {
             const { table, xScore, oScore, turn } = msg;
             const players = [...this.state.players];
@@ -443,7 +439,7 @@ class GamePlay extends Component {
 
         try {
             if (!this.state.table) {
-                return "در حال اتصال";
+                return "...در حال اتصال";
             } else {
                 let dimens = [];
                 for (let i = 0; i < tableDimension; i++) dimens.push(i);
