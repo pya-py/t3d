@@ -1,9 +1,9 @@
-import { useContext } from "react";
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import MainContext from "./contexts/MainContext";
 
 const NavigationBar = () => {
-  const context = useContext(MainContext);
+  const player = useSelector(state => state.player);
+
   return (
     // 2. link items theme: make theme better
 
@@ -65,7 +65,7 @@ const NavigationBar = () => {
           {/* how to float search bar to right? */}
         </div>
       </div>
-      {context.player ? (
+      {player ? (
         <NavLink
           style={{ float: "left" }}
           className="navItems nav-link btn btn-outline-success btn-sm"

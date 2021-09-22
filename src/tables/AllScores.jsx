@@ -1,16 +1,16 @@
 import { Fragment } from "react";
-import Score from "./Score";
+import SingleScoreCard from "./SingleScoreCard";
 
 const AllScores = ({scores}) => {
     return ( 
         <Fragment>
             { scores.map(score => (
-                <Score key={score.gameID}
+                <SingleScoreCard key={score.gameID}
                     playerXName={score.xName}
                     playerOName={score.oName}
-                    xScores={score.xScores}
-                    oScores={score.oScores}
-                ></Score>
+                    xScore={score.xScore}
+                    oScore={score.oScore}
+                ></SingleScoreCard>
             )) }
         </Fragment>
      );

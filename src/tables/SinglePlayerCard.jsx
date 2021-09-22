@@ -1,4 +1,4 @@
-const Player = ({rowNumber, name, points, wins, loses, draws }) => {
+const SinglePlayerCard = ({rowNumber, name, points, wins, loses, draws }) => {
     return (
         <tr>
             <th scope="row">{rowNumber}</th>
@@ -11,4 +11,4 @@ const Player = ({rowNumber, name, points, wins, loses, draws }) => {
     );
 };
 
-export default Player;
+export default SinglePlayerCard;

@@ -1,18 +1,14 @@
 import { Component, Fragment } from "react";
 import "./games.css";
 import { toast } from "react-toastify";
-import MainContext from "../common/contexts/MainContext";
 import userServices from "./../services/userServices";
 import gameServices from "./../services/gameServices";
 import socketServices from "../services/socketServices";
+import withReduxDashboard from "../dashboard/withReduxDashboard";
 
 class GamePlay extends Component {
-    static contextType = MainContext;
-    // **** noticed: gameplay needs a seperate layout
     //**** game resets on device change. fix it */
-    // note: sidebars must change to ==> right-side: my-profile / left-side: opponent profile
     state = {
-        forceConnectTriggerIsNeeded: false,
         rowMarginRatio: 0,
         players: [
             {
@@ -31,30 +27,60 @@ class GamePlay extends Component {
             },
         ], // maybe use player actual user name and change this item to an object of objects?
         turn: 0, // start turn is decided by throwning dices
-        tableDimension: 4,
+        tableDimension: 3,
         table: null,
-        yourTurn: undefined, // change this
-        opponentID: null,
+        myTurn: undefined, // change this
         gameID: null,
+        socketConnection: undefined,
     };
 
     constructor() {
         super();
         this.connectionLost = false;
         this.cellButtons = [];
-        this.socketConnection = undefined;
     }
 
+    LoadOpponentData = (opponentID) => {
+        const { opponent, LoadOpponent } = this.props;
+        if (!opponent && opponentID) {
+            gameServices
+                .loadPlayerData(opponentID)
+                .then((result) => {
+                    LoadOpponent(result ? result : null);
+                })
+                .catch((err) => {
+                    //console.log(err);
+                    LoadOpponent(null);
+                });
+        }
+    };
+
+    updateGameScorebaord = () => {
+        const { myTurn, players } = this.state;
+        const oppTurn = Number(!myTurn);
+
+        this.props.UpdateScoreboard({
+            me: {
+                index: myTurn,
+                shape: players[myTurn].shape,
+                score: players[myTurn].score,
+            },
+            opp: {
+                index: oppTurn,
+                shape: players[oppTurn].shape,
+                score: players[oppTurn].score,
+            },
+        });
+    };
     socketOnMessage = (response) => {
         const { data } = response;
         const { command, msg } = JSON.parse(data);
         if (command === "SET_TURN") {
-            this.setState({ yourTurn: Number(msg) });
+            this.setState({ myTurn: Number(msg) });
         } else if (command === "START") {
-            const { yourTurn } = this.state;
-            const opponentIndex = Number(!yourTurn);
-            this.setState({ opponentID: msg[opponentIndex] });
-
+            const { myTurn } = this.state;
+            const opponentIndex = Number(!myTurn);
+            this.LoadOpponentData(msg[opponentIndex]);
         } else if (command === "LOAD") {
             const { table, xScore, oScore, turn } = msg;
             const players = [...this.state.players];
@@ -65,9 +91,9 @@ class GamePlay extends Component {
                 players,
                 turn,
             });
+            this.updateGameScorebaord();
         } else if (command === "UPDATE") {
-            const { roomName } = this.props;
-            const { player } = this.context;
+            const { player, room } = this.props;
             // toast.warn('new-move-recieved');
             //******** */ catch exceptions
             // ****** UPDATE THIS PART **************************************//
@@ -83,31 +109,33 @@ class GamePlay extends Component {
                 players,
             });
 
-            this.socketConnection.send(
+            this.state.socketConnection.send(
                 socketServices.createSocketRequest(
                     "moveRecieved",
-                    roomName,
+                    room,
                     player.userID,
                     true
                 )
             );
             this.verifyAndApplyTheMove(cell, this.cellButtons[cellID]);
             this.cellButtons[cellID].focus();
+            this.updateGameScorebaord();
         } else if (command === "END") {
             this.endGame();
+            this.props.CleanScoreboard();
         }
     };
 
     forceConnectToWebSocket = async (nextJob) => {
-        const { roomName } = this.props;
-        const { player } = this.context;
+        const { player, room } = this.props;
         try {
-            this.socketConnection = await socketServices.connect(
-                roomName,
+            let socket = await socketServices.connect(
+                room,
                 player.userID,
                 this.state.tableDimension
             );
-            this.socketConnection.onmessage = this.socketOnMessage;
+            socket.onmessage = this.socketOnMessage;
+            this.setState({ socketConnection: socket });
             if (nextJob) nextJob();
         } catch (err) {
             console.log(err);
@@ -144,39 +172,8 @@ class GamePlay extends Component {
                 console.log("dissconnected");
                 this.connectionLost = true;
             }
-            /*this.isOnline(
-                () => {
-                    if (this.connectionLost) {
-                        console.log("connected");
-                        this.connectionLost = false;
-                        this.forceConnectToWebSocket(null);
-                    }
-                },
-                () => {
-                    console.log("dissconnected");
-                    this.connectionLost = true;
-                }
-            );*/
         }, 1000);
     };
-
-    /*    isOnline = (success, failure) => {
-        var xhr = XMLHttpRequest
-            ? new XMLHttpRequest()
-            : new window.ActiveXObject("Microsoft.XMLHttp");
-        xhr.onload = function () {
-            if (success instanceof Function) {
-                success();
-            }
-        };
-        xhr.onerror = function () {
-            if (failure instanceof Function) {
-                failure();
-            }
-        };
-         xhr.open("GET", "https://t3dweb.herokuapp.com/users", true);//edit this ******************************
-         xhr.send();
-    }; */
 
     componentDidMount() {
         this.cellButtons = document.getElementsByClassName("gameTableCells"); // pay attension to searched className! may cause an error
@@ -186,13 +183,12 @@ class GamePlay extends Component {
         divTableBlock.addEventListener("resize", (event) =>
             this.onTableBlockResize(event)
         );
-        const { player } = this.context;
-        const { roomName } = this.props;
+        const { player, room } = this.props;
         this.forceConnectToWebSocket(() => {
-            this.socketConnection.send(
+            this.state.socketConnection.send(
                 socketServices.createSocketRequest(
                     "load",
-                    roomName,
+                    room,
                     player.userID,
                     null
                 )
@@ -226,14 +222,13 @@ class GamePlay extends Component {
         return { floor: cellFloor, row: cellRow, column: cellColumn };
     };
     onEachCellClick = (event) => {
-        const { opponentID, tableDimension } = this.state;
-        const { roomName } = this.props;
-        const { player } = this.context;
-        if (opponentID) {
+        const { tableDimension } = this.state;
+        const { player, opponent, room } = this.props;
+        if (opponent) {
             try {
                 const selectedCellButton = event.target;
 
-                if (this.state.turn !== this.state.yourTurn) {
+                if (this.state.turn !== this.state.myTurn) {
                     this.forceConnectToWebSocket(null);
                     return;
                 }
@@ -246,33 +241,24 @@ class GamePlay extends Component {
                 if (this.verifyAndApplyTheMove(cell, selectedCellButton)) {
                     //send move to WebSocket Server
                     this.forceConnectToWebSocket(() => {
-                        this.socketConnection.send(
+                        this.state.socketConnection.send(
                             socketServices.createSocketRequest(
                                 "move",
-                                roomName,
+                                room,
                                 player.userID,
                                 selectedCellButton.id
                             )
                         );
-                        this.socketConnection.send(
+                        this.state.socketConnection.send(
                             socketServices.createSocketRequest(
                                 "load",
-                                roomName,
+                                room,
                                 player.userID,
                                 null
                             )
                         );
                     });
                 }
-
-                // this.socketConnection.send(
-                //     socketServices.createSocketRequest(
-                //         "load",
-                //         roomName,
-                //         player.userID,
-                //         null
-                //     )
-                // );
             } catch (err) {
                 console.log(err);
                 //load again here?
@@ -406,30 +392,23 @@ class GamePlay extends Component {
     endGame = async () => {
         //*******************important:
         //ADD TRY CATCHimport socketServices from './../services/socketServices';
+        //*************edit: this.context.gatherPlayerData();
+        this.props.UpdateMyRecords(); //resets redux.state.player => forces MainLayout to reload player data and records
 
-        const { players, yourTurn, opponentID } = this.state;
-        const { userID } = this.context.player;
-        const opponent = Number(!yourTurn); // you: 1 => opponent: 0, you: 0 => opponent: 1
-        const deltaPoints = players[yourTurn].score - players[opponent].score; // difference between players points
-        const givenPoints = deltaPoints > 0 ? 3 : Number(!deltaPoints); // 3 for win, 1 for draw, 0 for lose
-        await userServices.updateRecords(userID, givenPoints);
-        this.context.gatherPlayerData();
-
-        //temp: fuck clients: winner must be decided in the server
-        toast.success("GAME ENDED");
-        toast.warn(`YOU ACHIEVED ${givenPoints} POINTS`);
-        // toast for telling the edn result
-        // x (yourTurn===0) always saves the game result
-        if (!yourTurn) {
-            await gameServices.saveGame({
-                xID: userID,
-                oID: opponentID,
-                xScores: players[0].score,
-                oScores: players[1].score,
-                isLive: false,
-            });
-            //toast for saving succefully
-        }
+        const { players, myTurn } = this.state;
+        const oppTurn = Number(!myTurn);
+        if (players[myTurn].score > players[oppTurn].score)
+            toast.success("شما برنده شدید و سه امتیاز کسب کردید");
+        else if (players[myTurn].score === players[oppTurn].score)
+            toast.info("شما مساوی شدید و یک امتیاز کسب کردید");
+        else
+            toast.error('تکبیر!');
+        //reset everything:
+        setTimeout(() => {
+            this.props.CleanScoreboard();
+            this.props.ResetOpponent();
+            this.props.SetRoom(null);
+        }, 5000);
     };
     drawGameTable = () => {
         // *****************note: when window size changes: table's selected cells are cleared
@@ -502,4 +481,51 @@ class GamePlay extends Component {
     };
 }
 
-export default GamePlay;
+export default withReduxDashboard(GamePlay);
+
+//another way to check online / offline status :
+// initiateGameTimer = () => {
+//     setInterval(() => {
+//         if (window.navigator.onLine) {
+//             if (this.connectionLost) {
+//                 console.log("connected");
+//                 this.connectionLost = false;
+//                 this.forceConnectToWebSocket(null);
+//             }
+//         } else {
+//             console.log("dissconnected");
+//             this.connectionLost = true;
+//         }
+//         /*this.isOnline(
+//             () => {
+//                 if (this.connectionLost) {
+//                     console.log("connected");
+//                     this.connectionLost = false;
+//                     this.forceConnectToWebSocket(null);
+//                 }
+//             },
+//             () => {
+//                 console.log("dissconnected");
+//                 this.connectionLost = true;
+//             }
+//         );*/
+//     }, 1000);
+// };
+
+// /*    isOnline = (success, failure) => {
+//     var xhr = XMLHttpRequest
+//         ? new XMLHttpRequest()
+//         : new window.ActiveXObject("Microsoft.XMLHttp");
+//     xhr.onload = function () {
+//         if (success instanceof Function) {
+//             success();
+//         }
+//     };
+//     xhr.onerror = function () {
+//         if (failure instanceof Function) {
+//             failure();
+//         }
+//     };
+//      xhr.open("GET", "https://t3dweb.herokuapp.com/users", true);//edit this ******************************
+//      xhr.send();
+// }; */

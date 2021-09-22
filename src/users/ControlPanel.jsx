@@ -1,11 +1,10 @@
 import { Component } from "react";
-import MainContext from './../common/contexts/MainContext';
 
 class ControlPanel extends Component {
-    static contextType = MainContext;
-    onSignOutClick = async () => {
-        this.context.signOutPlayer();
-    }
+    // static contextType = MainContext;
+    // onSignOutClick = async () => {
+    //     this.context.signOutPlayer();
+    // }
     render() {
         return (
             <div className="card border-success mb-3 signUpCard">

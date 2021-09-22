@@ -6,58 +6,53 @@ import { withRouter } from "react-router";
 import { useMediaQuery } from "react-responsive";
 import SmartPhoneNavigationBar from "./SmartPhoneNavigationBar";
 import PlayerInfoSideBar from "../sidebars/PlayerInfoSideBar";
-import userServices from "../services/userServices";
-import MainContext from "./contexts/MainContext";
-import { useState } from "react";
-
+import { useDispatch, useSelector } from "react-redux";
+import { LoadMe } from "../dashboard/actions";
+import { Fragment } from "react";
+import userServices from "./../services/userServices";
+import gameServices from "../services/gameServices";
 const MainLayout = (props) => {
     const { pathname } = props.location;
+    //redux
+    const player = useSelector((state) => state.player);
+    const opponent = useSelector(state => state.opponent);
+    const scoreboard = useSelector(state => state.scoreboard);
+
+    const dispatch = useDispatch();
+
     const deviceIsDesktop = useMediaQuery({ query: "(min-width: 1200px)" });
     const deviceIsSmartPhone = useMediaQuery({ query: "(max-width: 768px)" });
     const deviceIsTablet =
         !deviceIsDesktop && !deviceIsSmartPhone ? true : false;
-    const [player, setPlayer] = useState(null);
     // this method is for temporary use and for finding items that cause horizontal overflow causing horizontal scrollbar
-    const findHorizontalOverflow = () => {
-        let docWidth = document.documentElement.offsetWidth;
-        [].forEach.call(document.querySelectorAll("*"), function (el) {
-            if (el.offsetWidth > docWidth) {
-                console.log("here is the sabotage: ", el);
-            }
-        });
-    };
+    // const findHorizontalOverflow = () => {
+    //     let docWidth = document.documentElement.offsetWidth;
+    //     [].forEach.call(document.querySelectorAll("*"), function (el) {
+    //         if (el.offsetWidth > docWidth) {
+    //             console.log("here is the sabotage: ", el);
+    //         }
+    //     });
+    // };
 
-    // get player records
-    const gatherPlayerData = () => {
-        (async () => {
-            const STATUS = { SUCCESSFULL: 200 };
-            const userID = userServices.readUserID();
-            if (userID) {
-                const { data, status } = await userServices.getPlayer(userID);
-                if (status === STATUS.SUCCESSFULL) return data.player;
-            }
-            return null;
-        })()
+    //load player data after sign in
+    const userID = userServices.readUserID();
+    if (userID && !player) {
+        gameServices
+            .loadPlayerData(userID)
             .then((result) => {
-                console.log("auth called");
-                setPlayer(result);
+                dispatch(LoadMe(result ? result : null));
             })
             .catch((err) => {
-                // handle error
-                setPlayer(null);
+                dispatch(LoadMe(null));
             });
-    };
-    // use an anonymous function to check wether a reliable sign in has been made or not
-    // using await causes all 'return' to return a promise. so it must be handles by .then .catch
-    if (!player) gatherPlayerData();
-
-    const signOutPlayer = () => {
-        sessionStorage.clear();
-        setPlayer(null);
-    };
+    }
 
     let pageLeftSideBars = <NewsSideBar />;
-    let pageRightSideBar = player ? <PlayerInfoSideBar /> : <SignInSideBar />; // in case login hassnt been made
+    let pageRightSideBar = player ? (
+        <PlayerInfoSideBar player={player} inGame={scoreboard.me}/>
+    ) : (
+        <SignInSideBar />
+    ); // in case login hassnt been made
 
     if (pathname === "/signUp") {
         // || pathname === '/competitions'){ // this condition MUST change later
@@ -67,7 +62,9 @@ const MainLayout = (props) => {
 
     if (pathname === "/gameDeck") {
         // left sidebar must be opponents playerInfo
-
+        if(opponent){
+            pageLeftSideBars = <PlayerInfoSideBar player={opponent} inGame={scoreboard.opp}/>;
+        }
         if (deviceIsSmartPhone) {
             //this is temprory
             // find a way for showing result in smartphone, without causing vertical scroll
@@ -77,7 +74,7 @@ const MainLayout = (props) => {
     }
 
     return (
-        <MainContext.Provider value={{ player, signOutPlayer, gatherPlayerData }}>
+        <Fragment>
             <ToastContainer />
             {deviceIsDesktop || deviceIsTablet ? (
                 <NavigationBar />
@@ -90,8 +87,7 @@ const MainLayout = (props) => {
                     <div
                         className={
                             pageLeftSideBars !== null ? "col-6" : "col-12"
-                        }
-                    >
+                        }>
                         {props.children}
                     </div>
                     <div className="col-3">{pageLeftSideBars}</div>
@@ -102,8 +98,7 @@ const MainLayout = (props) => {
                     <div
                         className={
                             pageLeftSideBars !== null ? "col-8" : "col-12"
-                        }
-                    >
+                        }>
                         {props.children}
                     </div>
                     <div className="col-4">{pageLeftSideBars}</div>
@@ -120,8 +115,7 @@ const MainLayout = (props) => {
                     <div className="row w-100 mx-auto">{props.children}</div>
                 </div>
             )}
-            {/* {findHorizontalOverflow()} */}
-        </MainContext.Provider>
+        </Fragment>
     );
 };
 

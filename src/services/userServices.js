@@ -20,12 +20,6 @@ const userServices = {
     getAllPlayers: () => {
         return http.get(`${config.serverRoot}/${config.usersRoute}`);
     },
-    updateRecords: (userID, gameStatus) => {
-        return http.put(
-            `${config.serverRoot}/${config.usersRoute}/${userID}`,
-            JSON.stringify({ gameStatus })
-        );
-    },
     saveUser: (id, token) => {
         // use remember me option
         sessionStorage.setItem("uid", id); // localStorage or sessionStorage?

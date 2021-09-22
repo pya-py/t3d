@@ -1,13 +1,13 @@
 import "./tables.css";
 
-const Score = ({ playerXName, playerOName, xScores, oScores }) => {
+const SingleScoreCard = ({ playerXName, playerOName, xScore, oScore }) => {
     // format score text:
     let xBorderStyle = null;
     let oBorderStyle = null; // null means default text color
     let xBadgeColor = null;
     let oBadgeColor = null; // null means default badge color
 
-    if (xScores > oScores) {
+    if (xScore > oScore) {
         // x won
         xBadgeColor = "badge-success";
         xBorderStyle = {
@@ -18,7 +18,7 @@ const Score = ({ playerXName, playerOName, xScores, oScores }) => {
         };
         oBadgeColor = "badge-danger";
         oBorderStyle = null; // null means default text color
-    } else if (xScores === oScores) {
+    } else if (xScore === oScore) {
         //draw
         xBadgeColor = "badge-warning";
         oBadgeColor = "badge-warning";
@@ -47,13 +47,13 @@ const Score = ({ playerXName, playerOName, xScores, oScores }) => {
                     <span
                         className={`badge badge-pill ${xBadgeColor} scoreBadge col-1`}
                     >
-                        {xScores < 10 ? `0${xScores}` : `${xScores}`}
+                        {xScore < 10 ? `0${xScore}` : `${xScore}`}
                     </span>
 
                     <span
                         className={`badge badge-pill ${oBadgeColor} scoreBadge col-1`}
                     >
-                        {oScores < 10 ? `0${oScores}` : `${oScores}`}
+                        {oScore < 10 ? `0${oScore}` : `${oScore}`}
                     </span>
                     <span className="col-5" style={oBorderStyle}>{playerOName}</span>
                 </div>
@@ -65,9 +65,9 @@ const Score = ({ playerXName, playerOName, xScores, oScores }) => {
                 بازپخش بازی
             </button>
             {/*1st method: pass key to the score.jsx and find the specific game to replay
-            2nd method: pass replay function from AllScores.jsx to Scores.jsx ? */}
+            2nd method: pass replay function from AllScore.jsx to Score.jsx ? */}
         </div>
     );
 };
 
-export default Score;
+export default SingleScoreCard;

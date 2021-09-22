@@ -1,5 +1,5 @@
 import { Card } from "react-bootstrap";
-import Player from "./Player";
+import SinglePlayerCard from "./SinglePlayerCard";
 
 const AllPlayers = ({ players }) => {
     return (
@@ -19,7 +19,7 @@ const AllPlayers = ({ players }) => {
                     </thead>
                     <tbody>
                         {players.map((player) => (
-                            <Player
+                            <SinglePlayerCard
                                 key={player.userID}
                                 rowNumber={players.findIndex(p => p.userID === player.userID) + 1}
                                 name={player.fullname}
@@ -27,7 +27,7 @@ const AllPlayers = ({ players }) => {
                                 wins={player.records.wins}
                                 loses={player.records.loses}
                                 draws={player.records.draws}
-                            ></Player>
+                            ></SinglePlayerCard>
                         ))}
                     </tbody>
                 </table>

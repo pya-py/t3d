@@ -1,10 +1,9 @@
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { useContext } from "react";
-import MainContext from "./contexts/MainContext";
 
 const SmartPhoneNavigationBar = () => {
-  const context = useContext(MainContext);
 
+  const player = useSelector(state => state.player);
   return (
     // 2. link items theme: make theme better
 
@@ -65,7 +64,7 @@ const SmartPhoneNavigationBar = () => {
                 </NavLink>
               </li>
               <li className="nav-item ml-2">
-                {context.player ? (
+                {player ? (
                   <NavLink
                     className="navItems nav-link btn btn-outline-success btn-block mt-1 mr-lg-5"
                     to="/controlPanel"
