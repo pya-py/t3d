@@ -13,14 +13,14 @@ class GamePlay extends Component {
         players: [
             {
                 // ID: '',
-                shape: "X",
+                shape: <i class="fa fa-times" aria-hidden="true" />, // "X" : some device may not support font-awsome
                 color: "cyan",
                 lineColor: "btn btn-primary",
                 score: 0,
             },
             {
                 // ID: '',
-                shape: "O",
+                shape: <i class="fa fa-sun-o" aria-hidden="true" />, // "O" : some device may not support font-awsome
                 color: "darkred",
                 lineColor: "btn btn-danger",
                 score: 0,
@@ -277,7 +277,7 @@ class GamePlay extends Component {
         let tempTable = [...this.state.table];
         if (tempTable[cell.floor][cell.row][cell.column] === null) {
             tempTable[cell.floor][cell.row][cell.column] = turn; //maybe its better to use players actual Id huh?
-            cellButton.innerHTML = players[turn].shape;
+            cellButton.value = players[turn].shape;
             cellButton.style.color = players[turn].color;
             this.setState({
                 turn: (turn + 1) % 2,

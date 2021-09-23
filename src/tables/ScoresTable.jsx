@@ -1,20 +1,19 @@
-import './tables.css';
-import { Component } from 'react';
-import AllScores from './AllScores';
-import gameServices from './../services/gameServices';
-
+import "./tables.css";
+import { Component } from "react";
+import AllScores from "./AllScores";
+import gameServices from "./../services/gameServices";
 
 class ScoresTable extends Component {
-    state = { 
-        liveScores: [ ],
-        finalScores: [ ],
+    state = {
+        liveScores: [],
+        finalScores: [],
         showLiveOnes: false,
-        loading: false
-     };
+        loading: false,
+    };
 
-     componentDidMount() {
-         // get all game results , live or final, handling promises
-         // client and server side for this Module seriously need to be edited
+    componentDidMount() {
+        // get all game results , live or final, handling promises
+        // client and server side for this Module seriously need to be edited
         (async () => {
             this.setState({ loading: true }); // use preloader here?
             const STATUS = { SUCCESSFULL: 200 };
@@ -23,7 +22,11 @@ class ScoresTable extends Component {
             return [];
         })()
             .then((result) => {
-                this.setState({liveScores: result.filter(game => game.isLive), finalScores: result.filter(game => !game.isLive), loading: false});
+                this.setState({
+                    liveScores: result.filter((game) => game.isLive),
+                    finalScores: result.filter((game) => !game.isLive),
+                    loading: false,
+                });
                 //EDIT EDIT EDIT
             })
             .catch((err) => {
@@ -34,41 +37,60 @@ class ScoresTable extends Component {
     }
 
     btnShowLiveScores = () => {
-        this.setState({showLiveOnes: true});
-
-    }
+        this.setState({ showLiveOnes: true });
+    };
 
     btnShowFinalScores = () => {
-        this.setState({showLiveOnes: false});
-    }
+        this.setState({ showLiveOnes: false });
+    };
 
     render() {
         // game replay? is it a good idea DataBase Size-Wise ? ===> if true: see 1st page of the notebook
         /* add a NextGames button maybe? (گزینه بازی های اینده) */
-        let {liveScores, finalScores, showLiveOnes} = this.state;
+        let { liveScores, finalScores, showLiveOnes } = this.state;
 
-        return ( 
+        return (
             <div className="container">
                 <div className="row">
-                    <div className='col-6'>
-                       <button
-                        className={`scoresTypeSelectButton btn ${showLiveOnes ? `btn-outline-success` : `btn-outline-primary`}`}
-                        onClick={this.btnShowLiveScores}  >نتایج زنده</button>
+                    <div className="col-6">
+                        <button
+                            className={`scoresTypeSelectButton btn ${
+                                showLiveOnes
+                                    ? `btn-outline-success`
+                                    : `btn-outline-primary`
+                            }`}
+                            onClick={this.btnShowLiveScores}>
+                            نتایج زنده
+                            <i
+                                class="fa fa-play-circle px-3"
+                                aria-hidden="true"></i>
+                        </button>
                     </div>
-                    <div className='col-6'>
-                        <button 
-                            className={`scoresTypeSelectButton btn ${showLiveOnes ? `btn-outline-primary` : `btn-outline-success`}`}
-                            onClick={this.btnShowFinalScores}  >نتایج نهایی</button> 
+                    <div className="col-6">
+                        <button
+                            className={`scoresTypeSelectButton btn ${
+                                showLiveOnes
+                                    ? `btn-outline-primary`
+                                    : `btn-outline-success`
+                            }`}
+                            onClick={this.btnShowFinalScores}>
+                            نتایج نهایی
+                            <i
+                                class="fa fa-stop-circle-o px-3"
+                                aria-hidden="true"></i>
+                        </button>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-12">
-                        <AllScores scores={showLiveOnes? liveScores : finalScores} />
+                        <AllScores
+                            scores={showLiveOnes ? liveScores : finalScores}
+                        />
                     </div>
                 </div>
             </div>
         );
     }
 }
- 
+
 export default ScoresTable;

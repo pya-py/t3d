@@ -259,13 +259,15 @@ class SignUp extends Component {
 
                         <button
                             type="submit"
-                            className="btn btn-success btn-block mt-4"
-                        >
+                            className="btn btn-success btn-block mt-4">
+                            <i
+                                class="fa fa-user-plus px-3"
+                                aria-hidden="true"></i>
                             ثبت نام
                         </button>
                     </form>
                     <p className="forgot-password text-right mt-5">
-                        اگر قبلا ثبت نام کردی، به صفحه ی <ModalSignIn /> برو !{" "}
+                        اگر قبلا ثبت نام کردی، به صفحه ی <ModalSignIn /> برو !
                     </p>
                 </div>
             </div>

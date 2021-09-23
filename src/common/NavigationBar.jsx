@@ -61,6 +61,7 @@ const NavigationBar = () => {
                 تماس با ما
               </NavLink>
             </li>
+            
           </ul>
           {/* how to float search bar to right? */}
         </div>

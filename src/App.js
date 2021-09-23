@@ -6,7 +6,7 @@ import ContactInfo from "./informations/ContactInfo";
 import SignUp from "./users/SignUp";
 import MainLayout from "./common/MainLayout";
 import Ranking from "./tables/Ranking";
-import ControlPanel from './users/ControlPanel';
+import ControlPanel from './users/controlpanel/ControlPanel';
 import GameDeck from './games/GameDeck';
 
 class App extends Component {
@@ -22,8 +22,8 @@ class App extends Component {
                     <Route path="/ranking" component={Ranking} />
                     <Route path="/gameRules" component={GameRules} />
                     <Route path="/contactInfo" component={ContactInfo} />
+                    <Route path="/controlPanel" component={ControlPanel} />
                     <Route path="/" exact component={ScoresTable} />
-                    <Route path="/controlPanel" exact component={ControlPanel} />
                 </Switch>
             </MainLayout>
         );

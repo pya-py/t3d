@@ -1,8 +1,8 @@
+import './sidebars.css';
 
-
-const NewsSideBar = () => {
+const NoticeSideBar = () => {
     return ( 
-        <div className="card newsSidebar border-success  mb-3">
+        <div className="card noticeSidebar border-success  mb-3">
             <div className="card-header text-center text-success border-success">اطلاعیه</div>
             <div className="card-body text-right">
                 <p>متن خبر 1</p>
@@ -15,4 +15,4 @@ const NewsSideBar = () => {
     );
 }
  
-export default NewsSideBar;
+export default NoticeSideBar;

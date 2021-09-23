@@ -1,7 +1,7 @@
 import { ToastContainer } from "react-toastify";
 import NavigationBar from "./NavigationBar";
 import SignInSideBar from "./../sidebars/SignInSideBar";
-import NewsSideBar from "./../sidebars/NewsSideBar";
+import NoticeSideBar from "../sidebars/NoticeSideBar";
 import { withRouter } from "react-router";
 import { useMediaQuery } from "react-responsive";
 import SmartPhoneNavigationBar from "./SmartPhoneNavigationBar";
@@ -11,12 +11,15 @@ import { LoadMe } from "../dashboard/actions";
 import { Fragment } from "react";
 import userServices from "./../services/userServices";
 import gameServices from "../services/gameServices";
+import { Col, Container, Row } from "react-bootstrap";
+import PanelMenu from "../users/controlpanel/PanelMenu";
+
 const MainLayout = (props) => {
     const { pathname } = props.location;
     //redux
     const player = useSelector((state) => state.player);
-    const opponent = useSelector(state => state.opponent);
-    const scoreboard = useSelector(state => state.scoreboard);
+    const opponent = useSelector((state) => state.opponent);
+    const scoreboard = useSelector((state) => state.scoreboard);
 
     const dispatch = useDispatch();
 
@@ -47,32 +50,36 @@ const MainLayout = (props) => {
             });
     }
 
-    let pageLeftSideBars = <NewsSideBar />;
+    let pageLeftSideBar = <NoticeSideBar />;
     let pageRightSideBar = player ? (
-        <PlayerInfoSideBar player={player} inGame={scoreboard.me}/>
+        <PlayerInfoSideBar player={player} inGame={scoreboard.me} />
     ) : (
         <SignInSideBar />
     ); // in case login hassnt been made
 
-    if (pathname === "/signUp") {
-        // || pathname === '/competitions'){ // this condition MUST change later
-        pageLeftSideBars = null; //change later
-        pageRightSideBar = null; // change then
-    }
+    if (pathname === "/signUp")
+        pageLeftSideBar = pageRightSideBar = null;
 
-    if (pathname === "/gameDeck") {
+    else if( pathname === "/controlPanel"){
+        pageLeftSideBar = null;
+        pageRightSideBar = <PanelMenu />;
+    }
+    else if (pathname === "/gameDeck") {
         // left sidebar must be opponents playerInfo
-        if(opponent){
-            pageLeftSideBars = <PlayerInfoSideBar player={opponent} inGame={scoreboard.opp}/>;
+        if (opponent) {
+            pageLeftSideBar = (
+                <PlayerInfoSideBar player={opponent} inGame={scoreboard.opp} />
+            );
         }
         if (deviceIsSmartPhone) {
             //this is temprory
             // find a way for showing result in smartphone, without causing vertical scroll
-            pageLeftSideBars = null; //change later
+            pageLeftSideBar = null; //change later
             pageRightSideBar = null; // change then
         }
     }
 
+    // *******create independent components for each device****
     return (
         <Fragment>
             <ToastContainer />
@@ -81,39 +88,35 @@ const MainLayout = (props) => {
             ) : (
                 <SmartPhoneNavigationBar />
             )}
+
+            {/* wrap up this shit in
+multiple components for each device design
+this looks like shit khodayi */}
             {deviceIsDesktop && (
-                <div className="row mx-auto w-100">
-                    <div className="col-3">{pageRightSideBar}</div>
-                    <div
-                        className={
-                            pageLeftSideBars !== null ? "col-6" : "col-12"
-                        }>
-                        {props.children}
-                    </div>
-                    <div className="col-3">{pageLeftSideBars}</div>
-                </div>
+                <Row className="w-100 mx-auto">
+                    <Col xs={3}>{pageRightSideBar}</Col>
+                    <Col xs={pathname !== "/controlPanel" ? 6 : 9}>{props.children}</Col>
+                    <Col xs={3}>{pageLeftSideBar}</Col>
+                </Row>
             )}
             {deviceIsTablet && (
-                <div className="row mx-auto w-100">
-                    <div
-                        className={
-                            pageLeftSideBars !== null ? "col-8" : "col-12"
-                        }>
+                <Row className="w-100 mx-auto">
+                    {pathname === '/controlPanel' && <Col xs={4}>{pageRightSideBar}</Col>}
+                    <Col className="mx-auto" xs={8}>
                         {props.children}
-                    </div>
-                    <div className="col-4">{pageLeftSideBars}</div>
-                </div>
+                    </Col>
+                    {pageLeftSideBar && <Col xs={4}>{pageLeftSideBar}</Col>}
+                </Row>
             )}
             {deviceIsSmartPhone && (
-                <div className="container mx-auto w-100">
+                <Container>
+                    {/* what to do for control panelk sidebar in smartphone */}
                     {player ? (
-                        <div className="row w-100 mx-auto">
-                            {pageRightSideBar}
-                        </div>
+                        <Row className="w-100 mx-auto">{pageRightSideBar}</Row>
                     ) : null}
-                    <div className="row w-100 mx-auto">{pageLeftSideBars}</div>
-                    <div className="row w-100 mx-auto">{props.children}</div>
-                </div>
+                    <Row className="w-100 mx-auto">{pageLeftSideBar}</Row>
+                    <Row className="w-100 mx-auto">{props.children}</Row>
+                </Container>
             )}
         </Fragment>
     );

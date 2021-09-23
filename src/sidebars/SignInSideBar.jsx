@@ -12,7 +12,6 @@ class SignInSideBar extends Component {
         password: "",
         loading: false,
     };
-    
 
     onSignInSubmitted = async (event) => {
         event.preventDefault();
@@ -35,7 +34,6 @@ class SignInSideBar extends Component {
         this.setState({ loading: false });
     };
 
-    
     render() {
         const { studentID, password, loading } = this.state;
         return (
@@ -70,14 +68,18 @@ class SignInSideBar extends Component {
                             <button
                                 id="btnSideBarSignIn"
                                 type="submit"
-                                className="btn btn-outline-success btn-lg"
-                            >
+                                className="btn btn-outline-success btn-lg">
+                                <i
+                                    class="fa fa-sign-in px-3"
+                                    aria-hidden="true"></i>
                                 ورود
                             </button>
                             <button
                                 id="btnSideBarPasswordRecovery"
-                                className="btn btn-outline-info btn-lg"
-                            >
+                                className="btn btn-outline-info btn-lg">
+                                <i
+                                    class="fa fa-recycle px-3"
+                                    aria-hidden="true"></i>
                                 بازیابی پسورد
                             </button>
                         </div>

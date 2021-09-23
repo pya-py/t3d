@@ -21,7 +21,7 @@ class ModalSignIn extends Component {
         this.setState({ loading: true });
         const STATUS = { SUCCESSFULL: 200, AUTHENTICATION_INVALID: 401 };
         const { studentID, password } = this.state;
-        const user = { studentID: Number(studentID), password};
+        const user = { studentID: Number(studentID), password };
         try {
             const { status, data } = await userServices.signIn(user);
             if (status === STATUS.SUCCESSFULL) {
@@ -45,6 +45,7 @@ class ModalSignIn extends Component {
             <Fragment>
                 <LoadingBar loading={loading} />
                 <Button variant="outline-primary" onClick={this.onShowClick}>
+                    <i class="fa fa-user px-3" aria-hidden="true"></i>
                     ورود کاربران
                 </Button>
 
@@ -54,8 +55,7 @@ class ModalSignIn extends Component {
                     <Modal.Body>
                         <Form
                             className="m-4 text-right"
-                            onSubmit={(event) => this.onSignInSubmitted(event)}
-                        >
+                            onSubmit={(event) => this.onSignInSubmitted(event)}>
                             <Form.Group className="mb-3 form-inline">
                                 <Form.Label className="w-25">
                                     شماره دانشجویی
@@ -75,8 +75,7 @@ class ModalSignIn extends Component {
 
                             <Form.Group
                                 className="mb-3 form-inline"
-                                controlId="formBasicPassword"
-                            >
+                                controlId="formBasicPassword">
                                 <Form.Label className="w-25">
                                     رمز عبور
                                 </Form.Label>
@@ -96,15 +95,19 @@ class ModalSignIn extends Component {
                                 <Button
                                     className="w-50"
                                     type="submit"
-                                    variant="outline-success"
-                                >
+                                    variant="outline-success">
+                                    <i
+                                        class="fa fa-sign-in px-3"
+                                        aria-hidden="true"></i>
                                     ورود
                                 </Button>
                                 <Button
                                     className="w-50"
                                     variant="outline-info"
-                                    onClick={this.onForgotPasswordClick}
-                                >
+                                    onClick={this.onForgotPasswordClick}>
+                                    <i
+                                        class="fa fa-recycle px-3"
+                                        aria-hidden="true"></i>
                                     فراموشی رمز
                                 </Button>
                             </>

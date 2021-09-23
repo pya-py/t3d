@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { SetRoom } from "../dashboard/actions";
+import { Button } from "react-bootstrap";
 
 const RoomManager = () => {
     const [roomName, setRoomName] = useState("");
@@ -18,7 +19,7 @@ const RoomManager = () => {
             return;
         }
 
-        dispatch(SetRoom({roomName, gameType})); //set redux state room => roomname
+        dispatch(SetRoom({ roomName, gameType })); //set redux state room => roomname
     };
 
     return (
@@ -31,30 +32,52 @@ const RoomManager = () => {
                     <form onSubmit={(event) => onStartGameClick(event)}>
                         <div className="form-inline">
                             <label className="w-25">ابعاد جدول بازی</label>
-                            <label style={{border: '1px solid grey', borderRadius: '15px', padding: '5px'}} className="w-25"><input
-                                type="radio"
-                                className="mx-auto form-control"
-                                value="3"
-                                checked={gameType === 3}
-                                onChange={() => setGameType(3)} />
+                            <label
+                                style={{
+                                    border: "1px solid grey",
+                                    borderRadius: "15px",
+                                    padding: "5px",
+                                }}
+                                className="w-25">
+                                <input
+                                    type="radio"
+                                    className="mx-auto form-control"
+                                    value="3"
+                                    checked={gameType === 3}
+                                    onChange={() => setGameType(3)}
+                                />
                                 3x3x3
                             </label>
-                            <label style={{border: '1px solid grey', borderRadius: '15px', padding: '5px'}} className="w-25 ">
-                            <input
-                                type="radio"
-                                className="mx-auto form-control"
-                                value="4"
-                                checked={gameType === 4}
-                                onChange={() => setGameType(4)} />
-                                4x4x4 
+                            <label
+                                style={{
+                                    border: "1px solid grey",
+                                    borderRadius: "15px",
+                                    padding: "5px",
+                                }}
+                                className="w-25 ">
+                                <input
+                                    type="radio"
+                                    className="mx-auto form-control"
+                                    value="4"
+                                    checked={gameType === 4}
+                                    onChange={() => setGameType(4)}
+                                />
+                                4x4x4
                             </label>
-                            <label style={{border: '1px solid grey', borderRadius: '15px', padding: '5px'}} className="w-25">
-                            <input
-                                type="radio"
-                                className="mx-auto form-control"
-                                value="5"
-                                checked={gameType === 5}
-                                onChange={() => setGameType(5)} />
+                            <label
+                                style={{
+                                    border: "1px solid grey",
+                                    borderRadius: "15px",
+                                    padding: "5px",
+                                }}
+                                className="w-25">
+                                <input
+                                    type="radio"
+                                    className="mx-auto form-control"
+                                    value="5"
+                                    checked={gameType === 5}
+                                    onChange={() => setGameType(5)}
+                                />
                                 5x5x5
                             </label>
                         </div>
@@ -72,11 +95,10 @@ const RoomManager = () => {
                             />
                         </div>
 
-                        <button
-                            type="submit"
-                            className="btn btn-success btn-block mt-4">
+                        <Button type="submit" className="mt-4" block variant="success">
+                            <i class="fa fa-cube px-3" aria-hidden="true"></i>
                             شروع بازی
-                        </button>
+                        </Button>
                     </form>
                 </div>
             </div>
