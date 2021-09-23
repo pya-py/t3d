@@ -24,7 +24,9 @@ export const SetRoom = (room) => ({
     type: "SET_ROOM",
     payload: room,
 });
-
+export const ResetRoom = () => ({
+    type: "RESET_ROOM"
+});
 export const SetGameID = (gameID) => ({
     type: "SET_GAME_ID",
     payload: gameID,

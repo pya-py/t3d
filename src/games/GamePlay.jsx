@@ -62,6 +62,8 @@ class GamePlay extends Component {
                 .loadPlayerData(opponentID)
                 .then((result) => {
                     LoadOpponent(result ? result : null);
+                    toast.info("حریف شما هم به بازی متصل شد");
+                    toast.warn( 'حرکت اول با: ' + (!this.state.myTurn ? 'شما' : 'حریف شما') );
                 })
                 .catch((err) => {
                     //console.log(err);
@@ -406,7 +408,7 @@ class GamePlay extends Component {
         setTimeout(() => {
             this.props.CleanScoreboard();
             this.props.ResetOpponent();
-            this.props.SetRoom(null);
+            this.props.ResetRoom();
             this.props.history.replace("/"); // in competition mode must be send back to competition page
         }, 5000);
     };
@@ -477,7 +479,7 @@ class GamePlay extends Component {
     };
 }
 
-export default withReduxDashboard(withRouter(GamePlay));
+export default withRouter(withReduxDashboard(GamePlay));
 
 //another way to check online / offline status :
 // initiateGameTimer = () => {

@@ -9,6 +9,7 @@ import {
     SetGameID,
     UpdateScoreboard,
     CleanScoreboard,
+    ResetRoom,
 } from "./actions";
 // ***** remove the ones that arent used in class components => for memory management/ not necessary though
 // useSelector for functional components
@@ -28,6 +29,7 @@ function withReduxDashboard(component) {
         UpdateMyRecords: () => dispatch(UpdateMyRecords()),
         ResetOpponent: () => dispatch(ResetOpponent()),
         SetRoom: (room) => dispatch(SetRoom(room)),
+        ResetRoom: () => dispatch(ResetRoom()),
         SetGameID: (gameID) => dispatch(SetGameID(gameID)),
         UpdateScoreboard: (details) => dispatch(UpdateScoreboard(details)),
         CleanScoreboard: () => dispatch(CleanScoreboard()),

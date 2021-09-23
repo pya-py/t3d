@@ -5,6 +5,8 @@ export const roomReducer = (state = null, action) => {
             return {name: roomName, type: gameType};
         // case "SET_GAME_ID":
         //     return action.payload;
+        case "RESET_ROOM":
+            return {name: null, type: null}
         default:
             return state;
     }
