@@ -20,9 +20,9 @@ export const ResetOpponent = () => ({
     type: "RESET_OPPONENT",
 });
 
-export const SetRoom = (roomName) => ({
+export const SetRoom = (room) => ({
     type: "SET_ROOM",
-    payload: roomName,
+    payload: room,
 });
 
 export const SetGameID = (gameID) => ({

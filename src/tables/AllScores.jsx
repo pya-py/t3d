@@ -2,10 +2,12 @@ import { Fragment } from "react";
 import SingleScoreCard from "./SingleScoreCard";
 
 const AllScores = ({scores}) => {
+    console.log(scores);
     return ( 
         <Fragment>
             { scores.map(score => (
                 <SingleScoreCard key={score.gameID}
+                    gameType={score.gameType}
                     playerXName={score.xName}
                     playerOName={score.oName}
                     xScore={score.xScore}

@@ -1,10 +1,10 @@
 import { Component, Fragment } from "react";
 import "./games.css";
 import { toast } from "react-toastify";
-import userServices from "./../services/userServices";
 import gameServices from "./../services/gameServices";
 import socketServices from "../services/socketServices";
 import withReduxDashboard from "../dashboard/withReduxDashboard";
+import { withRouter } from "react-router";
 
 class GamePlay extends Component {
     //**** game resets on device change. fix it */
@@ -27,7 +27,7 @@ class GamePlay extends Component {
             },
         ], // maybe use player actual user name and change this item to an object of objects?
         turn: 0, // start turn is decided by throwning dices
-        tableDimension: 4,
+        dimension: 3,
         table: null,
         myTurn: undefined, // change this
         gameID: null,
@@ -40,6 +40,21 @@ class GamePlay extends Component {
         this.cellButtons = [];
     }
 
+    render() {
+        return (
+            <div id="divTableBlock" className="card border-dark gameBorderCard">
+                <div className="form-inline w-100">
+                    <p
+                        style={{ color: this.state.players[1].color }}
+                        className="w-50 text-center">{`O: ${this.state.players[1].score}`}</p>
+                    <p
+                        style={{ color: this.state.players[0].color }}
+                        className="w-50 text-center">{`X: ${this.state.players[0].score}`}</p>
+                </div>
+                {this.drawGameTable()}
+            </div>
+        );
+    }
     LoadOpponentData = (opponentID) => {
         const { opponent, LoadOpponent } = this.props;
         if (!opponent && opponentID) {
@@ -79,8 +94,10 @@ class GamePlay extends Component {
             this.setState({ myTurn: Number(msg) });
         } else if (command === "START") {
             const { myTurn } = this.state;
+            const { IDs, gameType } = msg;
             const opponentIndex = Number(!myTurn);
-            this.LoadOpponentData(msg[opponentIndex]);
+            this.setState({ dimension: gameType });
+            this.LoadOpponentData(IDs[opponentIndex]);
         } else if (command === "LOAD") {
             const { table, xScore, oScore, turn } = msg;
             const players = [...this.state.players];
@@ -112,7 +129,7 @@ class GamePlay extends Component {
             this.state.socketConnection.send(
                 socketServices.createSocketRequest(
                     "moveRecieved",
-                    room,
+                    room.name,
                     player.userID,
                     true
                 )
@@ -122,17 +139,17 @@ class GamePlay extends Component {
             this.updateGameScorebaord();
         } else if (command === "END") {
             this.endGame();
-            this.props.CleanScoreboard();
         }
     };
 
     forceConnectToWebSocket = async (nextJob) => {
         const { player, room } = this.props;
+
         try {
             let socket = await socketServices.connect(
-                room,
+                room.name,
                 player.userID,
-                this.state.tableDimension
+                room.type
             );
             socket.onmessage = this.socketOnMessage;
             this.setState({ socketConnection: socket });
@@ -183,34 +200,21 @@ class GamePlay extends Component {
         divTableBlock.addEventListener("resize", (event) =>
             this.onTableBlockResize(event)
         );
+
         const { player, room } = this.props;
+        this.setState({ dimension: room.type });
+
         this.forceConnectToWebSocket(() => {
             this.state.socketConnection.send(
                 socketServices.createSocketRequest(
                     "load",
-                    room,
+                    room.name,
                     player.userID,
                     null
                 )
             );
         });
         this.initiateGameTimer();
-    }
-
-    render() {
-        return (
-            <div id="divTableBlock" className="card border-dark gameBorderCard">
-                <div className="form-inline w-100">
-                    <p
-                        style={{ color: this.state.players[1].color }}
-                        className="w-50 text-center">{`O: ${this.state.players[1].score}`}</p>
-                    <p
-                        style={{ color: this.state.players[0].color }}
-                        className="w-50 text-center">{`X: ${this.state.players[0].score}`}</p>
-                </div>
-                {this.drawGameTable()}
-            </div>
-        );
     }
 
     getCellCoordinates = (cellID, dimen) => {
@@ -222,7 +226,7 @@ class GamePlay extends Component {
         return { floor: cellFloor, row: cellRow, column: cellColumn };
     };
     onEachCellClick = (event) => {
-        const { tableDimension } = this.state;
+        const { dimension } = this.state;
         const { player, opponent, room } = this.props;
         if (opponent) {
             try {
@@ -235,7 +239,7 @@ class GamePlay extends Component {
 
                 const cell = this.getCellCoordinates(
                     selectedCellButton.id,
-                    tableDimension
+                    dimension
                 );
 
                 if (this.verifyAndApplyTheMove(cell, selectedCellButton)) {
@@ -244,7 +248,7 @@ class GamePlay extends Component {
                         this.state.socketConnection.send(
                             socketServices.createSocketRequest(
                                 "move",
-                                room,
+                                room.name,
                                 player.userID,
                                 selectedCellButton.id
                             )
@@ -252,7 +256,7 @@ class GamePlay extends Component {
                         this.state.socketConnection.send(
                             socketServices.createSocketRequest(
                                 "load",
-                                room,
+                                room.name,
                                 player.userID,
                                 null
                             )
@@ -288,7 +292,7 @@ class GamePlay extends Component {
     inspectAreaAroundTheCell = (floor, row, column) => {
         // inpect the table in all ways around a selected cell (new selected one), to update points and color the score routes
         // is it needed to write a inspectAll method ?
-        const { players, table, tableDimension } = this.state;
+        const { players, table, dimension } = this.state;
         const playerInTheCell = table[floor][row][column];
         let rowCount = 0,
             columnCount = 0,
@@ -297,7 +301,7 @@ class GamePlay extends Component {
         let tableMainDiagCount = 0,
             tableSideDiagCount = 0,
             tableAltitudeCount = 0;
-        for (let i = 0; i < tableDimension; i++) {
+        for (let i = 0; i < dimension; i++) {
             if (table[floor][row][i] === playerInTheCell) rowCount++; // inspect in a row
             if (table[floor][i][column] === playerInTheCell) columnCount++; // inspect in a column
             if (table[i][row][column] === playerInTheCell) tableAltitudeCount++; // inspect in a altitude line
@@ -307,68 +311,67 @@ class GamePlay extends Component {
                 if (row === floor && table[i][i][i] === playerInTheCell)
                     tableMainDiagCount++; // inspect in a 3D main diagonal line through the whole table
             }
-            if (row + column + 1 === tableDimension) {
-                if (table[floor][i][tableDimension - i - 1] === playerInTheCell)
+            if (row + column + 1 === dimension) {
+                if (table[floor][i][dimension - i - 1] === playerInTheCell)
                     floorSideDiagCount++; // inpect in a 2D side Diagonal line through the cell's floor
                 if (
                     row === floor &&
-                    table[i][i][tableDimension - i - 1] === playerInTheCell
+                    table[i][i][dimension - i - 1] === playerInTheCell
                 )
                     tableSideDiagCount++; // inspect in a 3D side diagonal line through the whole table
             }
         }
 
         // now inspect wether a line has been made and take action for it
-        let totalScores =
-            this.connectTheScoreLines(
-                rowCount,
-                floor * tableDimension * tableDimension + row * tableDimension,
-                1,
-                players[playerInTheCell],
-                tableDimension
-            ) +
-            this.connectTheScoreLines(
-                columnCount,
-                floor * tableDimension * tableDimension + column,
-                tableDimension,
-                players[playerInTheCell],
-                tableDimension
-            ) +
-            this.connectTheScoreLines(
-                floorMainDiagCount,
-                floor * tableDimension * tableDimension,
-                tableDimension + 1,
-                players[playerInTheCell],
-                tableDimension
-            ) +
-            this.connectTheScoreLines(
-                floorSideDiagCount,
-                floor * tableDimension * tableDimension + (tableDimension - 1),
-                tableDimension - 1,
-                players[playerInTheCell],
-                tableDimension
-            ) +
-            this.connectTheScoreLines(
-                tableMainDiagCount,
-                0,
-                tableDimension * (tableDimension + 1) + 1,
-                players[playerInTheCell],
-                tableDimension
-            ) +
-            this.connectTheScoreLines(
-                tableSideDiagCount,
-                tableDimension - 1,
-                tableDimension * (tableDimension + 1) - 1,
-                players[playerInTheCell],
-                tableDimension
-            ) +
-            this.connectTheScoreLines(
-                tableAltitudeCount,
-                row * tableDimension + column,
-                tableDimension * tableDimension,
-                players[playerInTheCell],
-                tableDimension
-            );
+        this.connectTheScoreLines(
+            rowCount,
+            floor * dimension * dimension + row * dimension,
+            1,
+            players[playerInTheCell],
+            dimension
+        );
+        this.connectTheScoreLines(
+            columnCount,
+            floor * dimension * dimension + column,
+            dimension,
+            players[playerInTheCell],
+            dimension
+        );
+        this.connectTheScoreLines(
+            floorMainDiagCount,
+            floor * dimension * dimension,
+            dimension + 1,
+            players[playerInTheCell],
+            dimension
+        );
+        this.connectTheScoreLines(
+            floorSideDiagCount,
+            floor * dimension * dimension + (dimension - 1),
+            dimension - 1,
+            players[playerInTheCell],
+            dimension
+        );
+        this.connectTheScoreLines(
+            tableMainDiagCount,
+            0,
+            dimension * (dimension + 1) + 1,
+            players[playerInTheCell],
+            dimension
+        );
+        this.connectTheScoreLines(
+            tableSideDiagCount,
+            dimension - 1,
+            dimension * (dimension + 1) - 1,
+            players[playerInTheCell],
+            dimension
+        );
+        this.connectTheScoreLines(
+            tableAltitudeCount,
+            row * dimension + column,
+            dimension * dimension,
+            players[playerInTheCell],
+            dimension
+        );
     };
 
     // method below: checks each possible line(according to the condition that user gives it),
@@ -383,10 +386,7 @@ class GamePlay extends Component {
                         "gameTableCells btn btn-outline-dark";
                 }, 1000 + i * 100);
             }
-
-            return 1;
         }
-        return 0;
     };
 
     endGame = async () => {
@@ -401,19 +401,19 @@ class GamePlay extends Component {
             toast.success("شما برنده شدید و سه امتیاز کسب کردید");
         else if (players[myTurn].score === players[oppTurn].score)
             toast.info("شما مساوی شدید و یک امتیاز کسب کردید");
-        else
-            toast.error('تکبیر!');
+        else toast.error("تکبیر!");
         //reset everything:
         setTimeout(() => {
             this.props.CleanScoreboard();
             this.props.ResetOpponent();
             this.props.SetRoom(null);
+            this.props.history.replace("/"); // in competition mode must be send back to competition page
         }, 5000);
     };
     drawGameTable = () => {
         // *****************note: when window size changes: table's selected cells are cleared
         // use this.state.table to load again*****************
-        const { rowMarginRatio, tableDimension } = this.state;
+        const { rowMarginRatio, dimension } = this.state;
         // initialize rows columns floors
 
         try {
@@ -421,7 +421,7 @@ class GamePlay extends Component {
                 return "...در حال اتصال";
             } else {
                 let dimens = [];
-                for (let i = 0; i < tableDimension; i++) dimens.push(i);
+                for (let i = 0; i < dimension; i++) dimens.push(i);
                 const { table, players } = this.state;
                 // drawing the table and setting id s and click events
                 return dimens.map((floor) => (
@@ -434,10 +434,8 @@ class GamePlay extends Component {
                                 {dimens.map((column) => (
                                     <button
                                         key={
-                                            floor *
-                                                tableDimension *
-                                                tableDimension +
-                                            row * tableDimension +
+                                            floor * dimension * dimension +
+                                            row * dimension +
                                             column
                                         }
                                         type="button"
@@ -454,10 +452,8 @@ class GamePlay extends Component {
                                                 : null
                                         }
                                         id={
-                                            floor *
-                                                tableDimension *
-                                                tableDimension +
-                                            row * tableDimension +
+                                            floor * dimension * dimension +
+                                            row * dimension +
                                             column
                                         }
                                         onClick={(event) =>
@@ -481,7 +477,7 @@ class GamePlay extends Component {
     };
 }
 
-export default withReduxDashboard(GamePlay);
+export default withReduxDashboard(withRouter(GamePlay));
 
 //another way to check online / offline status :
 // initiateGameTimer = () => {

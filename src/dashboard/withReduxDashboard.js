@@ -27,7 +27,7 @@ function withReduxDashboard(component) {
         LoadOpponent: (opponent) => dispatch(LoadOpponent(opponent)),
         UpdateMyRecords: () => dispatch(UpdateMyRecords()),
         ResetOpponent: () => dispatch(ResetOpponent()),
-        SetRoom: (roomName) => dispatch(SetRoom(roomName)),
+        SetRoom: (room) => dispatch(SetRoom(room)),
         SetGameID: (gameID) => dispatch(SetGameID(gameID)),
         UpdateScoreboard: (details) => dispatch(UpdateScoreboard(details)),
         CleanScoreboard: () => dispatch(CleanScoreboard()),

@@ -17,8 +17,11 @@ class Ranking extends Component {
             .then((result) => {
                 let tempPlayers = [...result];
                 this.setState({
-                    players: tempPlayers.sort(
-                        (p1, p2) => p2.records.points - p1.records.points
+                    players: tempPlayers.sort( //sort priorities: 1. more points 2. more wins 3. less loses
+                        (p1, p2) =>
+                            p2.records.points - p1.records.points ||
+                            p2.records.wins - p1.records.wins ||
+                            p1.records.loses - p2.records.loses
                     ),
                     loading: false,
                 });
