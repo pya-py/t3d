@@ -43,7 +43,7 @@ const NoticeManager = () => {
         })()
             .then((all) => {
                 if (all.length) setNotices(all.reverse());
-                else
+                else //if all is empty
                     setNotices([
                         { title: "پیام", text: "اطلاعیه جدیدی وجود ندارد" },
                     ]);
@@ -105,8 +105,8 @@ const NoticeManager = () => {
             const { status } = await noticeServices.createNotice({
                 title,
                 text,
-                startDate,
-                endDate,
+                startDate: new Date(startDate),
+                endDate: new Date(endDate),
             });
             //*********** */
             //COMPLETELY CHECK NOTICE IN CLIENT AND SERVER
@@ -132,8 +132,8 @@ const NoticeManager = () => {
         setSelectedNoticeID(notice._id);
         setTitle(notice.title);
         setText(notice.text);
-        setStartDate(notice.startDate);
-        setEndDate(notice.endDate);
+        setStartDate(new Date(notice.startDate));
+        setEndDate(new Date(notice.endDate));
     };
 
     const cancelEditing = () => {
