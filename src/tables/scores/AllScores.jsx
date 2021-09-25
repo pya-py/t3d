@@ -2,7 +2,6 @@ import { Fragment } from "react";
 import SingleScoreCard from "./SingleScoreCard";
 
 const AllScores = ({scores}) => {
-    console.log(scores);
     return ( 
         <Fragment>
             { scores.map(score => (

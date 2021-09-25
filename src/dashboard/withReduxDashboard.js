@@ -10,6 +10,7 @@ import {
     UpdateScoreboard,
     CleanScoreboard,
     ResetRoom,
+    TriggerRecordUpdate
 } from "./actions";
 // ***** remove the ones that arent used in class components => for memory management/ not necessary though
 // useSelector for functional components
@@ -21,6 +22,7 @@ function withReduxDashboard(component) {
         opponent: state.opponent,
         room: state.room,
         scoreboard: state.scoreboard,
+        tools: state.tools
     });
 
     const mapDispatchToProps = (dispatch) => ({
@@ -33,6 +35,7 @@ function withReduxDashboard(component) {
         SetGameID: (gameID) => dispatch(SetGameID(gameID)),
         UpdateScoreboard: (details) => dispatch(UpdateScoreboard(details)),
         CleanScoreboard: () => dispatch(CleanScoreboard()),
+        TriggerRecordUpdate: () => dispatch(TriggerRecordUpdate())
     });
     return connect(mapStateToProps, mapDispatchToProps)(component);
 }

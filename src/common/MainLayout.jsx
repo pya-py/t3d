@@ -7,17 +7,19 @@ import { useMediaQuery } from "react-responsive";
 import SmartPhoneNavigationBar from "./SmartPhoneNavigationBar";
 import PlayerInfoSideBar from "../sidebars/PlayerInfoSideBar";
 import { useDispatch, useSelector } from "react-redux";
-import { LoadMe } from "../dashboard/actions";
+import { LoadMe, SignOut, UpdateMyRecords } from "../dashboard/actions";
 import { Fragment } from "react";
 import userServices from "./../services/userServices";
 import gameServices from "../services/gameServices";
 import { Col, Container, Row } from "react-bootstrap";
-import PanelMenu from "../users/controlpanel/PanelMenu";
-
+import PanelMenu from "../controlpanel/PanelMenu";
+import "../services/configs/server";
+import { useEffect } from "react";
 const MainLayout = (props) => {
     const { pathname } = props.location;
     //redux
     const player = useSelector((state) => state.player);
+    const tools = useSelector((state) => state.tools); //redux useful tools: like trigger update
     const opponent = useSelector((state) => state.opponent);
     const scoreboard = useSelector((state) => state.scoreboard);
 
@@ -39,7 +41,11 @@ const MainLayout = (props) => {
 
     //load player data after sign in
     const userID = userServices.readUserID();
+    useEffect(() => {
+        dispatch(UpdateMyRecords());
+    }, [tools.trigger, dispatch]);
     if (userID && !player) {
+        console.log("auth called");
         gameServices
             .loadPlayerData(userID)
             .then((result) => {
@@ -48,8 +54,11 @@ const MainLayout = (props) => {
             .catch((err) => {
                 dispatch(LoadMe(null));
             });
+    } else if (player && !userID) {
+        //still doesnt log out completely automatic:
+        //how to sign out after token expires?
+        dispatch(SignOut());
     }
-
     let pageLeftSideBar = <NoticeSideBar />;
     let pageRightSideBar = player ? (
         <PlayerInfoSideBar player={player} inGame={scoreboard.me} />
@@ -57,14 +66,12 @@ const MainLayout = (props) => {
         <SignInSideBar />
     ); // in case login hassnt been made
 
-    if (pathname === "/signUp")
-        pageLeftSideBar = pageRightSideBar = null;
-
-    else if( pathname === "/controlPanel"){
+    const inControlPanelPages = pathname.includes("/controlPanel");
+    if (pathname === "/signUp") pageLeftSideBar = pageRightSideBar = null;
+    else if (inControlPanelPages) {
         pageLeftSideBar = null;
         pageRightSideBar = <PanelMenu />;
-    }
-    else if (pathname === "/gameDeck") {
+    } else if (pathname === "/gameDeck") {
         // left sidebar must be opponents playerInfo
         if (opponent) {
             pageLeftSideBar = (
@@ -95,13 +102,17 @@ this looks like shit khodayi */}
             {deviceIsDesktop && (
                 <Row className="w-100 mx-auto">
                     <Col xs={3}>{pageRightSideBar}</Col>
-                    <Col xs={pathname !== "/controlPanel" ? 6 : 9}>{props.children}</Col>
-                    <Col xs={3}>{pageLeftSideBar}</Col>
+                    <Col xs={!inControlPanelPages ? 6 : 9}>
+                        {props.children}
+                    </Col>
+                    {pageLeftSideBar && <Col xs={3}>{pageLeftSideBar}</Col>}
                 </Row>
             )}
             {deviceIsTablet && (
                 <Row className="w-100 mx-auto">
-                    {pathname === '/controlPanel' && <Col xs={4}>{pageRightSideBar}</Col>}
+                    {pathname === "/controlPanel" && (
+                        <Col xs={4}>{pageRightSideBar}</Col>
+                    )}
                     <Col className="mx-auto" xs={8}>
                         {props.children}
                     </Col>

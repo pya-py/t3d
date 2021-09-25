@@ -1,7 +1,8 @@
 import { Component } from "react";
 import AllPlayers from "./AllPlayers";
-import userServices from "./../services/userServices";
-import LoadingBar from "../common/LoadingBar";
+import userServices from "../../services/userServices";
+import LoadingBar from "../../common/LoadingBar";
+import Configs from '../../services/configs';
 
 class Ranking extends Component {
     state = { players: [], loading: false };
@@ -9,9 +10,8 @@ class Ranking extends Component {
     componentDidMount() {
         (async () => {
             this.setState({ loading: true });
-            const STATUS = { SUCCESSFULL: 200 };
             const { data, status } = await userServices.getAllPlayers();
-            if (status === STATUS.SUCCESSFULL) return data.players;
+            if (status === Configs.Status.Successful) return data.players;
             return [];
         })()
             .then((result) => {

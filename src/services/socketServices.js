@@ -1,4 +1,4 @@
-import config from "./config.json";
+import {Routes} from './configs';
 
 const createSocketRequest = (request, roomName, playerID, msg) =>
     JSON.stringify({
@@ -10,7 +10,7 @@ const createSocketRequest = (request, roomName, playerID, msg) =>
 
 const connect = (roomName, playerID, gameType) => {
     return new Promise((resolve, reject) => {
-        var server = new WebSocket(config.webSocketRoot);
+        var server = new WebSocket(Routes.WebSocketRoot);
         server.onopen = () => {
             server.send(createSocketRequest("join", roomName, playerID, gameType)); //temp
             resolve(server);

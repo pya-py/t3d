@@ -1,18 +1,62 @@
-import './sidebars.css';
+import "./sidebars.css";
+import { Fragment, useEffect, useState } from "react";
+import noticeServices from "./../services/noticeServices";
+import Configs from "../services/configs";
+import { Alert, Card } from "react-bootstrap";
 
 const NoticeSideBar = () => {
-    return ( 
-        <div className="card noticeSidebar border-success  mb-3">
-            <div className="card-header text-center text-success border-success">اطلاعیه</div>
-            <div className="card-body text-right">
-                <p>متن خبر 1</p>
-                <p>متن خبر 2</p>
-                <p>متن خبر 3</p>
-                <p>متن خبر 4</p>
-                <p>blah blah blah</p>
-            </div>
-        </div>
+    const [notices, setNotices] = useState([]);
+    
+    // oncomponentMount or update
+    useEffect(() => {
+        (async () => {
+            const { status, data } = await noticeServices.getShortNotices();
+            if (status === Configs.Status.Successful) return data.notices;
+            return [];
+        })()
+            .then((all) => {
+                if (all) setNotices(all.reverse());
+                else
+                    setNotices([
+                        { title: "پیام", text: "اطلاعیه جدیدی وجود ندارد" },
+                    ]);
+            })
+            .catch((err) => {
+                setNotices([
+                    {
+                        title: "خطا",
+                        text: "...مشکلی حین بارگذاری اطلاعیه ها پیش آمد. دوباره امتحان کنید",
+                    },
+                ]);
+            });
+    }, []);
+
+    return (
+        <Card className="noticeSidebar" border="success">
+            <Card.Header className="text-center text-success">
+                اطلاعیه ها
+            </Card.Header>
+            <Card.Body className="text-right">
+                {notices.map((notice) => {
+                    return (
+                        <Fragment>
+                            <Alert variant="info">
+                                <i
+                                    className="fa fa-info-circle px-3"
+                                    aria-hidden="true"></i>
+                                <span
+                                    style={{ color: "red", fontSize: "18px" }}>
+                                    {notice.title}
+                                </span>
+                                : {notice.text}
+                            </Alert>
+                            <hr />
+                        </Fragment>
+                    );
+                })}
+            </Card.Body>
+        </Card>
     );
-}
- 
+};
+
 export default NoticeSideBar;

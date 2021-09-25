@@ -96,7 +96,7 @@ const RoomManager = () => {
                         </div>
 
                         <Button type="submit" className="mt-4" block variant="success">
-                            <i class="fa fa-cube px-3" aria-hidden="true"></i>
+                            <i className="fa fa-cube px-3" aria-hidden="true"></i>
                             شروع بازی
                         </Button>
                     </form>

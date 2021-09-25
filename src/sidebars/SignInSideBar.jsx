@@ -3,6 +3,8 @@ import "./sidebars.css";
 import userServices from "../services/userServices";
 import { withRouter } from "react-router-dom";
 import LoadingBar from "../common/LoadingBar";
+import Configs from "../services/configs";
+import { toast } from "react-toastify";
 
 class SignInSideBar extends Component {
     // *********************Objectives***********************
@@ -16,20 +18,23 @@ class SignInSideBar extends Component {
     onSignInSubmitted = async (event) => {
         event.preventDefault();
         this.setState({ loading: true });
-        const STATUS = { SUCCESSFULL: 200 };
         const { studentID, password } = this.state;
         const user = { studentID: Number(studentID), password };
         try {
             const { status, data } = await userServices.signIn(user);
-            if (status === STATUS.SUCCESSFULL) {
+            if (status === Configs.Status.Successful) {
                 userServices.saveUser(data.userID, data.token);
                 this.props.history.replace("/");
             }
-        } catch (ex) {
+        } catch (err) {
             // check nonserver errors
-            // console.log(ex);
+            // console.log(err);
             this.setState({ password: "" });
-            //toast.error('.ورود با مشکل رو به رو شد. لطفا دوباره تلاش کتنید.', {position: 'top-left', closeOnClick: true});
+            if (!Configs.Status.isErrorExpected(err))
+                toast.error(
+                    ".ورود با مشکل رو به رو شد. لطفا دوباره تلاش کتنید.",
+                    { position: "top-left", closeOnClick: true }
+                );
         }
         this.setState({ loading: false });
     };
@@ -37,7 +42,7 @@ class SignInSideBar extends Component {
     render() {
         const { studentID, password, loading } = this.state;
         return (
-            <div className="card signInSidebar border-primary mb-3">
+            <div className="card signInSidebar border-primary">
                 <div className="card-header text-center text-primary border-primary">
                     ورود کاربران
                 </div>
@@ -70,7 +75,7 @@ class SignInSideBar extends Component {
                                 type="submit"
                                 className="btn btn-outline-success btn-lg">
                                 <i
-                                    class="fa fa-sign-in px-3"
+                                    className="fa fa-sign-in px-3"
                                     aria-hidden="true"></i>
                                 ورود
                             </button>
@@ -78,7 +83,7 @@ class SignInSideBar extends Component {
                                 id="btnSideBarPasswordRecovery"
                                 className="btn btn-outline-info btn-lg">
                                 <i
-                                    class="fa fa-recycle px-3"
+                                    className="fa fa-recycle px-3"
                                     aria-hidden="true"></i>
                                 بازیابی پسورد
                             </button>

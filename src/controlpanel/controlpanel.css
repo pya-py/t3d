@@ -1,0 +1,45 @@
+.controlPanelCard {
+    background-color: white;
+    color: black;
+    /*max-width: 18rem;*/
+    /* find a way to prevent NavigationBar overlap on its below items */
+    width: 100%;
+    border-radius: 15px;
+    text-align: center;
+    margin: auto;
+    margin-top: 1%;
+}
+
+.panelSideBar {
+    height: 90vh; /*what to do about this*/
+    border-radius: 15px;
+}
+
+.noticeManagerCard {
+    width: 100%;
+    border-radius: 15px;
+    margin-top: 2%;
+    height: 100%;
+}
+
+.iconEditNotice {
+    cursor: pointer;
+}
+.iconEditNotice:hover {
+    color: orange;
+}
+
+.userInfoCard {
+    width: 100%;
+    border-radius: 15px;
+    margin-top: 1%;
+}
+
+.userInfoTextBox {
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    text-align: left;
+    margin-top: 2%;
+    
+}

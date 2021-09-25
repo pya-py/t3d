@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import userServices from "../services/userServices";
 import { withRouter } from "react-router-dom";
 import LoadingBar from "../common/LoadingBar";
+import Configs from '../services/configs';
 
 class SignUp extends Component {
     // *********************Objectives***********************
@@ -50,7 +51,6 @@ class SignUp extends Component {
             });
             return;
         }
-        const STATUS = { USER_CREATED: 201, ALREADY_EXISTS: 403 };
         if (password === confirmPassword) {
             try {
                 this.setState({ loading: true });
@@ -63,7 +63,7 @@ class SignUp extends Component {
 
                 const { status, data } = await userServices.signUp(newUser);
 
-                if (status === STATUS.USER_CREATED) {
+                if (status === Configs.Status.CreatedSuccessfully) {
                     //console.log(data);
                     toast.success(`ثبت نام با موفقیت انجام شد`, {
                         position: "top-right",
@@ -74,17 +74,17 @@ class SignUp extends Component {
                     // this.props.history.replace('/signIn')
                     // ******* change server to return user token and auto sign in
                 }
-            } catch (ex) {
-                // console.log(ex);
+            } catch (err) {
+                // console.log(err);
                 this.setState({ loading: false });
-                if (ex.response.status === STATUS.ALREADY_EXISTS) {
-                    toast.error(
-                        "کاربری با این شماره دانشجویی یا ایمیل قبلا ثبت نام کرده است",
-                        {
-                            position: "top-right",
-                            closeOnClick: true,
-                        }
-                    );
+                if (err.response.status === Configs.Status.Conflict) {
+                    // toast.error(
+                    //     "کاربری با این شماره دانشجویی یا ایمیل قبلا ثبت نام کرده است",
+                    //     {
+                    //         position: "top-right",
+                    //         closeOnClick: true,
+                    //     }
+                    // );
                     toast.warn(
                         "اگر رمز عبور خود را فراموش کرده اید، از گزینه بازیابی رمز عبور در صفحه ی ورود استفاده نمایید",
                         {
@@ -92,7 +92,7 @@ class SignUp extends Component {
                             closeOnClick: true,
                         }
                     );
-                } else {
+                } else if(!Configs.Status.isErrorExpected(err)){
                     toast.error(
                         "ثبت نام با مشکل رو به رو شد. لطفا دوباره تلاش کتنید",
                         {
@@ -261,7 +261,7 @@ class SignUp extends Component {
                             type="submit"
                             className="btn btn-success btn-block mt-4">
                             <i
-                                class="fa fa-user-plus px-3"
+                                className="fa fa-user-plus px-3"
                                 aria-hidden="true"></i>
                             ثبت نام
                         </button>

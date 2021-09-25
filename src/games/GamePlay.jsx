@@ -13,14 +13,14 @@ class GamePlay extends Component {
         players: [
             {
                 // ID: '',
-                shape: <i class="fa fa-times" aria-hidden="true" />, // "X" : some device may not support font-awsome
+                shape: <i className="fa fa-times" aria-hidden="true" />, // "X" : some device may not support font-awsome
                 color: "cyan",
                 lineColor: "btn btn-primary",
                 score: 0,
             },
             {
                 // ID: '',
-                shape: <i class="fa fa-sun-o" aria-hidden="true" />, // "O" : some device may not support font-awsome
+                shape: <i className="fa fa-sun-o" aria-hidden="true" />, // "O" : some device may not support font-awsome
                 color: "darkred",
                 lineColor: "btn btn-danger",
                 score: 0,

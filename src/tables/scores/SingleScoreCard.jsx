@@ -1,4 +1,4 @@
-import "./tables.css";
+import "../tables.css";
 
 const SingleScoreCard = ({gameType, playerXName, playerOName, xScore, oScore }) => {
     // format score text:

@@ -3,6 +3,9 @@ import { Component, Fragment } from "react";
 import userServices from "../services/userServices";
 import { withRouter } from "react-router-dom";
 import LoadingBar from "../common/LoadingBar";
+import Configs from "../services/configs";
+import { toast } from "react-toastify";
+
 class ModalSignIn extends Component {
     // *********************Objectives***********************
     // 1. handle errors particularly
@@ -19,19 +22,22 @@ class ModalSignIn extends Component {
     onSignInSubmitted = async (event) => {
         event.preventDefault();
         this.setState({ loading: true });
-        const STATUS = { SUCCESSFULL: 200, AUTHENTICATION_INVALID: 401 };
         const { studentID, password } = this.state;
         const user = { studentID: Number(studentID), password };
         try {
             const { status, data } = await userServices.signIn(user);
-            if (status === STATUS.SUCCESSFULL) {
+            if (status === Configs.Status.Successful) {
                 userServices.saveUser(data.userID, data.token);
                 this.props.history.replace("/");
             }
-        } catch (ex) {
+        } catch (err) {
             // check nonserver errors
             this.setState({ password: "" });
-            //toast.error('.ورود با مشکل رو به رو شد. لطفا دوباره تلاش کتنید.', {position: 'top-right', closeOnClick: true});
+            if (!Configs.Status.isErrorExpected(err))
+                toast.error(
+                    ".ورود با مشکل رو به رو شد. لطفا دوباره تلاش کتنید.",
+                    { position: "top-right", closeOnClick: true }
+                );
         }
         this.setState({ loading: false });
     };
@@ -45,7 +51,7 @@ class ModalSignIn extends Component {
             <Fragment>
                 <LoadingBar loading={loading} />
                 <Button variant="outline-primary" onClick={this.onShowClick}>
-                    <i class="fa fa-user px-3" aria-hidden="true"></i>
+                    <i className="fa fa-user px-3" aria-hidden="true"></i>
                     ورود کاربران
                 </Button>
 
@@ -97,7 +103,7 @@ class ModalSignIn extends Component {
                                     type="submit"
                                     variant="outline-success">
                                     <i
-                                        class="fa fa-sign-in px-3"
+                                        className="fa fa-sign-in px-3"
                                         aria-hidden="true"></i>
                                     ورود
                                 </Button>
@@ -106,7 +112,7 @@ class ModalSignIn extends Component {
                                     variant="outline-info"
                                     onClick={this.onForgotPasswordClick}>
                                     <i
-                                        class="fa fa-recycle px-3"
+                                        className="fa fa-recycle px-3"
                                         aria-hidden="true"></i>
                                     فراموشی رمز
                                 </Button>

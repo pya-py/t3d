@@ -7,6 +7,11 @@ export const UpdateMyRecords = () => ({
     type: "UPDATE_ME",
 });
 
+export const TriggerRecordUpdate = () => ({
+    type: "TRIGGER_UPDATE",
+});
+
+
 export const SignOut = () => ({
     type: "SIGN_OUT",
 });

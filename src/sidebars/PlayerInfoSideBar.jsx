@@ -4,7 +4,7 @@ import noAvatar from "./no-avatar.png"; // definitely must be changed bro!
 const PlayerInfoSideBar = (props) => {
     const { player, inGame } = props;
     return (
-        <div className="card playerInfoSideBar border-info mb-3">
+        <div className="card playerInfoSideBar border-info">
             <div className="card-header text-center text-info border-info">
                 {player.fullname}
             </div>

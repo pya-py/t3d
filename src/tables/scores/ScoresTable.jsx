@@ -1,7 +1,8 @@
-import "./tables.css";
+import "../tables.css";
 import { Component } from "react";
 import AllScores from "./AllScores";
-import gameServices from "./../services/gameServices";
+import gameServices from "../../services/gameServices";
+import Configs from '../../services/configs';
 
 class ScoresTable extends Component {
     state = {
@@ -16,9 +17,8 @@ class ScoresTable extends Component {
         // client and server side for this Module seriously need to be edited
         (async () => {
             this.setState({ loading: true }); // use preloader here?
-            const STATUS = { SUCCESSFULL: 200 };
             const { data, status } = await gameServices.getAllResults();
-            if (status === STATUS.SUCCESSFULL) return data.gameResults;
+            if (status === Configs.Status.Successful) return data.gameResults;
             return [];
         })()
             .then((result) => {
@@ -62,7 +62,7 @@ class ScoresTable extends Component {
                             onClick={this.btnShowLiveScores}>
                             نتایج زنده
                             <i
-                                class="fa fa-play-circle px-3"
+                                className="fa fa-play-circle px-3"
                                 aria-hidden="true"></i>
                         </button>
                     </div>
@@ -76,7 +76,7 @@ class ScoresTable extends Component {
                             onClick={this.btnShowFinalScores}>
                             نتایج نهایی
                             <i
-                                class="fa fa-stop-circle-o px-3"
+                                className="fa fa-stop-circle-o px-3"
                                 aria-hidden="true"></i>
                         </button>
                     </div>
