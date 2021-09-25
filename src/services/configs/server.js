@@ -9,5 +9,6 @@ module.exports = {
     Public: "public",
     Administrators: "administrators",
     Games: "games",
+    Notices: "notices",
     NoticeManagement: "manage"
 };
