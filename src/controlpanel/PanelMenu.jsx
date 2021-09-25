@@ -16,7 +16,7 @@ const PanelMenu = (props) => {
 
     return (
         <Row //bg-transparent
-            className="panelSideBar mt-2 bg-dark text-right d-flex flex-column flex-shrink-0 p-3">
+            className="panelSideBar mt-2 bg-dark text-right d-flex flex-column mx-auto flex-shrink-0 p-3">
             <NavLink
                 to="/controlPanel"
                 className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
@@ -49,7 +49,10 @@ const PanelMenu = (props) => {
                     <NavLink
                         className="nav-link link-dark"
                         to="/controlPanel/games">
-                        <i className="fa fa-gamepad px-3" aria-hidden="true"></i>
+                        
+                        <i
+                                    className="fa fa-trophy px-2"
+                                    aria-hidden="true"></i>
                         بازی ها
                     </NavLink>
                 </li>

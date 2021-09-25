@@ -5,6 +5,7 @@ import gameServices from "./../services/gameServices";
 import socketServices from "../services/socketServices";
 import withReduxDashboard from "../dashboard/withReduxDashboard";
 import { withRouter } from "react-router";
+import { Button, Card, Row, Col } from "react-bootstrap";
 
 class GamePlay extends Component {
     //**** game resets on device change. fix it */
@@ -41,18 +42,37 @@ class GamePlay extends Component {
     }
 
     render() {
+        const { players } = this.state;
         return (
-            <div id="divTableBlock" className="card border-dark gameBorderCard">
-                <div className="form-inline w-100">
-                    <p
-                        style={{ color: this.state.players[1].color }}
-                        className="w-50 text-center">{`O: ${this.state.players[1].score}`}</p>
-                    <p
-                        style={{ color: this.state.players[0].color }}
-                        className="w-50 text-center">{`X: ${this.state.players[0].score}`}</p>
-                </div>
-                {this.drawGameTable()}
-            </div>
+            <Card
+                id="divTableBlock"
+                bg="transparent"
+                border="dark"
+                className="w-100 mx-auto">
+                <Card.Header className="w-100 text-center">
+                    <Row>
+                        <Col
+                            style={{
+                                fontSize: "20px",
+                                textAlign: "right",
+                                color: players[1].color,
+                            }}>
+                            {players[1].shape} : {players[1].score}
+                        </Col>
+                        <Col
+                            style={{
+                                fontSize: "20px",
+                                textAlign: "left",
+                                color: players[0].color,
+                            }}>
+                            {players[0].score} : {players[0].shape}
+                        </Col>
+                    </Row>
+                </Card.Header>
+                <Card.Body className="gameBorderCard">
+                    {this.drawGameTable()}
+                </Card.Body>
+            </Card>
         );
     }
     LoadOpponentData = (opponentID) => {
@@ -63,7 +83,10 @@ class GamePlay extends Component {
                 .then((result) => {
                     LoadOpponent(result ? result : null);
                     toast.info("حریف شما هم به بازی متصل شد");
-                    toast.warn( 'حرکت اول با: ' + (!this.state.myTurn ? 'شما' : 'حریف شما') );
+                    toast.warn(
+                        "حرکت اول با: " +
+                            (!this.state.myTurn ? "شما" : "حریف شما")
+                    );
                 })
                 .catch((err) => {
                     //console.log(err);
@@ -425,25 +448,27 @@ class GamePlay extends Component {
                 return "...در حال اتصال";
             } else {
                 let dimens = [];
+                const leftMargins = [0, 40, 80, 120, 160];
                 for (let i = 0; i < dimension; i++) dimens.push(i);
                 const { table, players } = this.state;
                 // drawing the table and setting id s and click events
                 return dimens.map((floor) => (
                     <Fragment>
                         {dimens.map((row) => (
-                            <div
+                            <Row
                                 style={{
-                                    marginLeft: `${row * rowMarginRatio}px`,
+                                    direction: "ltr",
+                                    marginLeft: `${leftMargins[row]}px`,
                                 }}>
                                 {dimens.map((column) => (
-                                    <button
+                                    <Button
                                         key={
                                             floor * dimension * dimension +
                                             row * dimension +
                                             column
                                         }
-                                        type="button"
-                                        className="gameTableCells btn btn-outline-dark"
+                                        variant="btn btn-outline-dark"
+                                        className="gameTableCells"
                                         style={
                                             table[floor][row][column] !== null
                                                 ? {
@@ -466,9 +491,9 @@ class GamePlay extends Component {
                                         {table[floor][row][column] !== null &&
                                             players[table[floor][row][column]]
                                                 .shape}
-                                    </button>
+                                    </Button>
                                 ))}
-                            </div>
+                            </Row>
                         ))}
                         <br />
                     </Fragment>

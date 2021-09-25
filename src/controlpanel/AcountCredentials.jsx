@@ -147,12 +147,12 @@ const AccountCredentials = () => {
                                         ? "outline-primary"
                                         : "outline-secondary"
                                 }`}>
-                                فقط مشاهده
                                 {pageMode === MODES.READ_ONLY && (
                                     <i
                                         className="fa fa-dot-circle-o px-2"
                                         aria-hidden="true"></i>
                                 )}
+                                فقط مشاهده
                             </Button>
                         </Col>
                         <Col>
@@ -164,12 +164,12 @@ const AccountCredentials = () => {
                                         ? "outline-primary"
                                         : "outline-secondary"
                                 }`}>
-                                ویرایش
                                 {pageMode === MODES.EDIT && (
                                     <i
                                         className="fa fa-dot-circle-o px-2"
                                         aria-hidden="true"></i>
                                 )}
+                                ویرایش
                             </Button>
                         </Col>
                         <Col>
@@ -181,12 +181,12 @@ const AccountCredentials = () => {
                                         ? "outline-primary"
                                         : "outline-secondary"
                                 }`}>
-                                تغییر رمز عبور
                                 {pageMode === MODES.CHANGE_PASS && (
                                     <i
                                         className="fa fa-dot-circle-o px-2"
                                         aria-hidden="true"></i>
                                 )}
+                                تغییر رمز عبور
                             </Button>
                         </Col>
                     </Row>

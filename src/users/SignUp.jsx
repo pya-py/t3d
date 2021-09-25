@@ -261,7 +261,7 @@ class SignUp extends Component {
                             type="submit"
                             className="btn btn-success btn-block mt-4">
                             <i
-                                className="fa fa-user-plus px-3"
+                                className="fa fa-user-plus px-2"
                                 aria-hidden="true"></i>
                             ثبت نام
                         </button>

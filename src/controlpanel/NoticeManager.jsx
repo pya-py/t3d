@@ -111,7 +111,7 @@ const NoticeManager = () => {
             //*********** */
             //COMPLETELY CHECK NOTICE IN CLIENT AND SERVER
             if (status === Configs.Status.CreatedSuccessfully) {
-                toast.success(`اطلاعیه ی ${title} با مورفقیت ساخته شد`, {
+                toast.success(`اطلاعیه ی ${title} با موفقیت ساخته شد`, {
                     position: "top-right",
                     closeOnClick: true,
                 });
@@ -172,7 +172,7 @@ const NoticeManager = () => {
     //edit all heights in control panel
     //add patern and stuff to states and inputs
     return (
-        <Fragment>
+        <Fragment style={{width:'100%'}}>
             {player && isAllowed && (
                 <Row style={{ height: "100%" }}>
                     <LoadingBar loading={loading} />
@@ -280,14 +280,14 @@ const NoticeManager = () => {
                         </Card>
                     </Col>
                     <Col xs={7}>
-                        <Card
+                        <Card   
                             border="info"
                             bg="transparent"
                             className="mx-auto noticeManagerCard">
                             <Card.Header className="text-center">
                                 اطلاعیه های قبلی
                             </Card.Header>
-                            <Card.Body className="text-right">
+                            <Card.Body style={{overflowY: 'scroll'}} className="text-right">
                                 {notices.map((notice) => {
                                     return (
                                         <Fragment>

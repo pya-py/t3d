@@ -51,7 +51,7 @@ class ModalSignIn extends Component {
             <Fragment>
                 <LoadingBar loading={loading} />
                 <Button variant="outline-primary" onClick={this.onShowClick}>
-                    <i className="fa fa-user px-3" aria-hidden="true"></i>
+                    <i className="fa fa-user px-2" aria-hidden="true"></i>
                     ورود کاربران
                 </Button>
 
@@ -103,7 +103,7 @@ class ModalSignIn extends Component {
                                     type="submit"
                                     variant="outline-success">
                                     <i
-                                        className="fa fa-sign-in px-3"
+                                        className="fa fa-sign-in px-2"
                                         aria-hidden="true"></i>
                                     ورود
                                 </Button>
@@ -112,7 +112,7 @@ class ModalSignIn extends Component {
                                     variant="outline-info"
                                     onClick={this.onForgotPasswordClick}>
                                     <i
-                                        className="fa fa-recycle px-3"
+                                        className="fa fa-recycle px-2"
                                         aria-hidden="true"></i>
                                     فراموشی رمز
                                 </Button>
