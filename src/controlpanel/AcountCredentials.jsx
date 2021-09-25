@@ -18,6 +18,8 @@ const AccountCredentials = () => {
     const [loading, setLoading] = useState("");
     const [pageMode, setPageMode] = useState(MODES.READ_ONLY); //  0 => read only, 1 => edit mode, 2 => change password
     const [pageUpdateTrigger, triggerPageUpdate] = useState(false); // true <=> false -> triggers page , ==> see useEffect
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
     const dispatch = useDispatch();
     //on component mount download user credentials
@@ -79,21 +81,55 @@ const AccountCredentials = () => {
         setLoading(false);
     };
 
-    const updatePassword = () => {};
+    const changeMyPassword = async () => {
+        setLoading(true);
+        try {
+            const { status } = await userServices.changeMyPassword({
+                studentID,
+                password,
+                newPassword
+            });
+            if (status === Configs.Status.Successful) {
+                toast.success(`رمز شما با موفقیت تغییر داده شد`, {
+                    position: "top-right",
+                    closeOnClick: true,
+                });
+                dispatch(TriggerRecordUpdate());
+                reloadPage();
+            }
+        } catch (err) {
+            if (!Configs.Status.isErrorExpected(err))
+                toast.error(
+                    "خطایی در ذخیره تغییرات بوجود امد ... لطفا دوباره تلاش کنید",
+                    { position: "top-left", closeOnClick: true }
+                );
+        }
+        setLoading(false);
+    };
 
     const selectMode = (e) => {
         e.preventDefault();
-        switch(pageMode){
+        switch (pageMode) {
             case MODES.EDIT:
                 saveChanges();
                 return;
             case MODES.CHANGE_PASS:
-                updatePassword();
+                changeMyPassword();
                 return;
             default:
                 return;
         }
-    }
+    };
+    const checkConfirmPassword = (event) => {
+        setConfirmNewPassword(event.target.value);
+        if (newPassword !== event.target.value) {
+            event.target.setCustomValidity(
+                "تایید رمز عبور جدید باید با خود رمز عبور جدید مطابقت کامل داشته باشد"
+            );
+            //console.log(password, confirmPassword);
+        } else event.target.setCustomValidity("");
+    };
+
     return (
         <Fragment>
             <Card
@@ -112,6 +148,11 @@ const AccountCredentials = () => {
                                         : "outline-secondary"
                                 }`}>
                                 فقط مشاهده
+                                {pageMode === MODES.READ_ONLY && (
+                                    <i
+                                        className="fa fa-dot-circle-o px-2"
+                                        aria-hidden="true"></i>
+                                )}
                             </Button>
                         </Col>
                         <Col>
@@ -124,6 +165,11 @@ const AccountCredentials = () => {
                                         : "outline-secondary"
                                 }`}>
                                 ویرایش
+                                {pageMode === MODES.EDIT && (
+                                    <i
+                                        className="fa fa-dot-circle-o px-2"
+                                        aria-hidden="true"></i>
+                                )}
                             </Button>
                         </Col>
                         <Col>
@@ -136,15 +182,19 @@ const AccountCredentials = () => {
                                         : "outline-secondary"
                                 }`}>
                                 تغییر رمز عبور
+                                {pageMode === MODES.CHANGE_PASS && (
+                                    <i
+                                        className="fa fa-dot-circle-o px-2"
+                                        aria-hidden="true"></i>
+                                )}
                             </Button>
                         </Col>
                     </Row>
                 </Card.Header>
-                <Form onSubmit={e => selectMode(e)}>
-                <Card.Body className="w-50 mx-auto">
-                    <LoadingBar loading={loading} />
+                <Form onSubmit={(e) => selectMode(e)}>
+                    <Card.Body className="w-50 mx-auto">
+                        <LoadingBar loading={loading} />
 
-                    
                         {pageMode !== MODES.CHANGE_PASS && (
                             <>
                                 <Form.Group className="form-inline">
@@ -154,7 +204,7 @@ const AccountCredentials = () => {
                                     <Form.Control
                                         type="text"
                                         disabled
-                                        className="userInfoTextBox form-control w-75"
+                                        className="userInfoTextBox w-75"
                                         placeholder="Student ID"
                                         value={studentID}
                                     />
@@ -166,7 +216,7 @@ const AccountCredentials = () => {
                                     <Form.Control
                                         disabled={!pageMode}
                                         type="text"
-                                        className="userInfoTextBox form-control w-75"
+                                        className="userInfoTextBox w-75"
                                         pattern="[آ-ی ]{6,}" // persian characters and space
                                         onInput={(e) =>
                                             e.target.setCustomValidity("")
@@ -201,7 +251,7 @@ const AccountCredentials = () => {
                                                 "ورودی باید فرمت معتبر ایمیل را رعایت کرده و حداقل 6 کاراکتر باشد"
                                             )
                                         }
-                                        className="userInfoTextBox form-control w-75"
+                                        className="userInfoTextBox w-75"
                                         placeholder="E-mail"
                                         value={email}
                                         required="required"
@@ -223,7 +273,7 @@ const AccountCredentials = () => {
                                 </Form.Label>
                                 <Form.Control
                                     type="password"
-                                    className="userInfoTextBox form-control w-75"
+                                    className="userInfoTextBox w-75"
                                     placeholder="Password"
                                     value={password}
                                     onChange={(e) =>
@@ -249,56 +299,47 @@ const AccountCredentials = () => {
                                                 "رمز عبور باید حداقل 6 کاراکتر و حداکثر 15 کاراکتر داشته باشد"
                                             )
                                         }
-                                        className="userInfoTextBox form-control w-75"
+                                        className="userInfoTextBox w-75"
                                         placeholder="New Password"
-                                        value={password}
+                                        value={newPassword}
                                         required="required"
                                         onChange={(e) =>
-                                            setPassword(e.target.value)
+                                            setNewPassword(e.target.value)
                                         }
                                     />
                                 </Form.Group>
                                 <Form.Group className="form-inline">
                                     <Form.Label className="w-25">
-                                        رمز عبور جدید
+                                        تایید رمز عبور جدید
                                     </Form.Label>
+
                                     <Form.Control
                                         type="password"
-                                        pattern=".{6,15}"
-                                        onInput={(e) =>
-                                            e.target.setCustomValidity("")
-                                        }
-                                        onInvalid={(e) =>
-                                            e.target.setCustomValidity(
-                                                "رمز عبور باید حداقل 6 کاراکتر و حداکثر 15 کاراکتر داشته باشد"
-                                            )
-                                        }
-                                        className="userInfoTextBox form-control w-75"
-                                        placeholder="New Password"
-                                        value={password}
+                                        className="userInfoTextBox w-75"
+                                        placeholder="Confirm New Password"
+                                        value={confirmNewPassword}
                                         required="required"
-                                        onChange={(e) =>
-                                            setPassword(e.target.value)
+                                        onChange={(event) =>
+                                            checkConfirmPassword(event)
                                         }
                                     />
                                 </Form.Group>
                             </>
                         )}
-                    
-                </Card.Body>
-                <Card.Footer>
-                    <Button
-                        type="submit"
-                        disabled={!pageMode}
-                        block
-                        variant="success"
-                        className="w-50 mx-auto">
-                        <i
-                            className="fa fa-user-plus px-3"
-                            aria-hidden="true"></i>
-                        ذخیره تغییرات
-                    </Button>
-                </Card.Footer>
+                    </Card.Body>
+                    <Card.Footer>
+                        <Button
+                            type="submit"
+                            disabled={!pageMode}
+                            block
+                            variant="success"
+                            className="w-50 mx-auto">
+                            <i
+                                className="fa fa-wrench px-2"
+                                aria-hidden="true"></i>
+                            ثبت تغییرات
+                        </Button>
+                    </Card.Footer>
                 </Form>
             </Card>
         </Fragment>

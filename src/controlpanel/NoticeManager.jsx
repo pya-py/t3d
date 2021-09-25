@@ -22,7 +22,7 @@ const NoticeManager = () => {
     const [selectedNoticeID, setSelectedNoticeID] = useState(null);
     const [updateTrigger, setUpdateTrigger] = useState(false);
     const [loading, setLoading] = useState(false);
-
+    
     const resetStates = () => {
         setTitle("");
         setText("");

@@ -6,6 +6,7 @@ module.exports = {
     SignIn: "signin",
     Users: "users",
     Credentials: "credentials",
+    PasswordChange: "password",
     Public: "public",
     Administrators: "administrators",
     Games: "games",

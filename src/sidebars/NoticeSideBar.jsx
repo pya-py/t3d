@@ -16,7 +16,7 @@ const NoticeSideBar = () => {
         })()
             .then((all) => {
                 if (all.length) setNotices(all.reverse());
-                else
+                else //if all is empty
                     setNotices([
                         { title: "پیام", text: "اطلاعیه جدیدی وجود ندارد" },
                     ]);

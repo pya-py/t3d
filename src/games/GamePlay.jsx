@@ -409,9 +409,11 @@ class GamePlay extends Component {
             this.props.CleanScoreboard();
             this.props.ResetOpponent();
             this.props.ResetRoom();
+            this.props.TriggerRecordUpdate();
             this.props.history.replace("/"); // in competition mode must be send back to competition page
         }, 5000);
     };
+
     drawGameTable = () => {
         // *****************note: when window size changes: table's selected cells are cleared
         // use this.state.table to load again*****************

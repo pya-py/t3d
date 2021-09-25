@@ -29,6 +29,12 @@ const userServices = {
             JSON.stringify(newMe)
         );
     },
+    changeMyPassword: (passwords) => {
+        return http.put(
+            `${Routes.Root}/${Routes.Users}/${Routes.Credentials}/${Routes.PasswordChange}`,
+            JSON.stringify(passwords)
+        );
+    },
     getAllPlayers: () => {
         return http.get(`${Routes.Root}/${Routes.Users}/${Routes.Public}`);
     },
