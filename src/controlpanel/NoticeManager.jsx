@@ -42,7 +42,7 @@ const NoticeManager = () => {
             return [];
         })()
             .then((all) => {
-                if (all) setNotices(all.reverse());
+                if (all.length) setNotices(all.reverse());
                 else
                     setNotices([
                         { title: "پیام", text: "اطلاعیه جدیدی وجود ندارد" },
