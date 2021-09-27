@@ -1,6 +1,6 @@
 import { Component } from "react";
 import AllPlayers from "./AllPlayers";
-import userServices from "../../services/userServices";
+import userServices from "../../services/http/userServices";
 import LoadingBar from "../../common/LoadingBar";
 import Configs from '../../services/configs';
 

@@ -18,12 +18,21 @@
     margin-bottom: 5%;
 }
 
-.singleCard {
+.roomManagerCard {
+    background-color: white;
+    color: black;
+    /*max-width: 18rem;*/
+    margin: auto;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.gameDeckCard {
     background-color: white;
     color: black;
     /*max-width: 18rem;*/
     margin: auto;
     margin-top: 2%;
-    border-radius: 15px;
+    border-radius: 5px;
     width: 100%;
 }

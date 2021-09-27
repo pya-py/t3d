@@ -1,7 +1,7 @@
 .signInSidebar {
     background-color: white;
     color: black;
-    border-radius: 15px;
+    border-radius: 10px;
     float: right;
     margin-top: 3%;
     width: 100%;
@@ -18,7 +18,7 @@
 .noticeSidebar {
     background-color: white;
     color: black;
-    border-radius: 15px;
+    border-radius: 10px;
     float: left;
     margin-top: 3%;
     width: 100%;
@@ -39,7 +39,7 @@
 .playerInfoSideBar {
     background-color: white;
     color: black;
-    border-radius: 15px;
+    border-radius: 10px;
     float: right;
     margin-top: 3%;
     width: 100%;
@@ -51,4 +51,8 @@
     border-radius: 50%;
     float: center;
     margin: auto;
+}
+
+.badgeFontSize {
+    font-size: 16px;
 }

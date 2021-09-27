@@ -11,7 +11,6 @@ export const TriggerRecordUpdate = () => ({
     type: "TRIGGER_UPDATE",
 });
 
-
 export const SignOut = () => ({
     type: "SIGN_OUT",
 });
@@ -30,7 +29,7 @@ export const SetRoom = (room) => ({
     payload: room,
 });
 export const ResetRoom = () => ({
-    type: "RESET_ROOM"
+    type: "RESET_ROOM",
 });
 export const SetGameID = (gameID) => ({
     type: "SET_GAME_ID",
@@ -39,9 +38,14 @@ export const SetGameID = (gameID) => ({
 
 export const UpdateScoreboard = (details) => ({
     type: "UPDATE_SCOREBOARD",
-    payload: details ,
+    payload: details,
 });
 
 export const CleanScoreboard = () => ({
     type: "CLEAN_SCOREBOARD",
+});
+
+export const UpdateStatistics = (statistics) => ({
+    type: "UPDATE_STATISTICS",
+    payload: statistics,
 });

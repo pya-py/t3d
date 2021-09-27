@@ -4,7 +4,7 @@ import SinglePlayerCard from "./SinglePlayerCard";
 const AllPlayers = ({ players }) => {
     return (
         
-        <Card border="dark" style={{ width: "100%", borderRadius: "15px" }}>
+        <Card border="dark" style={{ width: "100%", borderRadius: "5px" }}>
             <Card.Header className="text-center">رده بندی</Card.Header>
                 <table className="table table-striped table-bordered table-hover text-center">
                     <thead className="bg-info">

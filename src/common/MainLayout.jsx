@@ -4,17 +4,18 @@ import SignInSideBar from "./../sidebars/SignInSideBar";
 import NoticeSideBar from "../sidebars/NoticeSideBar";
 import { withRouter } from "react-router";
 import { useMediaQuery } from "react-responsive";
-import SmartPhoneNavigationBar from "./SmartPhoneNavigationBar";
 import PlayerInfoSideBar from "../sidebars/PlayerInfoSideBar";
 import { useDispatch, useSelector } from "react-redux";
 import { LoadMe, SignOut, UpdateMyRecords } from "../dashboard/actions";
 import { Fragment } from "react";
-import userServices from "./../services/userServices";
-import gameServices from "../services/gameServices";
+import userServices from "../services/http/userServices";
+import gameServices from "../services/http/gameServices";
+
 import { Col, Container, Row } from "react-bootstrap";
 import PanelMenu from "../controlpanel/PanelMenu";
 import "../services/configs/server";
 import { useEffect } from "react";
+import GlobalSocketManager from "../services/ws/GlobalSocketManager";
 const MainLayout = (props) => {
     const { pathname } = props.location;
     //redux
@@ -22,22 +23,21 @@ const MainLayout = (props) => {
     const tools = useSelector((state) => state.tools); //redux useful tools: like trigger update
     const opponent = useSelector((state) => state.opponent);
     const scoreboard = useSelector((state) => state.scoreboard);
-
     const dispatch = useDispatch();
 
     const deviceIsDesktop = useMediaQuery({ query: "(min-width: 1200px)" });
     const deviceIsSmartPhone = useMediaQuery({ query: "(max-width: 768px)" });
     const deviceIsTablet =
         !deviceIsDesktop && !deviceIsSmartPhone ? true : false;
-    // this method is for temporary use and for finding items that cause horizontal overflow causing horizontal scrollbar
-    // const findHorizontalOverflow = () => {
-    //     let docWidth = document.documentElement.offsetWidth;
-    //     [].forEach.call(document.querySelectorAll("*"), function (el) {
-    //         if (el.offsetWidth > docWidth) {
-    //             console.log("here is the sabotage: ", el);
-    //         }
-    //     });
-    // };
+    /*this method is for temporary use and for finding items that cause horizontal overflow causing horizontal scrollbar
+    const findHorizontalOverflow = () => {
+        let docWidth = document.documentElement.offsetWidth;
+        [].forEach.call(document.querySelectorAll("*"), function (el) {
+            if (el.offsetWidth > docWidth) {
+                console.log("here is the sabotage: ", el);
+            }
+        });
+    };*/
 
     //load player data after sign in
     const userID = userServices.readUserID();
@@ -89,12 +89,9 @@ const MainLayout = (props) => {
     // *******create independent components for each device****
     return (
         <Fragment>
+            <GlobalSocketManager />
             <ToastContainer />
-            {deviceIsDesktop || deviceIsTablet ? (
-                <NavigationBar />
-            ) : (
-                <SmartPhoneNavigationBar />
-            )}
+            <NavigationBar />
 
             {/* wrap up this shit in
 multiple components for each device design

@@ -1,6 +1,6 @@
 import { Component } from "react";
 import "./sidebars.css";
-import userServices from "../services/userServices";
+import userServices from "../services/http/userServices";
 import { withRouter } from "react-router-dom";
 import LoadingBar from "../common/LoadingBar";
 import Configs from "../services/configs";

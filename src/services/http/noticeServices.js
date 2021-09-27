@@ -1,5 +1,5 @@
 import http from "./httpService";
-import { Routes } from "./configs";
+import { Routes } from "../configs";
 
 const noticeServices = {
     createNotice: (notice) => {

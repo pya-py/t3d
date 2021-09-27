@@ -1,6 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Status, BrowserStorage } from "./configs";
+import { Status, BrowserStorage } from "../configs";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers.put["Content-Type"] = "application/json";

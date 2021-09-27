@@ -51,7 +51,7 @@ const PanelMenu = (props) => {
                         to="/controlPanel/games">
                         
                         <i
-                                    className="fa fa-trophy px-2"
+                                    className="fa fa-trophy px-3"
                                     aria-hidden="true"></i>
                         بازی ها
                     </NavLink>

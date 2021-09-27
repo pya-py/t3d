@@ -1,7 +1,7 @@
 import "../tables.css";
 import { Component } from "react";
 import AllScores from "./AllScores";
-import gameServices from "../../services/gameServices";
+import gameServices from "../../services/http/gameServices";
 import Configs from '../../services/configs';
 
 class ScoresTable extends Component {
@@ -49,6 +49,7 @@ class ScoresTable extends Component {
         /* add a NextGames button maybe? (گزینه بازی های اینده) */
         let { liveScores, finalScores, showLiveOnes } = this.state;
 
+        // DESIGN : USE <Tabs> ???
         return (
             <div className="container">
                 <div className="row">

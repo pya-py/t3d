@@ -2,7 +2,7 @@ import { Fragment, useState, useEffect } from "react";
 import { Button, Card, Form, Col, Row } from "react-bootstrap";
 import LoadingBar from "../common/LoadingBar";
 import "./controlpanel.css";
-import userServices from "./../services/userServices";
+import userServices from "./../services/http/userServices";
 import Configs from "../services/configs";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
@@ -11,6 +11,7 @@ import { TriggerRecordUpdate } from "../dashboard/actions";
 const MODES = { READ_ONLY: 0, EDIT: 1, CHANGE_PASS: 2 };
 const AccountCredentials = () => {
     //states
+
     const [fullname, setFullname] = useState("");
     const [studentID, setStudentID] = useState("");
     const [email, setEmail] = useState("");
@@ -69,6 +70,7 @@ const AccountCredentials = () => {
                     closeOnClick: true,
                 });
                 dispatch(TriggerRecordUpdate());
+                
                 reloadPage();
             }
         } catch (err) {
@@ -130,6 +132,9 @@ const AccountCredentials = () => {
         } else event.target.setCustomValidity("");
     };
 
+
+    // *************************** DESIGN NOTE *******/
+    // HOW ABOUT USING TABS ? <Tabs>
     return (
         <Fragment>
             <Card

@@ -1,5 +1,5 @@
 import http from "./httpService";
-import { BrowserStorage, Routes } from "./configs";
+import { BrowserStorage, Routes } from "../configs";
 
 const userServices = {
     signUp: (user) => {

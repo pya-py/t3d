@@ -1,6 +1,6 @@
 import "./sidebars.css";
 import { Fragment, useEffect, useState } from "react";
-import noticeServices from "./../services/noticeServices";
+import noticeServices from "../services/http/noticeServices";
 import Configs from "../services/configs";
 import { Alert, Card } from "react-bootstrap";
 

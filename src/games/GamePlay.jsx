@@ -1,16 +1,16 @@
 import { Component, Fragment } from "react";
 import "./games.css";
 import { toast } from "react-toastify";
-import gameServices from "./../services/gameServices";
-import socketServices from "../services/socketServices";
+import gameServices from "./../services/http/gameServices";
+import gamePlaySocketServices from "../services/ws/gamePlaySocketServices";
 import withReduxDashboard from "../dashboard/withReduxDashboard";
 import { withRouter } from "react-router";
-import { Button, Card, Row, Col } from "react-bootstrap";
+import { Button, Card, Row } from "react-bootstrap";
+import BriefScoreboard from "./BriefScoreboard";
 
 class GamePlay extends Component {
     //**** game resets on device change. fix it */
     state = {
-        rowMarginRatio: 0,
         players: [
             {
                 // ID: '',
@@ -32,7 +32,7 @@ class GamePlay extends Component {
         table: null,
         myTurn: undefined, // change this
         gameID: null,
-        socketConnection: undefined,
+        socketGamePlay: undefined,
     };
 
     constructor() {
@@ -49,26 +49,7 @@ class GamePlay extends Component {
                 bg="transparent"
                 border="dark"
                 className="w-100 mx-auto">
-                <Card.Header className="w-100 text-center">
-                    <Row>
-                        <Col
-                            style={{
-                                fontSize: "20px",
-                                textAlign: "right",
-                                color: players[1].color,
-                            }}>
-                            {players[1].shape} : {players[1].score}
-                        </Col>
-                        <Col
-                            style={{
-                                fontSize: "20px",
-                                textAlign: "left",
-                                color: players[0].color,
-                            }}>
-                            {players[0].score} : {players[0].shape}
-                        </Col>
-                    </Row>
-                </Card.Header>
+                <BriefScoreboard players={players} />
                 <Card.Body className="gameBorderCard">
                     {this.drawGameTable()}
                 </Card.Body>
@@ -125,7 +106,7 @@ class GamePlay extends Component {
             this.LoadOpponentData(IDs[opponentIndex]);
         } else if (command === "LOAD") {
             const { table, xScore, oScore, turn } = msg;
-            const players = [...this.state.players];
+            const {players} = this.state;
             players[0].score = xScore;
             players[1].score = oScore;
             this.setState({
@@ -151,8 +132,8 @@ class GamePlay extends Component {
                 players,
             });
 
-            this.state.socketConnection.send(
-                socketServices.createSocketRequest(
+            this.state.socketGamePlay.send(
+                gamePlaySocketServices.createSocketRequest(
                     "moveRecieved",
                     room.name,
                     player.userID,
@@ -171,13 +152,13 @@ class GamePlay extends Component {
         const { player, room } = this.props;
 
         try {
-            let socket = await socketServices.connect(
+            let socket = await gamePlaySocketServices.connect(
                 room.name,
                 player.userID,
                 room.type
             );
             socket.onmessage = this.socketOnMessage;
-            this.setState({ socketConnection: socket });
+            this.setState({ socketGamePlay: socket });
             if (nextJob) nextJob();
         } catch (err) {
             console.log(err);
@@ -187,19 +168,6 @@ class GamePlay extends Component {
                 this.forceConnectToWebSocket(nextJob);
             }, 1000);
         }
-    };
-
-    updateMarginParameters = (divTableBlock) => {
-        //const {deviceIsDesktop, deviceIsTablet, deviceIsSmartPhone} = this.context;
-        const rowMarginDevideOn = 12.4; // deviceIsDesktop ? 22 : (deviceIsTablet ? 14 : 6);
-        this.setState({
-            rowMarginRatio: divTableBlock.offsetWidth / rowMarginDevideOn,
-        });
-        //*** for now this method remain still but if the main container is in fixed pixels width, the hell is this needed? */
-    };
-
-    onTableBlockResize = (event) => {
-        this.updateMarginParameters(event.target);
     };
 
     initiateGameTimer = () => {
@@ -220,18 +188,12 @@ class GamePlay extends Component {
     componentDidMount() {
         this.cellButtons = document.getElementsByClassName("gameTableCells"); // pay attension to searched className! may cause an error
 
-        let divTableBlock = document.getElementById("divTableBlock");
-        this.updateMarginParameters(divTableBlock);
-        divTableBlock.addEventListener("resize", (event) =>
-            this.onTableBlockResize(event)
-        );
-
         const { player, room } = this.props;
         this.setState({ dimension: room.type });
 
         this.forceConnectToWebSocket(() => {
-            this.state.socketConnection.send(
-                socketServices.createSocketRequest(
+            this.state.socketGamePlay.send(
+                gamePlaySocketServices.createSocketRequest(
                     "load",
                     room.name,
                     player.userID,
@@ -270,16 +232,16 @@ class GamePlay extends Component {
                 if (this.verifyAndApplyTheMove(cell, selectedCellButton)) {
                     //send move to WebSocket Server
                     this.forceConnectToWebSocket(() => {
-                        this.state.socketConnection.send(
-                            socketServices.createSocketRequest(
+                        this.state.socketGamePlay.send(
+                            gamePlaySocketServices.createSocketRequest(
                                 "move",
                                 room.name,
                                 player.userID,
                                 selectedCellButton.id
                             )
                         );
-                        this.state.socketConnection.send(
-                            socketServices.createSocketRequest(
+                        this.state.socketGamePlay.send(
+                            gamePlaySocketServices.createSocketRequest(
                                 "load",
                                 room.name,
                                 player.userID,
@@ -416,10 +378,8 @@ class GamePlay extends Component {
 
     endGame = async () => {
         //*******************important:
-        //ADD TRY CATCHimport socketServices from './../services/socketServices';
-        //*************edit: this.context.gatherPlayerData();
-        this.props.UpdateMyRecords(); //resets redux.state.player => forces MainLayout to reload player data and records
-
+        //ADD TRY CATCHimport gamePlaySocketServices from './../services/gamePlaySocketServices';
+        //*************edit: this.context.gatherPlayerData();پ
         const { players, myTurn } = this.state;
         const oppTurn = Number(!myTurn);
         if (players[myTurn].score > players[oppTurn].score)
@@ -440,17 +400,16 @@ class GamePlay extends Component {
     drawGameTable = () => {
         // *****************note: when window size changes: table's selected cells are cleared
         // use this.state.table to load again*****************
-        const { rowMarginRatio, dimension } = this.state;
+        const { dimension, table, players } = this.state;
         // initialize rows columns floors
 
         try {
-            if (!this.state.table) {
+            if (!table) {
                 return "...در حال اتصال";
             } else {
                 let dimens = [];
                 const leftMargins = [0, 40, 80, 120, 160];
                 for (let i = 0; i < dimension; i++) dimens.push(i);
-                const { table, players } = this.state;
                 // drawing the table and setting id s and click events
                 return dimens.map((floor) => (
                     <Fragment>

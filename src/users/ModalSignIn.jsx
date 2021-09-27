@@ -1,6 +1,6 @@
 import { Button, Form, Modal } from "react-bootstrap";
 import { Component, Fragment } from "react";
-import userServices from "../services/userServices";
+import userServices from "../services/http/userServices";
 import { withRouter } from "react-router-dom";
 import LoadingBar from "../common/LoadingBar";
 import Configs from "../services/configs";

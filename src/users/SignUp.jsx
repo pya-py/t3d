@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ModalSignIn from "./ModalSignIn";
 import "./users.css";
 import { toast } from "react-toastify";
-import userServices from "../services/userServices";
+import userServices from "../services/http/userServices";
 import { withRouter } from "react-router-dom";
 import LoadingBar from "../common/LoadingBar";
 import Configs from '../services/configs';

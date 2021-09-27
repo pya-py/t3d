@@ -1,4 +1,4 @@
-import {Routes, Status} from './configs';
+import {Routes, Status} from '../configs';
 
 import http from "./httpService";
 import userServices from "./userServices";

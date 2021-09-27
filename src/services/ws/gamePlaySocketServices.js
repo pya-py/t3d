@@ -1,4 +1,4 @@
-import {Routes} from './configs';
+import {Routes} from '../configs';
 
 const createSocketRequest = (request, roomName, playerID, msg) =>
     JSON.stringify({
@@ -10,7 +10,7 @@ const createSocketRequest = (request, roomName, playerID, msg) =>
 
 const connect = (roomName, playerID, gameType) => {
     return new Promise((resolve, reject) => {
-        var server = new WebSocket(Routes.WebSocketRoot);
+        var server = new WebSocket(`${Routes.WebSocketRoot}/${Routes.wsGamePlayRoute}`);
         server.onopen = () => {
             server.send(createSocketRequest("join", roomName, playerID, gameType)); //temp
             resolve(server);
@@ -23,7 +23,6 @@ const connect = (roomName, playerID, gameType) => {
         };
 
         server.onclose = () => {
-            // change
             // setTimeout( () => {
             //     connect(roomName, playerID);
             //     console.log('reconnecting from onClose');
@@ -34,9 +33,9 @@ const connect = (roomName, playerID, gameType) => {
     });
 };
 
-const socketServices = {
+const gamePlaySocketServices = {
     createSocketRequest,
     connect,
 };
 
-export default socketServices;
+export default gamePlaySocketServices;
