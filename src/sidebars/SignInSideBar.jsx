@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 import LoadingBar from "../common/LoadingBar";
 import Configs from "../services/configs";
 import { toast } from "react-toastify";
+import { Card, Form, Button, Col, Row } from "react-bootstrap";
 
 class SignInSideBar extends Component {
     // *********************Objectives***********************
@@ -42,55 +43,65 @@ class SignInSideBar extends Component {
     render() {
         const { studentID, password, loading } = this.state;
         return (
-            <div className="card signInSidebar border-primary">
-                <div className="card-header text-center text-primary border-primary">
+            <Card border="primary" className="signInSidebar">
+                <Card.Header
+                    border="primary"
+                    className="text-center text-primary">
                     ورود کاربران
-                </div>
+                </Card.Header>
                 <LoadingBar loading={loading} />
-                <div className="card-body text-primary">
-                    <form onSubmit={(event) => this.onSignInSubmitted(event)}>
-                        <input
+                <Card.Body className="text-primary">
+                    <Form onSubmit={(event) => this.onSignInSubmitted(event)}>
+                        <Form.Control
                             type="text"
-                            className="signInSidebarTextBox form-control text-primary"
-                            placeholder="Student ID"
+                            className="signInSidebarTextBox"
+                            placeholder="شماره دانشجویی"
                             value={studentID}
                             onChange={(e) =>
                                 this.setState({ studentID: e.target.value })
                             }
                         />
                         <br />
-                        <input
+                        <Form.Control
                             type="password"
-                            className="signInSidebarTextBox form-control text-primary"
-                            placeholder="Password"
+                            className="signInSidebarTextBox"
+                            placeholder="رمز عبور"
                             value={password}
                             onChange={(e) =>
                                 this.setState({ password: e.target.value })
                             }
                         />
                         <br />
-                        <div className="card-footer bg-transparent border-primary">
-                            <button
-                                id="btnSideBarSignIn"
-                                type="submit"
-                                className="btn btn-outline-success btn-lg">
-                                <i
-                                    className="fa fa-sign-in px-3"
-                                    aria-hidden="true"></i>
-                                ورود
-                            </button>
-                            <button
-                                id="btnSideBarPasswordRecovery"
-                                className="btn btn-outline-info btn-lg">
-                                <i
-                                    className="fa fa-recycle px-3"
-                                    aria-hidden="true"></i>
-                                بازیابی پسورد
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+                        <Card.Footer className="bg-transparent border-primary">
+                            <Row>
+                                <Col>
+                                    <Button
+                                        id="btnSideBarSignIn"
+                                        type="submit"
+                                        variant="success"
+                                        className="h-100">
+                                        <i
+                                            className="fa fa-sign-in px-3"
+                                            aria-hidden="true"></i>
+                                        ورود
+                                    </Button>
+                                </Col>
+                                <Col>
+                                    <Button
+                                        id="btnSideBarPasswordRecovery"
+                                        className="h-100"
+                                        variant="warning">
+                                        <i
+                                            className="fa fa-recycle px-3"
+                                            aria-hidden="true"></i>
+                                        بازیابی پسورد
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Card.Footer>
+                    </Form>
+                </Card.Body>
+            </Card>
         );
     }
 }

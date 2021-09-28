@@ -1,18 +1,19 @@
+import { Card } from 'react-bootstrap';
 import './info.css'
 
 const ContactInfo = () => {
     return ( 
-        <div className="card border-dark mb-3 singleCard" >
-            <div className="card-header text-center border-dark">اطلاعات تماس</div>
-            <div className="card-body text-center">
-                <p>دانشگاه علم و صنعت ایران</p>
-                <p>E-mail: <a href="https://mail.google.com">thcplusplus@gmail.com</a></p>
-                <p>Phone Number: 0000000000000</p>
-                <p>اطلاعات تماس استاد</p>
-                <p>instagram: ......</p>
-                <p>blah blah blah</p>
-            </div>
-        </div>
+        <Card border="dark" className="mb-3 singleCard" >
+            <Card.Header className="text-center">اطلاعات تماس</Card.Header>
+            <Card.Body className="text-right">
+                <Card.Text>دانشگاه علم و صنعت ایران</Card.Text>
+                <Card.Text>E-mail: <a href="https://mail.google.com">thcplusplus@gmail.com</a></Card.Text>
+                <Card.Text>Phone Number: 0000000000000</Card.Text>
+                <Card.Text>اطلاعات تماس استاد</Card.Text>
+                <Card.Text>instagram: ......</Card.Text>
+                <Card.Text>blah blah blah</Card.Text>
+            </Card.Body>
+        </Card>
      );
 }
  

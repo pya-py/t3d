@@ -11,7 +11,8 @@ import {
     CleanScoreboard,
     ResetRoom,
     TriggerRecordUpdate,
-    UpdateStatistics
+    UpdateStatistics,
+    TriggerOpponentSearch
 } from "./actions";
 // ***** remove the ones that arent used in class components => for memory management/ not necessary though
 // useSelector for functional components
@@ -37,7 +38,8 @@ function withReduxDashboard(component) {
         UpdateScoreboard: (details) => dispatch(UpdateScoreboard(details)),
         CleanScoreboard: () => dispatch(CleanScoreboard()),
         TriggerRecordUpdate: () => dispatch(TriggerRecordUpdate()),
-        UpdateStatistics: (stat) => dispatch(UpdateStatistics(stat))
+        UpdateStatistics: (stat) => dispatch(UpdateStatistics(stat)),
+        TriggerOpponentSearch: () => dispatch(TriggerOpponentSearch())
     });
     return connect(mapStateToProps, mapDispatchToProps)(component);
 }

@@ -6,6 +6,7 @@ import userServices from "../services/http/userServices";
 import { withRouter } from "react-router-dom";
 import LoadingBar from "../common/LoadingBar";
 import Configs from '../services/configs';
+import { Card, Form , Button} from "react-bootstrap";
 
 class SignUp extends Component {
     // *********************Objectives***********************
@@ -123,16 +124,16 @@ class SignUp extends Component {
         } = this.state;
 
         return (
-            <div className="card border-success mb-3 signUpCard">
+            <Card border="success" className="mb-3 signUpCard">
                 <LoadingBar loading={loading} />
-                <div className="card-header bg-transparent text-center border-success">
+                <Card.Header className="bg-transparent text-center border-success">
                     فرم ثبت نام
-                </div>
-                <div className="card-body">
-                    <form onSubmit={(event) => this.onSignUpSubmit(event)}>
-                        <div className="form-inline">
-                            <label className="w-25">نام</label>
-                            <input
+                </Card.Header>
+                <Card.Body>
+                    <Form onSubmit={(event) => this.onSignUpSubmit(event)}>
+                        <Form.Group className="form-inline">
+                            <Form.Label className="w-25">نام</Form.Label>
+                            <Form.Control
                                 type="text"
                                 pattern="[آ-ی ]{3,}" // persian characters and space
                                 onInput={(e) => e.target.setCustomValidity("")}
@@ -141,7 +142,7 @@ class SignUp extends Component {
                                         "نام باید با حروف فارسی و با حداقل طول سه حرف باشد"
                                     )
                                 }
-                                className="signUpTextBox form-control w-75"
+                                className="signUpTextBox w-75"
                                 placeholder="First Name"
                                 value={firstname}
                                 required="required"
@@ -151,11 +152,11 @@ class SignUp extends Component {
                                     })
                                 }
                             />
-                        </div>
+                        </Form.Group>
 
-                        <div className="form-inline">
-                            <label className="w-25">نام خانوادگی</label>
-                            <input
+                        <Form.Group className="form-inline">
+                            <Form.Label className="w-25">نام خانوادگی</Form.Label>
+                            <Form.Control
                                 type="text"
                                 className="signUpTextBox form-control w-75"
                                 pattern="[آ-ی ]{3,}" // persian characters and space
@@ -174,11 +175,11 @@ class SignUp extends Component {
                                     })
                                 }
                             />
-                        </div>
+                        </Form.Group>
 
-                        <div className="form-inline">
-                            <label className="w-25">شماره دانشجویی</label>
-                            <input
+                        <Form.Group className="form-inline">
+                            <Form.Label className="w-25">شماره دانشجویی</Form.Label>
+                            <Form.Control
                                 type="text"
                                 pattern="[0-9]{8}"
                                 onInput={(e) => e.target.setCustomValidity("")}
@@ -197,11 +198,11 @@ class SignUp extends Component {
                                     })
                                 }
                             />
-                        </div>
+                        </Form.Group>
 
-                        <div className="form-inline">
-                            <label className="w-25">ایمیل</label>
-                            <input
+                        <Form.Group className="form-inline">
+                            <Form.Label className="w-25">ایمیل</Form.Label>
+                            <Form.Control
                                 type="email"
                                 pattern=".{6,}"
                                 onInput={(e) => e.target.setCustomValidity("")}
@@ -218,11 +219,11 @@ class SignUp extends Component {
                                     this.setState({ email: e.target.value })
                                 }
                             />
-                        </div>
+                        </Form.Group>
 
-                        <div className="form-inline">
-                            <label className="w-25">رمز عبور</label>
-                            <input
+                        <Form.Group className="form-inline">
+                            <Form.Label className="w-25">رمز عبور</Form.Label>
+                            <Form.Control
                                 type="password"
                                 pattern=".{6,15}"
                                 onInput={(e) => e.target.setCustomValidity("")}
@@ -241,11 +242,11 @@ class SignUp extends Component {
                                     })
                                 }
                             />
-                        </div>
+                        </Form.Group>
 
-                        <div className="form-inline">
-                            <label className="w-25">تایید رمز عبور</label>
-                            <input
+                        <Form.Group className="form-inline">
+                            <Form.Label className="w-25">تایید رمز عبور</Form.Label>
+                            <Form.Control
                                 type="password"
                                 className="signUpTextBox form-control w-75"
                                 placeholder="Confirm Password"
@@ -255,22 +256,22 @@ class SignUp extends Component {
                                     this.checkConfirmPassword(event)
                                 }
                             />
-                        </div>
+                        </Form.Group>
 
-                        <button
+                        <Button
                             type="submit"
                             className="btn btn-success btn-block mt-4">
                             <i
                                 className="fa fa-user-plus px-2"
                                 aria-hidden="true"></i>
                             ثبت نام
-                        </button>
-                    </form>
-                    <p className="forgot-password text-right mt-5">
+                        </Button>
+                    </Form>
+                </Card.Body>
+                <Card.Footer className="border-primary bg-transparent">
                         اگر قبلا ثبت نام کردی، به صفحه ی <ModalSignIn /> برو !
-                    </p>
-                </div>
-            </div>
+                </Card.Footer>
+            </Card>
         );
     }
 }

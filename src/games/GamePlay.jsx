@@ -7,6 +7,7 @@ import withReduxDashboard from "../dashboard/withReduxDashboard";
 import { withRouter } from "react-router";
 import { Button, Card, Row } from "react-bootstrap";
 import BriefScoreboard from "./BriefScoreboard";
+import { GameSetting } from "../services/configs";
 
 class GamePlay extends Component {
     //**** game resets on device change. fix it */
@@ -15,7 +16,7 @@ class GamePlay extends Component {
             {
                 // ID: '',
                 shape: <i className="fa fa-times" aria-hidden="true" />, // "X" : some device may not support font-awsome
-                color: "cyan",
+                color: "blue",
                 lineColor: "btn btn-primary",
                 score: 0,
             },
@@ -106,7 +107,7 @@ class GamePlay extends Component {
             this.LoadOpponentData(IDs[opponentIndex]);
         } else if (command === "LOAD") {
             const { table, xScore, oScore, turn } = msg;
-            const {players} = this.state;
+            const { players } = this.state;
             players[0].score = xScore;
             players[1].score = oScore;
             this.setState({
@@ -189,6 +190,7 @@ class GamePlay extends Component {
         this.cellButtons = document.getElementsByClassName("gameTableCells"); // pay attension to searched className! may cause an error
 
         const { player, room } = this.props;
+        console.log()
         this.setState({ dimension: room.type });
 
         this.forceConnectToWebSocket(() => {
@@ -408,7 +410,6 @@ class GamePlay extends Component {
                 return "...در حال اتصال";
             } else {
                 let dimens = [];
-                const leftMargins = [0, 40, 80, 120, 160];
                 for (let i = 0; i < dimension; i++) dimens.push(i);
                 // drawing the table and setting id s and click events
                 return dimens.map((floor) => (
@@ -417,7 +418,7 @@ class GamePlay extends Component {
                             <Row
                                 style={{
                                     direction: "ltr",
-                                    marginLeft: `${leftMargins[row]}px`,
+                                    marginLeft: `${GameSetting.TableRowMargings[row]}px`,
                                 }}>
                                 {dimens.map((column) => (
                                     <Button

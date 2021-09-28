@@ -49,3 +49,7 @@ export const UpdateStatistics = (statistics) => ({
     type: "UPDATE_STATISTICS",
     payload: statistics,
 });
+
+export const TriggerOpponentSearch = () => ({
+    type: "TRIGGER_OPPONENT_SEARCH"
+})

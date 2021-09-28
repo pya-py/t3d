@@ -43,7 +43,7 @@ const MainLayout = (props) => {
     const userID = userServices.readUserID();
     useEffect(() => {
         dispatch(UpdateMyRecords());
-    }, [tools.trigger, dispatch]);
+    }, [tools.updateTriggered, dispatch]);
     if (userID && !player) {
         console.log("auth called");
         gameServices
