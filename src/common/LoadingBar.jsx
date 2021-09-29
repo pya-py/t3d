@@ -6,8 +6,8 @@ const LoadingBar = ({ loading }) => {
     useLayoutEffect(() => {
         document.body.style = { overflowY: "auto" };
         document.body.style = { height: "auto" };
-        if(loading)
-            setWhichOne(Math.floor(Math.random() * 100));
+        // if(loading)
+        //     setWhichOne(Math.floor(Math.random() * 100));
     }, [loading]);
     const selectedLoader = whichOne % 2 ? <Planets time={0} customLoading={loading} /> : <Circle2 time={0} customLoading={loading} />
     return <Fragment>{loading ? selectedLoader : null}</Fragment>;
