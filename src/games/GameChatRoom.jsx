@@ -16,14 +16,14 @@ const GameChatRoom = ({ friendID }) => {
     };
 
     return (
-        <Fragment>
+        <Form onSubmit={event => composeMessage(event)}>
             <Row className="w-100 mt-3 mx-auto">
                 <Alert className="w-100 text-right" variant="info">
                     {message.recieved ? message.recieved.text : null}
                 </Alert>
             </Row>
             <Row className="w-100 mx-auto mb-3">
-                <Form onSubmit={event => composeMessage(event)}>
+                
                     <InputGroup className="w-100">
                         <InputGroup.Prepend style={{ width: "10%" }}>
                             <Button
@@ -44,9 +44,8 @@ const GameChatRoom = ({ friendID }) => {
                                 className="text-right"></Form.Control>
                         </InputGroup.Prepend>
                     </InputGroup>
-                </Form>
             </Row>
-        </Fragment>
+        </Form>
     );
 };
 
