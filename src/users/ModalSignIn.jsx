@@ -1,4 +1,4 @@
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal, Row } from "react-bootstrap";
 import { Component, Fragment } from "react";
 import userServices from "../services/http/userServices";
 import { withRouter } from "react-router-dom";
@@ -55,7 +55,10 @@ class ModalSignIn extends Component {
                     ورود کاربران
                 </Button>
 
-                <Modal show={showModal} onHide={this.onCloseClick}>
+                <Modal
+                    backdrop="static"
+                    show={showModal}
+                    onHide={this.onCloseClick}>
                     <Modal.Header closeButton></Modal.Header>
 
                     <Modal.Body>
@@ -97,7 +100,8 @@ class ModalSignIn extends Component {
                                     }
                                 />
                             </Form.Group>
-                            <>
+                            <hr />
+                            <Row>
                                 <Button
                                     className="w-50"
                                     type="submit"
@@ -109,14 +113,14 @@ class ModalSignIn extends Component {
                                 </Button>
                                 <Button
                                     className="w-50"
-                                    variant="outline-info"
+                                    variant="outline-warning"
                                     onClick={this.onForgotPasswordClick}>
                                     <i
                                         className="fa fa-recycle px-2"
                                         aria-hidden="true"></i>
                                     فراموشی رمز
                                 </Button>
-                            </>
+                            </Row>
                         </Form>
                     </Modal.Body>
                 </Modal>

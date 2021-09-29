@@ -1,4 +1,4 @@
-const Routes = require ('./server');
+const Routes = require('./server');
 const Status = require('./status');
 const BrowserStorage = require('./browser');
 const GameSetting = require('./gamesetting');

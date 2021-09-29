@@ -18,10 +18,11 @@ class ScoresTable extends Component {
         (async () => {
             this.setState({ loading: true }); // use preloader here?
             const { data, status } = await gameServices.getAllResults();
-            if (status === Configs.Status.Successful) return data.gameResults;
+            if (status === Configs.Status.Successful) return data.allGames;
             return [];
         })()
             .then((result) => {
+                result = result.reverse();
                 this.setState({
                     liveScores: result.filter((game) => game.isLive),
                     finalScores: result.filter((game) => !game.isLive),

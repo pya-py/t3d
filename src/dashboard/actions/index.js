@@ -53,3 +53,22 @@ export const UpdateStatistics = (statistics) => ({
 export const TriggerOpponentSearch = () => ({
     type: "TRIGGER_OPPONENT_SEARCH"
 })
+
+export const SendFriendRequestTo = (targetID) => ({
+    type: "SEND_FRIEND_REQUEST",
+    payload: targetID
+})
+
+export const SendMessageTo = (name, friendID, text) => ({
+    type: "SEND_MESSAGE",
+    payload: { name, friendID, text }
+});
+
+export const RecieveMessageFrom = (name, friendID, text) => ({
+    type: "RECIEVE_MESSAGE",
+    payload: { name, friendID, text }
+});
+
+export const ResetMessages = () => ({
+    type: "RESET_MESSAGES"
+});

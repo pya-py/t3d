@@ -12,7 +12,11 @@ import {
     ResetRoom,
     TriggerRecordUpdate,
     UpdateStatistics,
-    TriggerOpponentSearch
+    TriggerOpponentSearch,
+    SendFriendRequestTo,
+    SendMessageTo,
+    RecieveMessageFrom,
+    ResetMessages
 } from "./actions";
 // ***** remove the ones that arent used in class components => for memory management/ not necessary though
 // useSelector for functional components
@@ -39,7 +43,11 @@ function withReduxDashboard(component) {
         CleanScoreboard: () => dispatch(CleanScoreboard()),
         TriggerRecordUpdate: () => dispatch(TriggerRecordUpdate()),
         UpdateStatistics: (stat) => dispatch(UpdateStatistics(stat)),
-        TriggerOpponentSearch: () => dispatch(TriggerOpponentSearch())
+        TriggerOpponentSearch: () => dispatch(TriggerOpponentSearch()),
+        SendFriendRequestTo: () => dispatch(SendFriendRequestTo()),
+        SendMessageTo: (name, friendID, text) => dispatch(SendMessageTo(name, friendID, text)),
+        RecieveMessageFrom: (name, friendID, text) => dispatch(RecieveMessageFrom(name, friendID, text)),
+        ResetMessages: () => dispatch(ResetMessages())
     });
     return connect(mapStateToProps, mapDispatchToProps)(component);
 }

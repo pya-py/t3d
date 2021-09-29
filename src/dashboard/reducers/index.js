@@ -5,6 +5,7 @@ import { roomReducer } from './room';
 import { scoreboardReducer } from './scoreboard';
 import { toolsReducer } from "./tools";
 import { statisticsReducer } from "./statistics";
+import { messageReducer } from './message';
 
 export const reducers = combineReducers({
     player: playerReducer,
@@ -12,5 +13,6 @@ export const reducers = combineReducers({
     room: roomReducer,
     scoreboard: scoreboardReducer,
     tools: toolsReducer,
-    statistics: statisticsReducer
+    statistics: statisticsReducer,
+    message: messageReducer
 });

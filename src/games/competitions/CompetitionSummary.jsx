@@ -4,7 +4,7 @@ const CompetitionSummary = ({ title, summary }) => {
     return (
         <Container>
             <Row>
-                <Alert className="text-right w-100" pill variant="info">
+                <Alert className="text-right w-100" variant="info">
                     <Alert.Heading className="text-center">
                         <Badge variant="success p-2" >
                             {title}

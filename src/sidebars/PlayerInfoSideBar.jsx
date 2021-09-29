@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import noAvatar from "./no-avatar.png"; // definitely must be changed bro!
 import {
     Card,
@@ -8,142 +7,143 @@ import {
     Badge,
     Image,
     ListGroup,
+    Button,
 } from "react-bootstrap";
-import { useSelector } from "react-redux";
-const PlayerInfoSideBar = (props) => {
-    const { player, inGame } = props;
-    const statistics = useSelector((state) => state.statistics);
+import OnlineStatistics from "./OnlineStatistics";
+import { SendFriendRequestTo } from "../dashboard/actions";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import userServices from "./../services/http/userServices";
+import Configs from "../services/configs";
+import GameChatRoom from "./../games/GameChatRoom";
 
+const PlayerInfoSideBar = (props) => {
+    const { person, inGame } = props;
+    const me = useSelector((state) => state.player);
+    const dispatch = useDispatch();
+    const [personIsFriend, setPersonIsFriend] = useState(false);
+
+    const onFriendRequestClick = (event) => {
+        event.target.innerHTML = "ارسال شد...";
+        event.target.disabled = true;
+        dispatch(SendFriendRequestTo(person.userID));
+    };
+    useEffect(() => {
+        if (person.userID !== me.userID) {
+            (async () => {
+                try {
+                    const { status, data } = await userServices.isMyFriend(
+                        person.userID
+                    );
+                    if (status === Configs.Status.Successful) {
+                        setPersonIsFriend(data.isFriend);
+                    }
+                } catch (err) {
+                    // handle error.
+                    console.log(err);
+                }
+            })();
+        }
+    }, [person, me]);
     return (
-        <Fragment>
-            <Card border="info" className="playerInfoSideBar">
-                <Card.Header className="text-center text-info">
-                    {player.fullname}
-                </Card.Header>
-                <Image
-                    className="card-img-top playerAvatar"
-                    src={noAvatar}
-                    alt="مشکلی در بارگذاری تصویر پیش آمد"
-                />
-                <hr />
-                <Card.Body className="card-body">
-                    <ListGroup className="list-group list-group-flush">
-                        {inGame && (
-                            <ListGroup.Item>
-                                <Alert
-                                    variant={
-                                        inGame.index ? "danger" : "primary"
-                                    }>
-                                    <Alert.Heading>
-                                        {inGame.shape} : {inGame.score}
-                                    </Alert.Heading>
-                                </Alert>
-                            </ListGroup.Item>
-                        )}
+        <Card border="info" className="playerInfoSideBar">
+            <Card.Header className="text-center text-info">
+                {person.fullname}
+            </Card.Header>
+            <Image
+                className="card-img-top playerAvatar"
+                src={noAvatar}
+                alt="مشکلی در بارگذاری تصویر پیش آمد"
+            />
+            <hr />
+            <Card.Body className="card-body">
+                <ListGroup className="list-group list-group-flush">
+                    {inGame && (
                         <ListGroup.Item>
-                            <Row className="py-2">
-                                <Col className="text-right">
-                                    <Card.Text>امتیاز بازیکن</Card.Text>
-                                </Col>
-                                <Col className="text-left">
-                                    <Badge
-                                        className="badgeFontSize"
-                                        pill
-                                        variant="primary">
-                                        {player.records.points}
-                                    </Badge>
-                                </Col>
-                            </Row>
+                            <Alert
+                                variant={inGame.index ? "danger" : "primary"}>
+                                <Alert.Heading className="text-center">
+                                    {inGame.score} : {inGame.shape}
+                                </Alert.Heading>
+                            </Alert>
                         </ListGroup.Item>
-                        <ListGroup.Item>
-                            <Row className="py-2">
-                                <Col className="text-right">
-                                    <Card.Text>تعداد بردها</Card.Text>
-                                </Col>
-                                <Col className="text-left">
-                                    <Badge
-                                        className="badgeFontSize"
-                                        pill
-                                        variant="primary">
-                                        {player.records.wins}
-                                    </Badge>
-                                </Col>
-                            </Row>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                            <Row className="py-2">
-                                <Col className="text-right">تعداد تساوی ها</Col>
-                                <Col className="text-left">
-                                    <Badge
-                                        className="badgeFontSize"
-                                        pill
-                                        variant="primary">
-                                        {player.records.points}
-                                    </Badge>
-                                </Col>
-                            </Row>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                            <Row className="py-2">
-                                <Col className="text-right">تعداد باخت ها</Col>
-                                <Col className="text-left">
-                                    <Badge
-                                        className="badgeFontSize"
-                                        pill
-                                        variant="primary">
-                                        {player.records.points}
-                                    </Badge>
-                                </Col>
-                            </Row>
-                        </ListGroup.Item>
-                    </ListGroup>
-                </Card.Body>
-                <Card.Footer>
-                    <ListGroup className="list-group list-group-flush">
-                        <ListGroup.Item className="bg-transparent">
-                            <Row>
-                                <Col>
-                                    <Card.Text className="text-center">
-                                        <i
-                                            className="fa fa-wifi px-2"
-                                            aria-hidden="true"></i>
-                                        تعداد کاربران آنلاین
-                                    </Card.Text>
-                                </Col>
-                                <Col>
-                                    <Badge
-                                        className="badgeFontSize"
-                                        variant="success"
-                                        pill>
-                                        {statistics.all}
-                                    </Badge>
-                                </Col>
-                            </Row>
-                        </ListGroup.Item>
-                        <ListGroup.Item className="bg-transparent">
-                            <Row>
-                                <Col>
-                                    <Card.Text className="text-center">
-                                        <i
-                                            className="fa fa-gamepad px-2"
-                                            aria-hidden="true"></i>
-                                        کاربران در حال بازی
-                                    </Card.Text>
-                                </Col>
-                                <Col>
-                                    <Badge
-                                        className="badgeFontSize"
-                                        variant="success"
-                                        pill>
-                                        {statistics.all}
-                                    </Badge>
-                                </Col>
-                            </Row>
-                        </ListGroup.Item>
-                    </ListGroup>
-                </Card.Footer>
-            </Card>
-        </Fragment>
+                    )}
+                    <ListGroup.Item>
+                        <Row className="py-2">
+                            <Col className="text-right">
+                                <Card.Text>امتیاز بازیکن</Card.Text>
+                            </Col>
+                            <Col className="text-left">
+                                <Badge
+                                    className="badgeFontSize"
+                                    pill
+                                    variant="primary">
+                                    {person.records.points}
+                                </Badge>
+                            </Col>
+                        </Row>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Row className="py-2">
+                            <Col className="text-right">
+                                <Card.Text>تعداد بردها</Card.Text>
+                            </Col>
+                            <Col className="text-left">
+                                <Badge
+                                    className="badgeFontSize"
+                                    pill
+                                    variant="primary">
+                                    {person.records.wins}
+                                </Badge>
+                            </Col>
+                        </Row>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Row className="py-2">
+                            <Col className="text-right">تعداد تساوی ها</Col>
+                            <Col className="text-left">
+                                <Badge
+                                    className="badgeFontSize"
+                                    pill
+                                    variant="primary">
+                                    {person.records.points}
+                                </Badge>
+                            </Col>
+                        </Row>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Row className="py-2">
+                            <Col className="text-right">تعداد باخت ها</Col>
+                            <Col className="text-left">
+                                <Badge
+                                    className="badgeFontSize"
+                                    pill
+                                    variant="primary">
+                                    {person.records.points}
+                                </Badge>
+                            </Col>
+                        </Row>
+                    </ListGroup.Item>
+                </ListGroup>
+            </Card.Body>
+            <Card.Footer>
+                {me.userID === person.userID ? (
+                    <OnlineStatistics />
+                ) : personIsFriend ? (
+                    <GameChatRoom friendID={person.userID}/>
+                ) : (
+                    <Button
+                        variant={"outline-info"}
+                        block
+                        onClick={(event) => onFriendRequestClick(event)}>
+                        <i
+                            className="fa fa-handshake-o px-2"
+                            aria-hidden="true"></i>
+                        درخواست دوستی
+                    </Button>
+                )}
+            </Card.Footer>
+        </Card>
     );
 };
 

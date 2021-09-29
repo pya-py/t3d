@@ -22,7 +22,7 @@ const NoticeManager = () => {
     const [selectedNoticeID, setSelectedNoticeID] = useState(null);
     const [updateTrigger, setUpdateTrigger] = useState(false);
     const [loading, setLoading] = useState(false);
-    
+
     const resetStates = () => {
         setTitle("");
         setText("");
@@ -31,25 +31,25 @@ const NoticeManager = () => {
         setSelectedNoticeID(null);
         setUpdateTrigger(!updateTrigger); // updateTrigger: true <===> false -> chane -> useEffects calls
     };
+
     useEffect(() => {
-        console.log("notice loaded");
         //use another simpler preloader
         //load all notices in left side for selecting: load all and push them in notices state
         (async () => {
-            setLoading(true);
-            const { status, data } = await noticeServices.getAdvancedNotics();
-            if (status === Configs.Status.Successful) return data.notices;
-            return [];
-        })()
-            .then((all) => {
-                if (all.length) setNotices(all.reverse());
-                else //if all is empty
-                    setNotices([
-                        { title: "پیام", text: "اطلاعیه جدیدی وجود ندارد" },
-                    ]);
-                setLoading(false);
-            })
-            .catch((err) => {
+            try {
+                setLoading(true);
+                const { status, data } =
+                    await noticeServices.getAdvancedNotics();
+                if (status === Configs.Status.Successful) {
+                    //return data.notices;
+                    if (data.notices.length) setNotices(data.notices.reverse());
+                    //if all is empty
+                    else
+                        setNotices([
+                            { title: "پیام", text: "اطلاعیه جدیدی وجود ندارد" },
+                        ]);
+                }
+            } catch (err) {
                 setNotices([
                     {
                         title: "خطا",
@@ -57,8 +57,11 @@ const NoticeManager = () => {
                     },
                 ]);
                 setLoading(false);
-            });
+            }
+            setLoading(false);
+        })();
     }, [updateTrigger]);
+
     //***** in server implemented a middleware for this, is this needed? */
     if (player && isAllowed === undefined) {
         //in admin tools pages: admin status is checked directly dor completely making sure that user is admin and he/her is trusted directly from server
@@ -172,7 +175,7 @@ const NoticeManager = () => {
     //edit all heights in control panel
     //add patern and stuff to states and inputs
     return (
-        <Fragment style={{width:'100%'}}>
+        <Fragment>
             {player && isAllowed && (
                 <Row style={{ height: "100%" }}>
                     <LoadingBar loading={loading} />
@@ -280,14 +283,16 @@ const NoticeManager = () => {
                         </Card>
                     </Col>
                     <Col xs={7}>
-                        <Card   
+                        <Card
                             border="info"
                             bg="transparent"
                             className="mx-auto noticeManagerCard">
                             <Card.Header className="text-center">
                                 اطلاعیه های قبلی
                             </Card.Header>
-                            <Card.Body style={{overflowY: 'scroll'}} className="text-right">
+                            <Card.Body
+                                style={{ overflowY: "scroll" }}
+                                className="text-right">
                                 {notices.map((notice) => {
                                     return (
                                         <Fragment>

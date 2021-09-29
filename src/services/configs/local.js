@@ -9,6 +9,7 @@ module.exports = {
     Users: "users",
     Credentials: "credentials",
     PasswordChange: "password",
+    Friends: 'friends',
     Public: "public",
     Administrators: "administrators",
     Games: "games",

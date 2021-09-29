@@ -6,29 +6,31 @@ import { Alert, Card } from "react-bootstrap";
 
 const NoticeSideBar = () => {
     const [notices, setNotices] = useState([]);
-    
+
     // oncomponentMount or update
     useEffect(() => {
         (async () => {
-            const { status, data } = await noticeServices.getShortNotices();
-            if (status === Configs.Status.Successful) return data.notices;
-            return [];
-        })()
-            .then((all) => {
-                if (all.length) setNotices(all.reverse());
-                else //if all is empty
-                    setNotices([
-                        { title: "پیام", text: "اطلاعیه جدیدی وجود ندارد" },
-                    ]);
-            })
-            .catch((err) => {
+            try {
+                const { status, data } =
+                    await noticeServices.getShortNotices();
+                if (status === Configs.Status.Successful) {
+                    //return data.notices;
+                    if (data.notices.length) setNotices(data.notices.reverse());
+                    //if all is empty
+                    else
+                        setNotices([
+                            { title: "پیام", text: "اطلاعیه جدیدی وجود ندارد" },
+                        ]);
+                }
+            } catch (err) {
                 setNotices([
                     {
                         title: "خطا",
                         text: "...مشکلی حین بارگذاری اطلاعیه ها پیش آمد. دوباره امتحان کنید",
                     },
                 ]);
-            });
+            }
+        })();
     }, []);
 
     return (

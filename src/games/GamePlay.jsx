@@ -1,13 +1,11 @@
-import { Component, Fragment } from "react";
+import { Component } from "react";
 import "./games.css";
 import { toast } from "react-toastify";
 import gameServices from "./../services/http/gameServices";
 import gamePlaySocketServices from "../services/ws/gamePlaySocketServices";
 import withReduxDashboard from "../dashboard/withReduxDashboard";
 import { withRouter } from "react-router";
-import { Button, Card, Row } from "react-bootstrap";
-import BriefScoreboard from "./BriefScoreboard";
-import { GameSetting } from "../services/configs";
+import TableDesign from "./TableDesign";
 
 class GamePlay extends Component {
     //**** game resets on device change. fix it */
@@ -42,21 +40,6 @@ class GamePlay extends Component {
         this.cellButtons = [];
     }
 
-    render() {
-        const { players } = this.state;
-        return (
-            <Card
-                id="divTableBlock"
-                bg="transparent"
-                border="dark"
-                className="w-100 mx-auto">
-                <BriefScoreboard players={players} />
-                <Card.Body className="gameBorderCard">
-                    {this.drawGameTable()}
-                </Card.Body>
-            </Card>
-        );
-    }
     LoadOpponentData = (opponentID) => {
         const { opponent, LoadOpponent } = this.props;
         if (!opponent && opponentID) {
@@ -133,6 +116,7 @@ class GamePlay extends Component {
                 players,
             });
 
+            //force connect it?
             this.state.socketGamePlay.send(
                 gamePlaySocketServices.createSocketRequest(
                     "moveRecieved",
@@ -163,11 +147,12 @@ class GamePlay extends Component {
             if (nextJob) nextJob();
         } catch (err) {
             console.log(err);
-
+            // **********************
+            //time out must be set with rising time out time to prevent server getting fucked up
             setTimeout(() => {
                 console.log("rconnecting from GamePlay");
                 this.forceConnectToWebSocket(nextJob);
-            }, 1000);
+            }, 3000);
         }
     };
 
@@ -188,9 +173,9 @@ class GamePlay extends Component {
 
     componentDidMount() {
         this.cellButtons = document.getElementsByClassName("gameTableCells"); // pay attension to searched className! may cause an error
-
+        
         const { player, room } = this.props;
-        console.log()
+        console.log();
         this.setState({ dimension: room.type });
 
         this.forceConnectToWebSocket(() => {
@@ -203,6 +188,8 @@ class GamePlay extends Component {
                 )
             );
         });
+
+        console.log("TOO MANY UNNEEDED PROPS SENT: ", this.props);
         this.initiateGameTimer();
     }
 
@@ -399,71 +386,16 @@ class GamePlay extends Component {
         }, 5000);
     };
 
-    drawGameTable = () => {
-        // *****************note: when window size changes: table's selected cells are cleared
-        // use this.state.table to load again*****************
-        const { dimension, table, players } = this.state;
-        // initialize rows columns floors
-
-        try {
-            if (!table) {
-                return "...در حال اتصال";
-            } else {
-                let dimens = [];
-                for (let i = 0; i < dimension; i++) dimens.push(i);
-                // drawing the table and setting id s and click events
-                return dimens.map((floor) => (
-                    <Fragment>
-                        {dimens.map((row) => (
-                            <Row
-                                style={{
-                                    direction: "ltr",
-                                    marginLeft: `${GameSetting.TableRowMargings[row]}px`,
-                                }}>
-                                {dimens.map((column) => (
-                                    <Button
-                                        key={
-                                            floor * dimension * dimension +
-                                            row * dimension +
-                                            column
-                                        }
-                                        variant="btn btn-outline-dark"
-                                        className="gameTableCells"
-                                        style={
-                                            table[floor][row][column] !== null
-                                                ? {
-                                                      color: players[
-                                                          table[floor][row][
-                                                              column
-                                                          ]
-                                                      ].color,
-                                                  }
-                                                : null
-                                        }
-                                        id={
-                                            floor * dimension * dimension +
-                                            row * dimension +
-                                            column
-                                        }
-                                        onClick={(event) =>
-                                            this.onEachCellClick(event)
-                                        }>
-                                        {table[floor][row][column] !== null &&
-                                            players[table[floor][row][column]]
-                                                .shape}
-                                    </Button>
-                                ))}
-                            </Row>
-                        ))}
-                        <br />
-                    </Fragment>
-                ));
-            }
-        } catch (err) {
-            console.log(err);
-            return null;
-        }
-    };
+    render() {
+        return (
+            <TableDesign
+                dimension={this.state.dimension}
+                players={this.state.players}
+                table={this.state.table}
+                onEachCellClick={this.onEachCellClick}
+            />
+        );
+    }
 }
 
 export default withRouter(withReduxDashboard(GamePlay));

@@ -1,6 +1,6 @@
 import { Card, Col, Row } from "react-bootstrap";
 
-const BriefScoreboard = ({ players }) => {
+const BriefScoreboard = ({ players}) => {
     return (
         <Card.Header className="w-100 text-center">
             <Row>
@@ -15,7 +15,6 @@ const BriefScoreboard = ({ players }) => {
                 <Col className="text-warning" style={{
                         fontSize: "18px"}}>
                     <i className="fa fa-clock-o px-2" aria-hidden="true"></i>
-                    Timer: Edit:
                 </Col>
                 <Col
                     style={{

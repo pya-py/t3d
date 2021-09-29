@@ -24,28 +24,28 @@ const AccountCredentials = () => {
 
     const dispatch = useDispatch();
     //on component mount download user credentials
+
     useEffect(() => {
         (async () => {
-            setLoading(true);
-            const { status, data } = await userServices.getMyCredentials();
-            if (status === Configs.Status.Successful) return data.me;
-
-            return null;
-        })()
-            .then((me) => {
-                setFullname(me.fullname);
-                setStudentID(me.studentID);
-                setEmail(me.email);
-                setLoading(false);
-            })
-            .catch((err) => {
+            try {
+                setLoading(true);
+                const { status, data } = await userServices.getMyCredentials();
+                if (status === Configs.Status.Successful) {
+                    const { me } = data;
+                    setFullname(me.fullname);
+                    setStudentID(me.studentID);
+                    setEmail(me.email);
+                }
+            } catch (err) {
                 if (!Configs.Status.isErrorExpected(err))
                     toast.error(
                         "حین دریافت اطلاعات کاربر ایرادی پیش آمد. ... لطفا دوباره تلاش کنید.",
                         { position: "top-left", closeOnClick: true }
                     );
                 setLoading(false);
-            });
+            }
+            setLoading(false);
+        })();
     }, [pageUpdateTrigger]);
 
     const reloadPage = () => {
@@ -70,7 +70,7 @@ const AccountCredentials = () => {
                     closeOnClick: true,
                 });
                 dispatch(TriggerRecordUpdate());
-                
+
                 reloadPage();
             }
         } catch (err) {
@@ -89,7 +89,7 @@ const AccountCredentials = () => {
             const { status } = await userServices.changeMyPassword({
                 studentID,
                 password,
-                newPassword
+                newPassword,
             });
             if (status === Configs.Status.Successful) {
                 toast.success(`رمز شما با موفقیت تغییر داده شد`, {
@@ -131,7 +131,6 @@ const AccountCredentials = () => {
             //console.log(password, confirmPassword);
         } else event.target.setCustomValidity("");
     };
-
 
     // *************************** DESIGN NOTE *******/
     // HOW ABOUT USING TABS ? <Tabs>

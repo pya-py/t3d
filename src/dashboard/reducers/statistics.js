@@ -1,9 +1,9 @@
 
-export const statisticsReducer = (state = {all: 0, playing: 0}, action) => {
+export const statisticsReducer = (state = {players: 0, games: 0}, action) => {
     switch (action.type) {
         case "UPDATE_STATISTICS":
-            const {all, playing} = action.payload;
-            return {all, playing};
+            const {players, games} = action.payload;
+            return {players, games};
         
         default:
             return state;

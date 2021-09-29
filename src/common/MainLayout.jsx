@@ -16,6 +16,7 @@ import PanelMenu from "../controlpanel/PanelMenu";
 import "../services/configs/server";
 import { useEffect } from "react";
 import GlobalSocketManager from "../services/ws/GlobalSocketManager";
+import GameChatRoom from "../games/GameChatRoom";
 const MainLayout = (props) => {
     const { pathname } = props.location;
     //redux
@@ -61,7 +62,7 @@ const MainLayout = (props) => {
     }
     let pageLeftSideBar = <NoticeSideBar />;
     let pageRightSideBar = player ? (
-        <PlayerInfoSideBar player={player} inGame={scoreboard.me} />
+        <PlayerInfoSideBar person={player} inGame={scoreboard.me} />
     ) : (
         <SignInSideBar />
     ); // in case login hassnt been made
@@ -75,13 +76,13 @@ const MainLayout = (props) => {
         // left sidebar must be opponents playerInfo
         if (opponent) {
             pageLeftSideBar = (
-                <PlayerInfoSideBar player={opponent} inGame={scoreboard.opp} />
+                <PlayerInfoSideBar person={opponent} inGame={scoreboard.opp} />
             );
         }
         if (deviceIsSmartPhone) {
             //this is temprory
             // find a way for showing result in smartphone, without causing vertical scroll
-            pageLeftSideBar = null; //change later
+            pageLeftSideBar = null; //،ٍء\
             pageRightSideBar = null; // change then
         }
     }
@@ -118,12 +119,14 @@ this looks like shit khodayi */}
             )}
             {deviceIsSmartPhone && (
                 <Container>
+                    {pathname === '/gameDeck' && opponent && <GameChatRoom friendID={opponent.userID} />}
                     {/* what to do for control panelk sidebar in smartphone */}
                     {player ? (
                         <Row className="w-100 mx-auto">{pageRightSideBar}</Row>
                     ) : null}
                     <Row className="w-100 mx-auto">{pageLeftSideBar}</Row>
                     <Row className="w-100 mx-auto">{props.children}</Row>
+                    
                 </Container>
             )}
         </Fragment>

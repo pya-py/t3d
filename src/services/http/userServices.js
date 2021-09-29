@@ -19,6 +19,9 @@ const userServices = {
             `${Routes.Root}/${Routes.Users}/${Routes.Public}/${userID}`
         );
     },
+    getAllPlayers: () => {
+        return http.get(`${Routes.Root}/${Routes.Users}/${Routes.Public}`);
+    },
     getMyCredentials: () => {
         //token will be sent automatically, o.w. method doesnt return anything
         return http.get(`${Routes.Root}/${Routes.Users}/${Routes.Credentials}`);
@@ -35,19 +38,24 @@ const userServices = {
             JSON.stringify(passwords)
         );
     },
-    getAllPlayers: () => {
-        return http.get(`${Routes.Root}/${Routes.Users}/${Routes.Public}`);
+    getFriends: () => {
+        return http.get(`${Routes.Root}/${Routes.Users}/${Routes.Credentials}/${Routes.Friends}`);
     },
-    saveUser: (id, token) => {
-        // use remember me option
-        sessionStorage.setItem(BrowserStorage.ID, id); // localStorage or sessionStorage?
-        sessionStorage.setItem(BrowserStorage.Token, token);
+    isMyFriend: (targetID) => {
+        return http.get(
+            `${Routes.Root}/${Routes.Users}/${Routes.Credentials}/${Routes.Friends}/${targetID}`
+        );
     },
     isAdministrator: (userID) => {
         return http.get(
             `${Routes.Root}/${Routes.Users}/${Routes.Administrators}/${userID}`
         );
     }, // check is admin via token? or this?:|
+    saveUser: (id, token) => {
+        // use remember me option
+        sessionStorage.setItem(BrowserStorage.ID, id); // localStorage or sessionStorage?
+        sessionStorage.setItem(BrowserStorage.Token, token);
+    },
     readUserID: () => {
         //from browser
         // consider local storage
