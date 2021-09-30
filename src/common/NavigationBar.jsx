@@ -71,7 +71,7 @@ const NavigationBar = () => {
                                 aria-hidden="true"></i>
                             تماس با ما
                         </NavLink>
-                        {device === Device.SmartPhone && <NavLink
+                        {player && device === Device.SmartPhone && <NavLink
                             className="nav-link text-primary"
                             to={Routes.Client.ChatRoom}
                             activeClassName="btn-outline-secondary text-dark">
