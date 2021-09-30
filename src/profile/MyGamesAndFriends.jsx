@@ -5,15 +5,15 @@ import Configs from "../services/configs";
 import gameServices from "../services/http/gameServices";
 import { Card, Col, Nav, Row, Tab } from "react-bootstrap";
 import AllScores from "../tables/scores/AllScores";
-import PlayerInfoSideBar from "../sidebars/PlayerInfoSideBar";
 import './profile.css';
+import FriendRecords from "./FriendRecords";
 
 const MyGamesAndFriends = () => {
     const [loading, setLoading] = useState(false);
     const [myFriends, setMyFriends] = useState([]);
     const [myGames, setMyGames] = useState([]);
     const [filterID, setFilterID] = useState("me");
-
+    const [selectedFriendIndex, setSelectedFriendIndex] = useState(-1);
     useEffect(() => {
         (async () => {
             try {
@@ -32,6 +32,11 @@ const MyGamesAndFriends = () => {
         })();
     }, []);
 
+
+    useEffect(() => {
+        setSelectedFriendIndex(filterID !== "me" ? myFriends.findIndex(friend => friend.userID === filterID) : -1);
+        // if filterID === "me" || frined id wia .findIndex not found ---> returns -1
+    }, [filterID, myFriends])
     return (
         <Card
             border="secondary"
@@ -42,6 +47,7 @@ const MyGamesAndFriends = () => {
             </Card.Header>
             <LoadingBar loading={loading} />
             <Card.Body >
+                <LoadingBar loading={loading} />
                 <Tab.Container
                     defaultActiveKey={filterID}
                     onSelect={(key) => setFilterID(key)}>
@@ -86,8 +92,8 @@ const MyGamesAndFriends = () => {
                             </Tab.Content>
                         </Col>
                         {/* EDIT MAIL LAYOUT <Col> LIKE THIS */}
-                        {filterID !== "me" && myFriends.length && <Col xs={4}>
-                            <PlayerInfoSideBar person={myFriends.length ? myFriends[0] : null} />
+                        {<Col xs={4}>
+                            <FriendRecords friend={selectedFriendIndex !== -1 ? myFriends[selectedFriendIndex] : null} />
                         </Col>}
                     </Row>
                 </Tab.Container>

@@ -161,17 +161,27 @@ const GlobalSocketManager = () => {
     // EVENT NAME: RandomGameInitiated Event
     // happens when user clicks on 'Random Game" Tab search button => sends opponent search request to server
     useEffect(() => {
-        if (room.type && !room.name && socketGlobal && player) {
+        if (room.type) {
             //is it necessary?
             //completely making sure we're on right stage
-            console.log(room.type);
-            socketGlobal.send(
-                JSON.stringify({
-                    request: "find",
-                    clientID: player.userID,
-                    msg: room.type,
-                })
-            );
+            if (!room.name && socketGlobal && player)
+                socketGlobal.send(
+                    JSON.stringify({
+                        request: "find",
+                        clientID: player.userID,
+                        msg: room.type,
+                    })
+                );
+        } else if (!room.name) {
+            //room --> {null,null} --> means room has been reset hand u need to remove
+            if (socketGlobal)
+                socketGlobal.send(
+                    JSON.stringify({
+                        request: "close_game",
+                        clientID: player.userID,
+                        msg: null,
+                    })
+                );
         }
     }, [player, room, tools.opponentSearchTriggered, socketGlobal]);
 
@@ -240,18 +250,17 @@ const GlobalSocketManager = () => {
         }
     }, 5000);
 
-
     setInterval(() => {
-        socketGlobal && socketGlobal.send(
-            JSON.stringify({
-                request: "online",
-                clientID: player.userID,
-                msg: null,
-            })
-        );
+        if(socketGlobal)
+            socketGlobal.send(
+                JSON.stringify({
+                    request: "online",
+                    clientID: player.userID,
+                    msg: null,
+                })
+            );
     }, 60000); // every ONE MINUTE request number of online members to update the site
     // is it really necessary though ?????
-
 
     return (
         //this is just for firendship request in games

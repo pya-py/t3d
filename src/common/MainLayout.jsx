@@ -65,7 +65,7 @@ const MainLayout = (props) => {
     }
     let pageLeftSideBar = <NoticeSideBar />;
     let pageRightSideBar = player ? (
-        <PlayerInfoSideBar person={player} inGame={scoreboard.me} />
+        <PlayerInfoSideBar person={null} inGame={scoreboard.me} />
     ) : (
         <SignInSideBar />
     ); // in case login hassnt been made

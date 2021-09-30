@@ -46,11 +46,12 @@
 }
 
 .playerAvatar {
-    width: 200px;
-    height: 200px;
+    width: 35%;
+    height: 35%;
     border-radius: 50%;
     float: center;
     margin: auto;
+    margin-top:1%
 }
 
 .badgeFontSize {

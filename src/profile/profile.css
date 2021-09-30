@@ -43,3 +43,24 @@
     margin-top: 2%;
     
 }
+
+.friendRecords {
+    color: black;
+    border-radius: 5px;
+    margin-top: 1%;
+    width: 100%;
+}
+
+.myFriendAvatar {
+    width: 35%;
+    height: 35%;
+    border-radius: 50%;
+    float: center;
+    margin: auto;
+    margin-top: 2%;
+}
+
+
+.badgeFontSize {
+    font-size: 16px;
+}

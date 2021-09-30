@@ -18,8 +18,9 @@ import Configs from "../services/configs";
 import GameChatRoom from "../chat/GameChatRoom";
 
 const PlayerInfoSideBar = (props) => {
-    const { person, inGame } = props;
+    const { inGame } = props;
     const me = useSelector((state) => state.player);
+    const person = props.person ? props.person : me;
     const dispatch = useDispatch();
     const [personIsFriend, setPersonIsFriend] = useState(false);
 
@@ -47,16 +48,20 @@ const PlayerInfoSideBar = (props) => {
     }, [person, me]);
     return (
         <Card border="info" className="playerInfoSideBar">
-            <Card.Header className="text-center text-info">
-                {person.fullname}
+            <Card.Header className="text-center text-info form-inline">
+                <Col>
+                    <Card.Text className="text-left">{person.fullname}</Card.Text>
+                </Col>
+                <Col>
+                    <Image
+                        className="card-img-top playerAvatar"
+                        src={noAvatar}
+                        alt="مشکلی در بارگذاری تصویر پیش آمد"
+                    />
+                </Col>
             </Card.Header>
-            <Image
-                className="card-img-top playerAvatar"
-                src={noAvatar}
-                alt="مشکلی در بارگذاری تصویر پیش آمد"
-            />
-            <hr />
-            <Card.Body className="card-body">
+
+            <Card.Body>
                 <ListGroup className="list-group list-group-flush">
                     {inGame && (
                         <ListGroup.Item>
@@ -69,7 +74,7 @@ const PlayerInfoSideBar = (props) => {
                         </ListGroup.Item>
                     )}
                     <ListGroup.Item>
-                        <Row className="py-2">
+                        <Row>
                             <Col className="text-right">
                                 <Card.Text>امتیاز بازیکن</Card.Text>
                             </Col>
@@ -84,7 +89,7 @@ const PlayerInfoSideBar = (props) => {
                         </Row>
                     </ListGroup.Item>
                     <ListGroup.Item>
-                        <Row className="py-2">
+                        <Row>
                             <Col className="text-right">
                                 <Card.Text>تعداد بردها</Card.Text>
                             </Col>
@@ -99,27 +104,27 @@ const PlayerInfoSideBar = (props) => {
                         </Row>
                     </ListGroup.Item>
                     <ListGroup.Item>
-                        <Row className="py-2">
+                        <Row>
                             <Col className="text-right">تعداد تساوی ها</Col>
                             <Col className="text-left">
                                 <Badge
                                     className="badgeFontSize"
                                     pill
                                     variant="primary">
-                                    {person.records.points}
+                                    {person.records.draws}
                                 </Badge>
                             </Col>
                         </Row>
                     </ListGroup.Item>
                     <ListGroup.Item>
-                        <Row className="py-2">
+                        <Row>
                             <Col className="text-right">تعداد باخت ها</Col>
                             <Col className="text-left">
                                 <Badge
                                     className="badgeFontSize"
                                     pill
                                     variant="primary">
-                                    {person.records.points}
+                                    {person.records.loses}
                                 </Badge>
                             </Col>
                         </Row>
@@ -127,10 +132,10 @@ const PlayerInfoSideBar = (props) => {
                 </ListGroup>
             </Card.Body>
             <Card.Footer>
-                {me.userID === person.userID ? (
+                {me === person ? (
                     <OnlineStatistics />
                 ) : personIsFriend ? (
-                    <GameChatRoom friendID={person.userID}/>
+                    <GameChatRoom friendID={person.userID} />
                 ) : (
                     <Button
                         variant={"outline-info"}
