@@ -191,6 +191,7 @@ class SignUp extends Component {
                                 className="signUpTextBox form-control w-75"
                                 placeholder="Student ID"
                                 value={studentID}
+                                autoComplete="username"
                                 required="required"
                                 onChange={(e) =>
                                     this.setState({
@@ -235,6 +236,7 @@ class SignUp extends Component {
                                 className="signUpTextBox form-control w-75"
                                 placeholder="Password"
                                 value={password}
+                                autoComplete="new-password"
                                 required="required"
                                 onChange={(e) =>
                                     this.setState({

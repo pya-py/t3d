@@ -1,9 +1,9 @@
 import { Component } from "react";
-import "./games.css";
+import "../games.css";
 import { toast } from "react-toastify";
-import gameServices from "./../services/http/gameServices";
-import gamePlaySocketServices from "../services/ws/gamePlaySocketServices";
-import withReduxDashboard from "../dashboard/withReduxDashboard";
+import gameServices from "../../services/http/gameServices";
+import gamePlaySocketServices from "../../services/ws/gamePlaySocketServices";
+import withReduxDashboard from "../../dashboard/withReduxDashboard";
 import { withRouter } from "react-router";
 import TableDesign from "./TableDesign";
 
@@ -32,6 +32,7 @@ class GamePlay extends Component {
         myTurn: undefined, // change this
         gameID: null,
         socketGamePlay: undefined,
+        playerOnline: true,
     };
 
     constructor() {
@@ -159,21 +160,21 @@ class GamePlay extends Component {
     initiateGameTimer = () => {
         setInterval(() => {
             if (window.navigator.onLine) {
-                if (this.connectionLost) {
+                if (!this.state.playerOnline) { //player JUST became online
                     console.log("connected");
-                    this.connectionLost = false;
-                    this.forceConnectToWebSocket(null);
+                    this.setState({ playerOnline: true });// toggle online status
+                    this.forceConnectToWebSocket(null);  // reconnect to gamePlayWebSocket
                 }
-            } else {
+            } else if (this.state.playerOnline) { //player JUST became offline
                 console.log("dissconnected");
-                this.connectionLost = true;
+                this.setState({ playerOnline: false });
             }
-        }, 1000);
+        }, 2500); //2.5 sec is it ok?
     };
 
     componentDidMount() {
         this.cellButtons = document.getElementsByClassName("gameTableCells"); // pay attension to searched className! may cause an error
-        
+
         const { player, room } = this.props;
         console.log();
         this.setState({ dimension: room.type });

@@ -1,7 +1,8 @@
 import { Fragment } from "react";
 import { Button, Card, Row } from "react-bootstrap";
-import { GameSetting } from "../services/configs";
+import { GameSetting } from "../../services/configs";
 import BriefScoreboard from "./BriefScoreboard";
+import "../games.css";
 
 const TableDesign = ({ dimension, players, table, onEachCellClick }) => {
     let dimens = [];

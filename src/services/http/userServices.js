@@ -1,54 +1,56 @@
 import http from "./httpService";
 import { BrowserStorage, Routes } from "../configs";
 
+const {Server} = Routes;
+
 const userServices = {
     signUp: (user) => {
         return http.post(
-            `${Routes.Root}/${Routes.Users}/${Routes.SignUp}`,
+            `${Server.Root}/${Server.Users}/${Server.SignUp}`,
             JSON.stringify(user)
         );
     },
     signIn: (user) => {
         return http.post(
-            `${Routes.Root}/${Routes.Users}/${Routes.SignIn}`,
+            `${Server.Root}/${Server.Users}/${Server.SignIn}`,
             JSON.stringify(user)
         );
     },
     getPlayer: (userID) => {
         return http.get(
-            `${Routes.Root}/${Routes.Users}/${Routes.Public}/${userID}`
+            `${Server.Root}/${Server.Users}/${Server.Public}/${userID}`
         );
     },
     getAllPlayers: () => {
-        return http.get(`${Routes.Root}/${Routes.Users}/${Routes.Public}`);
+        return http.get(`${Server.Root}/${Server.Users}/${Server.Public}`);
     },
     getMyCredentials: () => {
         //token will be sent automatically, o.w. method doesnt return anything
-        return http.get(`${Routes.Root}/${Routes.Users}/${Routes.Credentials}`);
+        return http.get(`${Server.Root}/${Server.Users}/${Server.Credentials}`);
     },
     editMyCredentials: (newMe) => {
         return http.put(
-            `${Routes.Root}/${Routes.Users}/${Routes.Credentials}`,
+            `${Server.Root}/${Server.Users}/${Server.Credentials}`,
             JSON.stringify(newMe)
         );
     },
     changeMyPassword: (passwords) => {
         return http.put(
-            `${Routes.Root}/${Routes.Users}/${Routes.Credentials}/${Routes.PasswordChange}`,
+            `${Server.Root}/${Server.Users}/${Server.Credentials}/${Server.PasswordChange}`,
             JSON.stringify(passwords)
         );
     },
-    getFriends: () => {
-        return http.get(`${Routes.Root}/${Routes.Users}/${Routes.Credentials}/${Routes.Friends}`);
+    getMyFriends: () => {
+        return http.get(`${Server.Root}/${Server.Users}/${Server.Credentials}/${Server.Friends}`);
     },
     isMyFriend: (targetID) => {
         return http.get(
-            `${Routes.Root}/${Routes.Users}/${Routes.Credentials}/${Routes.Friends}/${targetID}`
+            `${Server.Root}/${Server.Users}/${Server.Credentials}/${Server.Friends}/${targetID}`
         );
     },
     isAdministrator: (userID) => {
         return http.get(
-            `${Routes.Root}/${Routes.Users}/${Routes.Administrators}/${userID}`
+            `${Server.Root}/${Server.Users}/${Server.Administrators}/${userID}`
         );
     }, // check is admin via token? or this?:|
     saveUser: (id, token) => {

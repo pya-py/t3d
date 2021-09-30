@@ -1,0 +1,43 @@
+.bigSingleCard {
+    width: 100%;
+    border-radius: 5px;
+    margin-top: 1%;
+}
+
+.userInfoTextBox {
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    text-align: left;
+    margin-top: 2%;
+}
+
+.chatRoomDevider {
+    border-left: 3px solid black;
+    border-radius: 5px;
+}
+
+.chatScrollableFriends {
+    height: 700px;
+    overflow-y: scroll;
+}
+
+.smartphoneChatScrollableFriends {
+    height: 200px;
+    overflow-y: scroll;
+}
+
+.chatBoxScrollable {
+    height: 700px;
+    overflow-y: scroll;
+}
+
+.smartphoneChatBoxScrollable {
+    height: 400px;
+    overflow-y: scroll;
+}
+
+.chatRoomMessageBox {
+    border: 1px solid cyan;
+}
+

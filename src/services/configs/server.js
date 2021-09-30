@@ -13,6 +13,7 @@ module.exports = {
     Public: "public",
     Administrators: "administrators",
     Games: "games",
+    Mine: "mine",
     Notices: "notices",
     NoticeManagement: "manage"
 };

@@ -1,8 +1,8 @@
 import { Fragment, useState, useEffect } from "react";
 import { Button, Card, Form, Col, Row } from "react-bootstrap";
 import LoadingBar from "../common/LoadingBar";
-import "./controlpanel.css";
-import userServices from "./../services/http/userServices";
+import "./profile.css";
+import userServices from "../services/http/userServices";
 import Configs from "../services/configs";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
@@ -139,7 +139,7 @@ const AccountCredentials = () => {
             <Card
                 border="secondary"
                 bg="transparent"
-                className="mx-auto userInfoCard">
+                className="mx-auto bigSingleCard">
                 <Card.Header className="text-center">
                     <Row className="w-50 mx-auto">
                         <Col>

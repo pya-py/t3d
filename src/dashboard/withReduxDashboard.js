@@ -11,12 +11,13 @@ import {
     CleanScoreboard,
     ResetRoom,
     TriggerRecordUpdate,
-    UpdateStatistics,
-    TriggerOpponentSearch,
-    SendFriendRequestTo,
-    SendMessageTo,
-    RecieveMessageFrom,
-    ResetMessages
+    // UpdateStatistics,
+    // TriggerOpponentSearch,
+    // SendFriendRequestTo,
+    // SendMessageTo,
+    // RecieveMessageFrom,
+    // ResetMessages,
+    // SetDeviceType,
 } from "./actions";
 // ***** remove the ones that arent used in class components => for memory management/ not necessary though
 // useSelector for functional components
@@ -28,7 +29,7 @@ function withReduxDashboard(component) {
         opponent: state.opponent,
         room: state.room,
         scoreboard: state.scoreboard,
-        tools: state.tools
+        tools: state.tools,
     });
 
     const mapDispatchToProps = (dispatch) => ({
@@ -42,12 +43,14 @@ function withReduxDashboard(component) {
         UpdateScoreboard: (details) => dispatch(UpdateScoreboard(details)),
         CleanScoreboard: () => dispatch(CleanScoreboard()),
         TriggerRecordUpdate: () => dispatch(TriggerRecordUpdate()),
-        UpdateStatistics: (stat) => dispatch(UpdateStatistics(stat)),
-        TriggerOpponentSearch: () => dispatch(TriggerOpponentSearch()),
-        SendFriendRequestTo: () => dispatch(SendFriendRequestTo()),
-        SendMessageTo: (name, friendID, text) => dispatch(SendMessageTo(name, friendID, text)),
-        RecieveMessageFrom: (name, friendID, text) => dispatch(RecieveMessageFrom(name, friendID, text)),
-        ResetMessages: () => dispatch(ResetMessages())
+        //for memory managment these are commented because they arent used in Class Components yet
+        //UpdateStatistics: (stat) => dispatch(UpdateStatistics(stat)),
+        //TriggerOpponentSearch: () => dispatch(TriggerOpponentSearch()),
+        //SendFriendRequestTo: () => dispatch(SendFriendRequestTo()),
+        //SendMessageTo: (name, friendID, text) => dispatch(SendMessageTo(name, friendID, text)),
+        //RecieveMessageFrom: (name, friendID, text) => dispatch(RecieveMessageFrom(name, friendID, text)),
+        //ResetMessages: () => dispatch(ResetMessages())
+        //SetDeviceType: () => dispatch(SetDeviceType()),
     });
     return connect(mapStateToProps, mapDispatchToProps)(component);
 }

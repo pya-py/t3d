@@ -17,7 +17,7 @@ class ScoresTable extends Component {
         // client and server side for this Module seriously need to be edited
         (async () => {
             this.setState({ loading: true }); // use preloader here?
-            const { data, status } = await gameServices.getAllResults();
+            const { data, status } = await gameServices.getAllGames();
             if (status === Configs.Status.Successful) return data.allGames;
             return [];
         })()

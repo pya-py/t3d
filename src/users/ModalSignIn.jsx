@@ -73,6 +73,7 @@ class ModalSignIn extends Component {
                                     type="text"
                                     className="w-75 text-left"
                                     placeholder="Student ID"
+                                    autoComplete="username"
                                     value={studentID}
                                     onChange={(e) =>
                                         this.setState({
@@ -92,6 +93,7 @@ class ModalSignIn extends Component {
                                     type="password"
                                     className="w-75 text-left"
                                     placeholder="Password"
+                                    autoComplete="current-password"
                                     value={password}
                                     onChange={(e) =>
                                         this.setState({

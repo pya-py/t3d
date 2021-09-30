@@ -8,10 +8,11 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import noticeServices from "../services/http/noticeServices";
 import Configs from "../services/configs";
-import "./controlpanel.css";
+import "./profile.css";
 import LoadingBar from "../common/LoadingBar";
 
 const NoticeManager = () => {
+    //u can create another component for listing notices ?
     const player = useSelector((state) => state.player);
     const [isAllowed, setAllowed] = useState(undefined);
     const [title, setTitle] = useState("");
@@ -181,7 +182,6 @@ const NoticeManager = () => {
                     <LoadingBar loading={loading} />
                     <Col xs={5}>
                         <Card
-                            style={{ height: "850px" }}
                             border="success"
                             bg="transparent"
                             className="mx-auto noticeManagerCard">

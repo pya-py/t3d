@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import userServices from "./../services/http/userServices";
 import Configs from "../services/configs";
-import GameChatRoom from "./../games/GameChatRoom";
+import GameChatRoom from "../chat/GameChatRoom";
 
 const PlayerInfoSideBar = (props) => {
     const { person, inGame } = props;

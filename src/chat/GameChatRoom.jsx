@@ -1,8 +1,7 @@
 import { Alert, Button, Form, Row, InputGroup } from "react-bootstrap";
-import { Fragment, useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { SendMessageTo } from "./../dashboard/actions/index";
+import {  useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { SendMessageTo } from "../dashboard/actions";
 
 const GameChatRoom = ({ friendID }) => {
     const [myMessage, setMyMessage] = useState(null);

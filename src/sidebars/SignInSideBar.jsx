@@ -51,9 +51,10 @@ class SignInSideBar extends Component {
                 </Card.Header>
                 <LoadingBar loading={loading} />
                 <Card.Body className="text-primary">
-                    <Form onSubmit={(event) => this.onSignInSubmitted(event)}>
+                    <Form onSubmit={(event) => this.onSignInSubmitted(event)} >
                         <Form.Control
                             type="text"
+                            autoComplete="username"
                             className="signInSidebarTextBox"
                             placeholder="شماره دانشجویی"
                             value={studentID}
@@ -64,6 +65,7 @@ class SignInSideBar extends Component {
                         <br />
                         <Form.Control
                             type="password"
+                            autoComplete="current-password"
                             className="signInSidebarTextBox"
                             placeholder="رمز عبور"
                             value={password}

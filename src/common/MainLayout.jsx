@@ -6,17 +6,16 @@ import { withRouter } from "react-router";
 import { useMediaQuery } from "react-responsive";
 import PlayerInfoSideBar from "../sidebars/PlayerInfoSideBar";
 import { useDispatch, useSelector } from "react-redux";
-import { LoadMe, SignOut, UpdateMyRecords } from "../dashboard/actions";
+import { LoadMe, SetDeviceType, SignOut, UpdateMyRecords } from "../dashboard/actions";
 import { Fragment } from "react";
 import userServices from "../services/http/userServices";
 import gameServices from "../services/http/gameServices";
-
 import { Col, Container, Row } from "react-bootstrap";
-import PanelMenu from "../controlpanel/PanelMenu";
-import "../services/configs/server";
+import ProfilePanel from "../profile/ProfilePanel";
 import { useEffect } from "react";
 import GlobalSocketManager from "../services/ws/GlobalSocketManager";
-import GameChatRoom from "../games/GameChatRoom";
+import {Routes, Device} from '../services/configs';
+
 const MainLayout = (props) => {
     const { pathname } = props.location;
     //redux
@@ -29,7 +28,11 @@ const MainLayout = (props) => {
     const deviceIsDesktop = useMediaQuery({ query: "(min-width: 1200px)" });
     const deviceIsSmartPhone = useMediaQuery({ query: "(max-width: 768px)" });
     const deviceIsTablet =
-        !deviceIsDesktop && !deviceIsSmartPhone ? true : false;
+        !deviceIsDesktop && !deviceIsSmartPhone;
+    if(deviceIsDesktop) dispatch(SetDeviceType(Device.Desktop));
+    else if(deviceIsTablet) dispatch(SetDeviceType(Device.Tablet));
+    else if(deviceIsSmartPhone) dispatch(SetDeviceType(Device.SmartPhone));
+    
     /*this method is for temporary use and for finding items that cause horizontal overflow causing horizontal scrollbar
     const findHorizontalOverflow = () => {
         let docWidth = document.documentElement.offsetWidth;
@@ -67,12 +70,13 @@ const MainLayout = (props) => {
         <SignInSideBar />
     ); // in case login hassnt been made
 
-    const inControlPanelPages = pathname.includes("/controlPanel");
-    if (pathname === "/signUp") pageLeftSideBar = pageRightSideBar = null;
-    else if (inControlPanelPages) {
+    const inProfilePages = pathname.includes(Routes.Client.Profile);
+
+    if (pathname === Routes.Client.SignUp) pageLeftSideBar = pageRightSideBar = null;
+    else if (inProfilePages) {
         pageLeftSideBar = null;
-        pageRightSideBar = <PanelMenu />;
-    } else if (pathname === "/gameDeck") {
+        pageRightSideBar = !deviceIsSmartPhone ? <ProfilePanel /> : null; //for now profile panel is hidden in phone
+    } else if (pathname === Routes.Client.GameDeck) {
         // left sidebar must be opponents playerInfo
         if (opponent) {
             pageLeftSideBar = (
@@ -87,20 +91,17 @@ const MainLayout = (props) => {
         }
     }
 
-    // *******create independent components for each device****
+    // *******create independent components for each device****????
+    // socket global only renders when client is signed in
     return (
         <Fragment>
-            <GlobalSocketManager />
+            {player && <GlobalSocketManager />}
             <ToastContainer />
             <NavigationBar />
-
-            {/* wrap up this shit in
-multiple components for each device design
-this looks like shit khodayi */}
             {deviceIsDesktop && (
                 <Row className="w-100 mx-auto">
-                    <Col xs={3}>{pageRightSideBar}</Col>
-                    <Col xs={!inControlPanelPages ? 6 : 9}>
+                    {pageRightSideBar && <Col xs={3}>{pageRightSideBar}</Col>}
+                    <Col className="mx-auto" xs={pathname !== Routes.Client.SignUp ? null : 7}>
                         {props.children}
                     </Col>
                     {pageLeftSideBar && <Col xs={3}>{pageLeftSideBar}</Col>}
@@ -108,10 +109,10 @@ this looks like shit khodayi */}
             )}
             {deviceIsTablet && (
                 <Row className="w-100 mx-auto">
-                    {pathname === "/controlPanel" && (
+                    {pathname === Routes.Client.Profile && pageRightSideBar && (
                         <Col xs={4}>{pageRightSideBar}</Col>
                     )}
-                    <Col className="mx-auto" xs={8}>
+                    <Col className="mx-auto" xs={pathname !== Routes.Client.SignUp ? null : 7} >
                         {props.children}
                     </Col>
                     {pageLeftSideBar && <Col xs={4}>{pageLeftSideBar}</Col>}
@@ -119,7 +120,6 @@ this looks like shit khodayi */}
             )}
             {deviceIsSmartPhone && (
                 <Container>
-                    {pathname === '/gameDeck' && opponent && <GameChatRoom friendID={opponent.userID} />}
                     {/* what to do for control panelk sidebar in smartphone */}
                     {player ? (
                         <Row className="w-100 mx-auto">{pageRightSideBar}</Row>

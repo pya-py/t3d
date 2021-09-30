@@ -1,10 +1,10 @@
 import './info.css'
 import { Card } from 'react-bootstrap';
 
-const GameRules = () => {
+const GameGuide = () => {
     return ( 
         <Card border="warning" className="mb-3 singleCard" >
-            <Card.Header className="text-center">اطلاعات تماس</Card.Header>
+            <Card.Header className="text-center">راهنمای بازی</Card.Header>
             <Card.Body className="text-right">
                 <Card.Text>دانشگاه علم و صنعت ایران</Card.Text>
                 <Card.Text>E-mail: <a href="https://mail.google.com">thcplusplus@gmail.com</a></Card.Text>
@@ -17,4 +17,4 @@ const GameRules = () => {
      );
 }
  
-export default GameRules;
+export default GameGuide;

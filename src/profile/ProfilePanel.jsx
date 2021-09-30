@@ -1,11 +1,13 @@
 import { NavLink } from "react-router-dom";
 import { Button, Row } from "react-bootstrap";
-import "./controlpanel.css";
+import "./profile.css";
 import { useDispatch, useSelector } from "react-redux";
 import { SignOut } from "../dashboard/actions";
 import { withRouter } from "react-router";
 import { Fragment } from "react";
-const PanelMenu = (props) => {
+import Configs from "../services/configs";
+
+const ProfilePanel = (props) => {
     const player = useSelector((state) => state.player);
     const dispatch = useDispatch();
 
@@ -18,7 +20,7 @@ const PanelMenu = (props) => {
         <Row //bg-transparent
             className="panelSideBar mt-2 bg-dark text-right d-flex flex-column mx-auto flex-shrink-0 p-3">
             <NavLink
-                to="/controlPanel"
+                to={Configs.Routes.Client.Profile}
                 className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                 <svg className="bi me-2" width="40" height="32"></svg>
                 <span className="fs-4">
@@ -30,7 +32,8 @@ const PanelMenu = (props) => {
             <ul className="nav nav-pills flex-column mb-auto">
                 <li className="nav-item">
                     <NavLink
-                        to="/controlPanel/info"
+                        exact
+                        to={Configs.Routes.Client.Profile}
                         className="nav-link"
                         aria-current="page">
                         <i className="fa fa-user-o px-3" aria-hidden="true"></i>
@@ -40,20 +43,17 @@ const PanelMenu = (props) => {
                 <li>
                     <NavLink
                         className="nav-link link-dark"
-                        to="/controlPanel/friends">
+                        to={Configs.Routes.Client.MyGamesAndFriends}>
                         <i className="fa fa-users px-3" aria-hidden="true"></i>
-                        دوستان
+                        دوستان و بازی ها
                     </NavLink>
                 </li>
                 <li>
                     <NavLink
                         className="nav-link link-dark"
-                        to="/controlPanel/games">
-                        
-                        <i
-                                    className="fa fa-trophy px-3"
-                                    aria-hidden="true"></i>
-                        بازی ها
+                        to={Configs.Routes.Client.ChatRoom}>
+                        <i className="fa fa-users px-3" aria-hidden="true"></i>
+                        چت روم
                     </NavLink>
                 </li>
                 <hr />
@@ -63,7 +63,7 @@ const PanelMenu = (props) => {
                         <li>
                             <NavLink
                                 className="nav-link link-dark"
-                                to="/controlPanel/admin/notices">
+                                to={Configs.Routes.Client.Notices}>
                                 <i
                                     className="fa fa-newspaper-o px-3"
                                     aria-hidden="true"></i>
@@ -80,7 +80,7 @@ const PanelMenu = (props) => {
                                     height="16"></svg>
                                 امکانات ادمین
                             </NavLink>
-                        </li>{" "}
+                        </li>
                     </Fragment>
                 )}
             </ul>
@@ -93,4 +93,4 @@ const PanelMenu = (props) => {
     );
 };
 
-export default withRouter(PanelMenu);
+export default withRouter(ProfilePanel);

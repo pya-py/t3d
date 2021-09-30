@@ -10,7 +10,7 @@ const createSocketRequest = (request, roomName, playerID, msg) =>
 
 const connect = (roomName, playerID, gameType) => {
     return new Promise((resolve, reject) => {
-        var server = new WebSocket(`${Routes.WebSocketRoot}/${Routes.wsGamePlayRoute}`);
+        var server = new WebSocket(`${Routes.Server.WebSocketRoot}/${Routes.Server.wsGamePlayRoute}`);
         server.onopen = () => {
             server.send(createSocketRequest("join", roomName, playerID, gameType)); //temp
             resolve(server);

@@ -1,6 +1,6 @@
 import "../tables.css";
 
-const SingleScoreCard = ({gameType, playerXName, playerOName, xScore, oScore }) => {
+const SingleScoreCard = ({Type, playerXName, playerOName, xScore, oScore }) => {
     // format score text:
     let xBadgeColor = null;
     let oBadgeColor = null; // null means default badge color
@@ -22,7 +22,7 @@ const SingleScoreCard = ({gameType, playerXName, playerOName, xScore, oScore }) 
     // make this card 'bg-transparent' too?
     return (
         <div className="card border-info mb-3 scoreCard">
-            <div className="card-header text-center border-info">{`T3D ${gameType}x${gameType}x${gameType}`}</div>
+            <div className="card-header text-center border-info">{`T3D ${Type}x${Type}x${Type}`}</div>
             <div className="card-body">
                 <div className="row text-center mx-auto">
                     <span className="col-5">{playerXName}</span>

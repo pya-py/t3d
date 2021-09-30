@@ -72,3 +72,8 @@ export const RecieveMessageFrom = (name, friendID, text) => ({
 export const ResetMessages = () => ({
     type: "RESET_MESSAGES"
 });
+
+export const SetDeviceType = (Type) => ({
+    type: "SET_DEVICE",
+    payload: Type
+});

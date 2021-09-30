@@ -1,4 +1,4 @@
-import GamePlay from "./GamePlay";
+import GamePlay from "./gameplay/GamePlay";
 import { useSelector } from "react-redux";
 import SingleGame from "./SingleGame";
 import { Tab, Tabs, Card, Fade } from "react-bootstrap";

@@ -1,18 +1,27 @@
 import { Fragment } from "react";
+import { Card } from "react-bootstrap";
 import SingleScoreCard from "./SingleScoreCard";
 
 const AllScores = ({scores}) => {
+    console.log(scores);
     return ( 
-        <Fragment>
-            { scores.map(score => (
+        <Fragment className="mx-auto">
+            { scores.length ? scores.map(score => (
                 <SingleScoreCard key={score.gameID}
-                    gameType={score.gameType}
-                    playerXName={score.xName}
-                    playerOName={score.oName}
-                    xScore={score.xScore}
-                    oScore={score.oScore}
+                    Type={score.Type}
+                    playerXName={score.players[0].name}
+                    playerOName={score.players[1].name}
+                    xScore={score.players[0].score}
+                    oScore={score.players[1].score}
                 ></SingleScoreCard>
-            )) }
+            )) :
+            <Card className="bg-transparent mx-auto mt-3" border="danger">
+                <Card.Body className="text-center">
+                    <Card.Text>
+                        هیچ بازی ای انجام نگرفته اس
+                    </Card.Text>
+                </Card.Body>
+                </Card>}
         </Fragment>
      );
 };

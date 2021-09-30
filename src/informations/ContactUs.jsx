@@ -1,7 +1,7 @@
 import { Card } from 'react-bootstrap';
 import './info.css'
 
-const ContactInfo = () => {
+const ContactUs = () => {
     return ( 
         <Card border="dark" className="mb-3 singleCard" >
             <Card.Header className="text-center">اطلاعات تماس</Card.Header>
@@ -17,4 +17,4 @@ const ContactInfo = () => {
      );
 }
  
-export default ContactInfo;
+export default ContactUs;

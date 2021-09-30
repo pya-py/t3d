@@ -19,7 +19,7 @@ const CompetitionSummary = ({ title, summary }) => {
             </Row>
             <hr />
             <Row>
-                <Alert className="text-right w-100" pill variant="info">
+                <Alert className="text-right w-100" pill="true" variant="info">
                     <p>تعداد شرکت کنندگان : 00000000</p>
                     <p>نکات دیگر</p>
                 </Alert>
