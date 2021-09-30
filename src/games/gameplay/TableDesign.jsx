@@ -4,17 +4,18 @@ import { GameSetting } from "../../services/configs";
 import BriefScoreboard from "./BriefScoreboard";
 import "../games.css";
 
-const TableDesign = ({ dimension, players, table, onEachCellClick }) => {
+const TableDesign = ({ timeRemaining, dimension, players, table, onEachCellClick }) => {
     let dimens = [];
     for (let i = 0; i < dimension; i++) dimens.push(i);
 
+    //prop drilling in BriefScoreBoard
     return (
         <Card
             id="divTableBlock"
             bg="transparent"
             border="dark"
             className="w-100 mx-auto">
-            <BriefScoreboard players={players} />
+            <BriefScoreboard timeRemaining={timeRemaining} players={players} />
             <Card.Body className="gameBorderCard">
                 {table ? (
                     dimens.map((floor) => (
@@ -23,7 +24,7 @@ const TableDesign = ({ dimension, players, table, onEachCellClick }) => {
                                 <Row
                                     style={{
                                         direction: "ltr",
-                                        marginLeft: `${GameSetting.TableRowMargings[row]}px`,
+                                        marginLeft: `${GameSetting.T3D.TableRowMargings[row]}px`,
                                     }}>
                                     {dimens.map((column) => (
                                         <Button

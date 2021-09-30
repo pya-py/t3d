@@ -5,7 +5,7 @@ import SingleScoreCard from "./SingleScoreCard";
 const AllScores = ({scores}) => {
     console.log(scores);
     return ( 
-        <Fragment className="mx-auto">
+        <Fragment>
             { scores.length ? scores.map(score => (
                 <SingleScoreCard key={score.gameID}
                     Type={score.Type}

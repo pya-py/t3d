@@ -1,9 +1,9 @@
 import {Routes} from '../configs';
 
-const createSocketRequest = (request, roomName, playerID, msg) =>
+const createSocketRequest = (request, rname, playerID, msg) =>
     JSON.stringify({
         request,
-        roomName,
+        rname,
         playerID,
         msg,
     });

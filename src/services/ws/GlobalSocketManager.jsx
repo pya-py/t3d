@@ -30,6 +30,31 @@ const GlobalSocketManager = () => {
     const [clientOnline, toggleClientOnline] = useState(true);
     const dispatch = useDispatch();
 
+    const enableGlobalTimer = useCallback(() => {
+        return setInterval(() => {
+            
+            if (socketGlobal){
+                console.log("updating statistics...");
+                socketGlobal.send(
+                    JSON.stringify({
+                        request: "online",
+                        clientID: player.userID,
+                        msg: null,
+                    })
+                );}
+        }, 60000); // every ONE MINUTE request number of online members to update the site
+    }, [socketGlobal, player]);
+    
+    useEffect(() => {
+        console.log("global timer enabled");
+        const timerID = enableGlobalTimer();
+
+        return () => {
+            console.log("global timer disabled");
+            clearInterval(timerID);
+        }
+    }, [enableGlobalTimer]);
+
     const connect = useCallback(() => {
         return new Promise((resolve, reject) => {
             var socket = new WebSocket(
@@ -250,16 +275,7 @@ const GlobalSocketManager = () => {
         }
     }, 5000);
 
-    setInterval(() => {
-        if(socketGlobal)
-            socketGlobal.send(
-                JSON.stringify({
-                    request: "online",
-                    clientID: player.userID,
-                    msg: null,
-                })
-            );
-    }, 60000); // every ONE MINUTE request number of online members to update the site
+    
     // is it really necessary though ?????
 
     return (
