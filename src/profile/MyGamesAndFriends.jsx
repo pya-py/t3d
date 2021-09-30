@@ -21,9 +21,9 @@ const MyGamesAndFriends = () => {
                 let serverResponse = await gameServices.getMyGames();
                 if (serverResponse.status === Configs.Status.Successful)
                     setMyGames(serverResponse.data.myGames.reverse());
-                // serverResponse = await userServices.getMyFriends();
-                // if (serverResponse.status === Configs.Status.Successful)
-                //     setMyFriends(serverResponse.data.friends);
+                serverResponse = await userServices.getMyFriends();
+                if (serverResponse.status === Configs.Status.Successful)
+                    setMyFriends(serverResponse.data.friends);
             } catch (err) {
                 console.log(err);
                 setLoading(false);
