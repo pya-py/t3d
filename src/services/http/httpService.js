@@ -41,6 +41,7 @@ axios.interceptors.response.use(null, (error) => {
 
         //*****notice: */
         //remove some oftheese errors... because they need to be costomized in every use in each components
+    // change to switch
     if (error.response.status === Status.BadRequest) {
         toast.error(
             "مشکلی در ارسال درخواست شما به سرور وجود داشت، لطفا دوباره تلاش کنید",
@@ -51,7 +52,7 @@ axios.interceptors.response.use(null, (error) => {
         );
     } else if (error.response.status === Status.Unauthorized) {
         toast.error(
-            "احراز هویت موفقیت آمیز نیست. لطفا دوباره وارد اکانت خود شوید",
+            "احراز هویت موفقیت آمیز نبود. لطفا وارد حساب کاربری خود شوید",
             {
                 position: "top-right",
                 closeOnClick: true,
@@ -62,7 +63,7 @@ axios.interceptors.response.use(null, (error) => {
             position: "top-right",
             closeOnClick: true,
         });
-    } else if (error.response.status === Status.NotAcceptable) {
+    } else if (error.response.status === Status.NotAcceptable) {//or used Locked: 423
         toast.error("این قسمت فقط مختص کاربران ادمین می باشد", {
             position: "top-right",
             closeOnClick: true,
@@ -75,6 +76,13 @@ axios.interceptors.response.use(null, (error) => {
                 closeOnClick: true,
             }
         );
+    }
+    else if(error.response.status === Status.SessionExpired){
+        toast.error("نشست شما منقضی شده است، لطفا دوباره وارد حساب خود شوید.", {
+            position: "top-right",
+            closeOnClick: true,
+        });
+        //redirect to sign in page !
     }
     else if (error.response.status === Status.UnprocessableEntity) {
         toast.error("ورودی شما با استانداردهای سایت مطابقت ندارد", {

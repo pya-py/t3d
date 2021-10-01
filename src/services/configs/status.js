@@ -15,6 +15,7 @@ module.exports = {
     NotFound: 404,
     NotAcceptable: 406,
     Conflict: 409,
+    SessionExpired: 420,
     UnprocessableEntity: 422,
     InternalServerError: 500,
     isErrorExpected,

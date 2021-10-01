@@ -5,6 +5,7 @@ import userServices from "../services/http/userServices";
 import SingleChatCard from "./ChatMessageBox";
 import { useSelector } from "react-redux";
 import "./chat.css";
+import LoadingBar from '../common/LoadingBar';
 
 const ChatRoom = () => {
     const [loading, setLoading] = useState(false);
@@ -30,6 +31,7 @@ const ChatRoom = () => {
             border="secondary"
             bg="transparent"
             className="mx-auto bigSingleCard">
+            <LoadingBar loading={loading} />
             <Card.Header className="text-center">چت روم شما</Card.Header>
             <Card.Body>
                 <Tab.Container

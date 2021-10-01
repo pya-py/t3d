@@ -1,6 +1,6 @@
 import {Routes} from '../configs';
 
-const createSocketRequest = (request, rname, playerID, msg) =>
+export const createSocketRequest = (request, rname, playerID, msg) =>
     JSON.stringify({
         request,
         rname,
@@ -8,7 +8,7 @@ const createSocketRequest = (request, rname, playerID, msg) =>
         msg,
     });
 
-const connect = (roomName, playerID, gameType) => {
+export const connect = (roomName, playerID, gameType) => {
     return new Promise((resolve, reject) => {
         var server = new WebSocket(`${Routes.Server.WebSocketRoot}/${Routes.Server.wsGamePlayRoute}`);
         server.onopen = () => {
@@ -32,10 +32,3 @@ const connect = (roomName, playerID, gameType) => {
         };
     });
 };
-
-const gamePlaySocketServices = {
-    createSocketRequest,
-    connect,
-};
-
-export default gamePlaySocketServices;
