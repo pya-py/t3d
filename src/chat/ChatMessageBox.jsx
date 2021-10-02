@@ -106,7 +106,7 @@ const ChatMessageBox = ({ friendID }) => {
                                 <div ref={mostRecentMessageRef}>
                                     <Message
                                         msg={msg}
-                                        inSmartphone={device}
+                                        inSmartphone={!device}
                                         previousDay={
                                             index !== 0
                                                 ? (new Date(

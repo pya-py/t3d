@@ -34,47 +34,50 @@ const Message = ({ msg, previousDay, inSmartphone }) => {
                     <p className="messageDate">{persianDate}</p>
                 </Fragment>
             )}
-            {!inSmartphone ? (
-                <Row>
-                    <Col>
-                        {msg.me && (
-                            <Alert className="w-100 text-right" variant="dark">
+            <Row>
+                <Col>
+                    {msg.me && (
+                        <Alert className="w-100 text-right" variant="dark">
+                            {!inSmartphone ? (
                                 <Row>
                                     <Col>{msg.me}</Col>
                                     <Col className="messageTime" xs={3}>
                                         {time}
                                     </Col>
                                 </Row>
-                            </Alert>
-                        )}
-                    </Col>
-                    <Col>
-                        {msg.friend && (
-                            <Alert
-                                className="w-100 text-right"
-                                variant="primary">
+                            ) : (
+                                <Fragment>
+                                    <Row>{msg.me}</Row>
+                                    <Row className="messageTime" xs={3}>
+                                        {time}
+                                    </Row>
+                                </Fragment>
+                            )}
+                        </Alert>
+                    )}
+                </Col>
+                <Col>
+                    {msg.friend && (
+                        <Alert className="w-100 text-right" variant="primary">
+                            {!inSmartphone ? (
                                 <Row>
                                     <Col>{msg.friend}</Col>
                                     <Col className="messageTime" xs={3}>
                                         {time}
                                     </Col>
                                 </Row>
-                            </Alert>
-                        )}
-                    </Col>
-                </Row>
-            ) : (
-                <Row>
-                    <Alert className="w-100 text-right" variant="dark">
-                        <Row>
-                            <Col>{msg.me ? msg.me : msg.friend}</Col>
-                            <Col className="messageTime" xs={3}>
-                                {time}
-                            </Col>
-                        </Row>
-                    </Alert>
-                </Row>
-            )}
+                            ) : (
+                                <Fragment>
+                                    <Row>{msg.friend}</Row>
+                                    <Row className="messageTime" xs={3}>
+                                        {time}
+                                    </Row>
+                                </Fragment>
+                            )}
+                        </Alert>
+                    )}
+                </Col>
+            </Row>
         </Fragment>
     );
 };
