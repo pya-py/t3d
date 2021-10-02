@@ -44,7 +44,6 @@ class GamePlay extends Component {
 
     constructor() {
         super();
-        this.connectionLost = false;
         this.cellButtons = [];
     }
 
@@ -104,6 +103,12 @@ class GamePlay extends Component {
             players,
             turn,
         });
+    };
+
+    disableAllTimers = () => {
+        const { connectionCheckTimerID, timerID } = this.state;
+        clearTimeout(connectionCheckTimerID);
+        clearTimeout(timerID); //move time out timer
     };
 
     socketOnMessage = (response) => {
@@ -187,7 +192,17 @@ class GamePlay extends Component {
                 this.enableTimerForMyMove();
             }
         } else if (command === "END") {
-            this.endGame();
+            this.updatePlayerStates(msg);
+            this.endThisGame();
+            this.disableAllTimers();
+        } else if (command === "CLOSE") {
+            toast.warn(
+                "بدلیل حاضر نبودن هیچ کدام از بازیکینان، بازی شما کنسل شد",
+                { position: "top-right", closeOnClick: true }
+            );
+            this.closeThisGame();
+        } else {
+            console.log("wrong socket request");
         }
     };
 
@@ -255,9 +270,7 @@ class GamePlay extends Component {
     }
 
     componentWillUnmount() {
-        const { connectionCheckTimerID, timerID } = this.state;
-        clearTimeout(connectionCheckTimerID);
-        clearTimeout(timerID); //move time out timer
+        this.disableAllTimers();
     }
     getCellCoordinates = (cellID, dimen) => {
         const cellFloor = Math.floor(cellID / (dimen * dimen));
@@ -436,15 +449,9 @@ class GamePlay extends Component {
         }
     };
 
-    endGame = async () => {
-        const { players, myTurn } = this.state;
-        const oppTurn = Number(!myTurn);
-        if (players[myTurn].score > players[oppTurn].score)
-            toast.success("شما برنده شدید و سه امتیاز کسب کردید");
-        else if (players[myTurn].score === players[oppTurn].score)
-            toast.info("شما مساوی شدید و یک امتیاز کسب کردید");
-        else toast.error("تکبیر!");
-        //reset everything:
+    closeThisGame = () => {
+        this.state.socketGamePlay.close();
+        this.setState({ socketGamePlay: null });
         setTimeout(() => {
             this.props.CleanScoreboard();
             this.props.ResetOpponent();
@@ -452,6 +459,19 @@ class GamePlay extends Component {
             this.props.TriggerRecordUpdate();
             this.props.history.replace("/"); // in competition mode must be send back to competition page
         }, 5000);
+    };
+
+    endThisGame = () => {
+        const { players, myTurn } = this.state;
+        const oppTurn = Number(!myTurn);
+        //NOTE: u can deliver this message to socket global to make sure toast shows all the tie but its no need really :|
+        if (players[myTurn].score > players[oppTurn].score)
+            toast.success("شما برنده شدید و سه امتیاز کسب کردید");
+        else if (players[myTurn].score === players[oppTurn].score)
+            toast.info("شما مساوی شدید و یک امتیاز کسب کردید");
+        else toast.error("تکبیر!");
+        //reset everything:
+        this.closeThisGame();
     };
 
     render() {

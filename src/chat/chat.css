@@ -4,14 +4,6 @@
     margin-top: 1%;
 }
 
-.userInfoTextBox {
-    background-color: white;
-    color: black;
-    font-size: 16px;
-    text-align: left;
-    margin-top: 2%;
-}
-
 .chatRoomDevider {
     border-left: 3px solid black;
     border-radius: 5px;
@@ -41,3 +33,18 @@
     border: 1px solid cyan;
 }
 
+.messageTime{
+    font-size: 12px;
+    color: brown;
+    text-align: left;
+}
+
+.messageDate {
+    width: 50%;
+    font-size: 14px;
+    color:darkviolet;
+    text-align: center;
+    margin:auto;
+    margin-bottom: 3%;
+    border-bottom: 1px solid darkviolet;
+}

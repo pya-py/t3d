@@ -14,6 +14,7 @@ module.exports = {
     Administrators: "administrators",
     Games: "games",
     Mine: "mine",
+    Chats: "chats",
     Notices: "notices",
     NoticeManagement: "manage"
 };

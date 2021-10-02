@@ -141,7 +141,7 @@ const AccountCredentials = () => {
                 bg="transparent"
                 className="mx-auto bigSingleCard">
                 <Card.Header className="text-center">
-                    <Row className="w-50 mx-auto">
+                    <Row className="w-100 mx-auto">
                         <Col>
                             <Button
                                 block
@@ -196,7 +196,7 @@ const AccountCredentials = () => {
                     </Row>
                 </Card.Header>
                 <Form onSubmit={(e) => selectMode(e)}>
-                    <Card.Body className="w-50 mx-auto">
+                    <Card.Body className="w-75 mx-auto">
                         <LoadingBar loading={loading} />
 
                         {pageMode !== MODES.CHANGE_PASS && (

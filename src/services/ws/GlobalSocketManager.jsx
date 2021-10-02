@@ -10,7 +10,6 @@ import {
     SendFriendRequestTo,
     RecieveMessageFrom,
     ResetMessages,
-    TriggerRecordUpdate,
 } from "../../dashboard/actions";
 import { Modal, Button, Row, Col, Badge } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -42,7 +41,7 @@ const GlobalSocketManager = () => {
                         msg: null,
                     })
                 );}
-        }, 60000); // every ONE MINUTE request number of online members to update the site
+        }, 300000); // every 5 MINUTES request number of online members to update the site
     }, [socketGlobal, player]);
     
     useEffect(() => {
@@ -125,6 +124,7 @@ const GlobalSocketManager = () => {
                                 answer ? "پذیرفت" : "رد کرد"
                             }`
                         );
+                        dispatch(SendFriendRequestTo(null));
                         break;
                     }
                     case "CHAT": {

@@ -23,10 +23,7 @@ export const connect = (roomName, playerID, gameType) => {
         };
 
         server.onclose = () => {
-            // setTimeout( () => {
-            //     connect(roomName, playerID);
-            //     console.log('reconnecting from onClose');
-            // }, 1000)
+            
             resolve(null);
             // this part needs editing ? maybe not
         };
