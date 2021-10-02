@@ -43,7 +43,7 @@ class SignInSideBar extends Component {
     render() {
         const { studentID, password, loading } = this.state;
         return (
-            <Card border="primary" className="signInSidebar">
+            <Card border="primary" className="sign-in-sidebar">
                 <Card.Header
                     border="primary"
                     className="text-center text-primary">
@@ -55,7 +55,7 @@ class SignInSideBar extends Component {
                         <Form.Control
                             type="text"
                             autoComplete="username"
-                            className="signInSidebarTextBox"
+                            className="sign-in-sidebar-textBox"
                             placeholder="شماره دانشجویی"
                             value={studentID}
                             onChange={(e) =>
@@ -66,7 +66,7 @@ class SignInSideBar extends Component {
                         <Form.Control
                             type="password"
                             autoComplete="current-password"
-                            className="signInSidebarTextBox"
+                            className="sign-in-sidebar-textBox"
                             placeholder="رمز عبور"
                             value={password}
                             onChange={(e) =>
@@ -78,10 +78,9 @@ class SignInSideBar extends Component {
                             <Row>
                                 <Col>
                                     <Button
-                                        id="btnSideBarSignIn"
                                         type="submit"
                                         variant="success"
-                                        className="h-100">
+                                        className="sign-in-sidebar-buttons">
                                         <i
                                             className="fa fa-sign-in px-3"
                                             aria-hidden="true"></i>
@@ -90,8 +89,7 @@ class SignInSideBar extends Component {
                                 </Col>
                                 <Col>
                                     <Button
-                                        id="btnSideBarPasswordRecovery"
-                                        className="h-100"
+                                        className="sign-in-sidebar-buttons"
                                         variant="warning">
                                         <i
                                             className="fa fa-recycle px-3"

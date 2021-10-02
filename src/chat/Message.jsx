@@ -5,7 +5,7 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import "./chat.css";
 
-const Message = ({ msg, previousDay, inSmartphone }) => {
+const Message = ({ msg, previousDay, inDesktop }) => {
     const { date } = msg; // destructure date from msg then make a new date object
     // reason for making new Date objects is that react throws error some time when you use it without new Date :|
     const [showDate, setShowDate] = useState(false); //for each day, the first message in that day has persian date above it
@@ -25,30 +25,30 @@ const Message = ({ msg, previousDay, inSmartphone }) => {
         ); //     0 means this is the first message in the chat
     }, [date, previousDay]);
 
-    //note: Device.Smartphone is 0 -> so it inSmartphone is used conditionally but it actually contains device type and not a boolean
+    //note: Device.Desktop is 0 -> so it inDesktop is used conditionally but it actually contains device type and not a boolean
     return (
         <Fragment>
             {!showDate ? null : (
                 <Fragment>
                     <hr />
-                    <p className="messageDate">{persianDate}</p>
+                    <p className="message-date">{persianDate}</p>
                 </Fragment>
             )}
             <Row>
                 <Col>
                     {msg.me && (
-                        <Alert className="w-100 text-right" variant="dark">
-                            {!inSmartphone ? (
+                        <Alert className="text-right" variant="dark">
+                            {inDesktop ? (
                                 <Row>
                                     <Col>{msg.me}</Col>
-                                    <Col className="messageTime" xs={3}>
+                                    <Col className="my-message-time" xs={3}>
                                         {time}
                                     </Col>
                                 </Row>
                             ) : (
                                 <Fragment>
                                     <Row>{msg.me}</Row>
-                                    <Row className="messageTime" xs={3}>
+                                    <Row className="my-message-time" xs={3}>
                                         {time}
                                     </Row>
                                 </Fragment>
@@ -58,18 +58,18 @@ const Message = ({ msg, previousDay, inSmartphone }) => {
                 </Col>
                 <Col>
                     {msg.friend && (
-                        <Alert className="w-100 text-right" variant="primary">
-                            {!inSmartphone ? (
+                        <Alert className="text-right" variant="primary">
+                            {inDesktop ? (
                                 <Row>
-                                    <Col>{msg.friend}</Col>
-                                    <Col className="messageTime" xs={3}>
+                                    <Col className="friend-message-time" xs={3}>
                                         {time}
                                     </Col>
+                                    <Col>{msg.friend}</Col>
                                 </Row>
                             ) : (
                                 <Fragment>
                                     <Row>{msg.friend}</Row>
-                                    <Row className="messageTime" xs={3}>
+                                    <Row className="friend-message-time" xs={3}>
                                         {time}
                                     </Row>
                                 </Fragment>

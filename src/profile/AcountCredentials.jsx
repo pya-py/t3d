@@ -139,7 +139,7 @@ const AccountCredentials = () => {
             <Card
                 border="secondary"
                 bg="transparent"
-                className="mx-auto bigSingleCard">
+                className="big-single-card">
                 <Card.Header className="text-center">
                     <Row className="w-100 mx-auto">
                         <Col>
@@ -196,11 +196,11 @@ const AccountCredentials = () => {
                     </Row>
                 </Card.Header>
                 <Form onSubmit={(e) => selectMode(e)}>
-                    <Card.Body className="w-75 mx-auto">
+                    <Card.Body className="w-75 text-center mx-auto">
                         <LoadingBar loading={loading} />
 
                         {pageMode !== MODES.CHANGE_PASS && (
-                            <>
+                            <Fragment>
                                 <Form.Group className="form-inline">
                                     <Form.Label className="w-25">
                                         شماره دانشجویی
@@ -208,7 +208,7 @@ const AccountCredentials = () => {
                                     <Form.Control
                                         type="text"
                                         disabled
-                                        className="userInfoTextBox w-75"
+                                        className="account-info-textbox w-75"
                                         placeholder="Student ID"
                                         value={studentID}
                                     />
@@ -220,7 +220,7 @@ const AccountCredentials = () => {
                                     <Form.Control
                                         disabled={!pageMode}
                                         type="text"
-                                        className="userInfoTextBox w-75"
+                                        className="account-info-textbox w-75"
                                         pattern="[آ-ی ]{6,}" // persian characters and space
                                         onInput={(e) =>
                                             e.target.setCustomValidity("")
@@ -255,7 +255,7 @@ const AccountCredentials = () => {
                                                 "ورودی باید فرمت معتبر ایمیل را رعایت کرده و حداقل 6 کاراکتر باشد"
                                             )
                                         }
-                                        className="userInfoTextBox w-75"
+                                        className="account-info-textbox w-75"
                                         placeholder="E-mail"
                                         value={email}
                                         required="required"
@@ -264,7 +264,7 @@ const AccountCredentials = () => {
                                         }
                                     />
                                 </Form.Group>
-                            </>
+                            </Fragment>
                         )}
                         {pageMode !== MODES.READ_ONLY && (
                             <Form.Group className="form-inline">
@@ -277,7 +277,7 @@ const AccountCredentials = () => {
                                 </Form.Label>
                                 <Form.Control
                                     type="password"
-                                    className="userInfoTextBox w-75"
+                                    className="account-info-textbox w-75"
                                     placeholder="Password"
                                     value={password}
                                     onChange={(e) =>
@@ -303,7 +303,7 @@ const AccountCredentials = () => {
                                                 "رمز عبور باید حداقل 6 کاراکتر و حداکثر 15 کاراکتر داشته باشد"
                                             )
                                         }
-                                        className="userInfoTextBox w-75"
+                                        className="account-info-textbox w-75"
                                         placeholder="New Password"
                                         value={newPassword}
                                         required="required"
@@ -319,7 +319,7 @@ const AccountCredentials = () => {
 
                                     <Form.Control
                                         type="password"
-                                        className="userInfoTextBox w-75"
+                                        className="account-info-textbox w-75"
                                         placeholder="Confirm New Password"
                                         value={confirmNewPassword}
                                         required="required"

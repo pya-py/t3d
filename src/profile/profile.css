@@ -1,57 +1,46 @@
-.controlPanelCard {
-    background-color: white;
-    color: black;
-    /*max-width: 18rem;*/
-    /* find a way to prevent NavigationBar overlap on its below items */
-    width: 100%;
-    border-radius: 10px;
-    text-align: center;
-    margin: auto;
-    margin-top: 1%;
-}
-
-.panelSideBar {
+.panel-sidebar {
     height: 90vh; /*what to do about this*/
     border-radius: 10px;
 }
 
-.noticeManagerCard {
+.notice-manager-card {
     width: 100%;
     border-radius: 10px;
     margin-top: 1%;
     height: 90vh;
 }
 
-.iconEditNotice {
+.icon-edit-notice {
     cursor: pointer;
 }
-.iconEditNotice:hover {
+.icon-edit-notice:hover {
     color: orange;
 }
 
-.bigSingleCard {
+.big-single-card {
+    margin: auto;
     width: 100%;
     border-radius: 5px;
     margin-top: 1%;
 }
 
-.userInfoTextBox {
+.account-info-textbox {
     background-color: white;
     color: black;
     font-size: 16px;
     text-align: left;
     margin-top: 2%;
-    
+    /* width: 100%; */
 }
 
-.friendRecords {
+.friend-records {
     color: black;
     border-radius: 5px;
     margin-top: 1%;
     width: 100%;
 }
 
-.myFriendAvatar {
+.my-friend-avatar {
     width: 35%;
     height: 35%;
     border-radius: 50%;
@@ -61,6 +50,6 @@
 }
 
 
-.badgeFontSize {
+.friend-badge-font-size {
     font-size: 16px;
 }

@@ -2,7 +2,7 @@ import { Card, Row, Col, Nav, Tab } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Configs from "../services/configs";
 import userServices from "../services/http/userServices";
-import SingleChatCard from "./ChatMessageBox";
+import ChatBox from "./ChatBox";
 import { useSelector } from "react-redux";
 import "./chat.css";
 import LoadingBar from '../common/LoadingBar';
@@ -30,7 +30,7 @@ const ChatRoom = () => {
         <Card
             border="secondary"
             bg="transparent"
-            className="mx-auto bigSingleCard">
+            className="chat-main-card">
             <LoadingBar loading={loading} />
             <Card.Header className="text-center">چت روم شما</Card.Header>
             <Card.Body>
@@ -43,8 +43,8 @@ const ChatRoom = () => {
                         <Col
                             className={
                                 device !== Configs.Device.SmartPhone
-                                    ? "chatRoomDevider chatScrollableFriends"
-                                    : "smartphoneChatScrollableFriends"
+                                    ? "chat-room-devider chat-scrollable-friends"
+                                    : "smartphone-chat-scrollable-friends"
                             }
                             sm={3}>
                             <Nav
@@ -63,7 +63,7 @@ const ChatRoom = () => {
                         <Col>
                             <Tab.Content>
                                 {myFriends.map((friend) => (
-                                    <SingleChatCard friendID={friend.userID} />
+                                    <ChatBox friendID={friend.userID} />
                                 ))}
                             </Tab.Content>
                         </Col>

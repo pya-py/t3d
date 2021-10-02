@@ -16,7 +16,7 @@ const GameDeck = () => {
                 <Card
                     border="secondary"
                     bg="transparent"
-                    className="gameDeckCard">
+                    className="game-deck-card">
                     <Card.Body>
                         <Tabs
                             defaultActiveKey="randomGame"

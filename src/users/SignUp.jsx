@@ -124,7 +124,7 @@ class SignUp extends Component {
         } = this.state;
 
         return (
-            <Card border="success" className="mb-3 signUpCard">
+            <Card border="success" className="sign-up-card">
                 <LoadingBar loading={loading} />
                 <Card.Header className="bg-transparent text-center border-success">
                     فرم ثبت نام
@@ -142,7 +142,7 @@ class SignUp extends Component {
                                         "نام باید با حروف فارسی و با حداقل طول سه حرف باشد"
                                     )
                                 }
-                                className="signUpTextBox w-75"
+                                className="sign-up-textbox w-75"
                                 placeholder="First Name"
                                 value={firstname}
                                 required="required"
@@ -158,7 +158,7 @@ class SignUp extends Component {
                             <Form.Label className="w-25">نام خانوادگی</Form.Label>
                             <Form.Control
                                 type="text"
-                                className="signUpTextBox form-control w-75"
+                                className="sign-up-textbox w-75"
                                 pattern="[آ-ی ]{3,}" // persian characters and space
                                 onInput={(e) => e.target.setCustomValidity("")}
                                 onInvalid={(e) =>
@@ -188,7 +188,7 @@ class SignUp extends Component {
                                         "شماره دانشجویی باید یک عدد 8 رقمی باشد"
                                     )
                                 }
-                                className="signUpTextBox form-control w-75"
+                                className="sign-up-textbox w-75"
                                 placeholder="Student ID"
                                 value={studentID}
                                 autoComplete="username"
@@ -212,7 +212,7 @@ class SignUp extends Component {
                                         "ورودی باید فرمت معتبر ایمیل را رعایت کرده و حداقل 6 کاراکتر باشد"
                                     )
                                 }
-                                className="signUpTextBox form-control w-75"
+                                className="sign-up-textbox w-75"
                                 placeholder="E-mail"
                                 value={email}
                                 required="required"
@@ -233,7 +233,7 @@ class SignUp extends Component {
                                         "رمز عبور باید حداقل 6 کاراکتر و حداکثر 15 کاراکتر داشته باشد"
                                     )
                                 }
-                                className="signUpTextBox form-control w-75"
+                                className="sign-up-textbox w-75"
                                 placeholder="Password"
                                 value={password}
                                 autoComplete="new-password"
@@ -250,7 +250,7 @@ class SignUp extends Component {
                             <Form.Label className="w-25">تایید رمز عبور</Form.Label>
                             <Form.Control
                                 type="password"
-                                className="signUpTextBox form-control w-75"
+                                className="sign-up-textbox w-75"
                                 placeholder="Confirm Password"
                                 value={confirmPassword}
                                 required="required"

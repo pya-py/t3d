@@ -1,4 +1,4 @@
-.gameTableCells {
+.game-table-cells {
     width: 50px;
     height: 40px;
     transform: skew(45deg);
@@ -8,27 +8,13 @@
     border: 2px solid black;
 }
 
-.gameBorderCard {
+.game-border-card {
     width: 100%;
     margin: auto;
     padding-left: 10%;
 }
 
-.tableWholeBlock {
-    margin-top: 5%;
-    margin-bottom: 5%;
-}
-
-.roomManagerCard {
-    background-color: white;
-    color: black;
-    /*max-width: 18rem;*/
-    margin: auto;
-    border-radius: 5px;
-    width: 100%;
-}
-
-.gameDeckCard {
+.game-deck-card {
     background-color: white;
     color: black;
     /*max-width: 18rem;*/

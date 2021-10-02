@@ -8,7 +8,7 @@ const CompetitionsMain = () => {
             <hr />
 
             <Row>
-                <Col className="competitionMenuBody" sm={3}>
+                <Col className="competition-menu-body" sm={3}>
                     <Nav variant="pills" className="flex-column">
                         <Nav.Item>
                             <Nav.Link className="text-right" eventKey="first">

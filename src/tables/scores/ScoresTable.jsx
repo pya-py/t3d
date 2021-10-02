@@ -1,8 +1,9 @@
-import "../tables.css";
+import "./scores.css";
 import { Component } from "react";
 import AllScores from "./AllScores";
 import gameServices from "../../services/http/gameServices";
-import Configs from '../../services/configs';
+import Configs from "../../services/configs";
+import { Button, Col, Container, Row } from "react-bootstrap";
 
 class ScoresTable extends Component {
     state = {
@@ -52,45 +53,48 @@ class ScoresTable extends Component {
 
         // DESIGN : USE <Tabs> ???
         return (
-            <div className="container">
-                <div className="row">
-                    <div className="col-6">
-                        <button
-                            className={`scoresTypeSelectButton btn ${
+            <Container>
+                <Row>
+                    <Col>
+                        <Button
+                            variant={
                                 showLiveOnes
-                                    ? `btn-outline-success`
-                                    : `btn-outline-primary`
-                            }`}
+                                    ? "outline-success"
+                                    : "outline-primary"
+                            }
+                            className="scores-mode-select-button"
                             onClick={this.btnShowLiveScores}>
                             نتایج زنده
                             <i
                                 className="fa fa-play-circle px-3"
                                 aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <div className="col-6">
-                        <button
-                            className={`scoresTypeSelectButton btn ${
-                                showLiveOnes
-                                    ? `btn-outline-primary`
-                                    : `btn-outline-success`
-                            }`}
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button
+                            variant={
+                                !showLiveOnes
+                                    ? "outline-success"
+                                    : "outline-primary"
+                            }
+                            className="scores-mode-select-button"
                             onClick={this.btnShowFinalScores}>
                             نتایج نهایی
                             <i
-                                className="fa fa-stop-circle-o px-3"
+                                className="fa fa-play-circle px-3"
                                 aria-hidden="true"></i>
-                        </button>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12">
+                        </Button>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        {/* this single column is to make mode select buttons and Allscores same width */}
                         <AllScores
                             scores={showLiveOnes ? liveScores : finalScores}
                         />
-                    </div>
-                </div>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }

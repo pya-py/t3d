@@ -248,7 +248,7 @@ class GamePlay extends Component {
     };
 
     componentDidMount() {
-        this.cellButtons = document.getElementsByClassName("gameTableCells"); // pay attension to searched className! may cause an error
+        this.cellButtons = document.getElementsByClassName("game-table-cells"); // pay attension to searched className! may cause an error
 
         const { player, room } = this.props;
         const { myTurn } = this.state;
@@ -440,10 +440,10 @@ class GamePlay extends Component {
         if (count === dimension) {
             for (let i = 0; i < dimension; i++) {
                 this.cellButtons[firstCell + i * step].className =
-                    "gameTableCells " + player.lineColor;
+                    "game-table-cells " + player.lineColor;
                 setTimeout(() => {
                     this.cellButtons[firstCell + i * step].className =
-                        "gameTableCells btn btn-outline-dark";
+                        "game-table-cells btn btn-outline-dark";
                 }, 1000 + i * 100);
             }
         }

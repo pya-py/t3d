@@ -11,12 +11,11 @@ const TableDesign = ({ timeRemaining, dimension, players, table, onEachCellClick
     //prop drilling in BriefScoreBoard
     return (
         <Card
-            id="divTableBlock"
             bg="transparent"
             border="dark"
             className="w-100 mx-auto">
             <BriefScoreboard timeRemaining={timeRemaining} players={players} />
-            <Card.Body className="gameBorderCard">
+            <Card.Body className="game-border-card">
                 {table ? (
                     dimens.map((floor) => (
                         <Fragment>
@@ -34,7 +33,7 @@ const TableDesign = ({ timeRemaining, dimension, players, table, onEachCellClick
                                                 column
                                             }
                                             variant="btn btn-outline-dark"
-                                            className="gameTableCells"
+                                            className="game-table-cells"
                                             style={
                                                 table[floor][row][column] !==
                                                 null

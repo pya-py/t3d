@@ -41,7 +41,7 @@ const MyGamesAndFriends = () => {
         <Card
             border="secondary"
             bg="transparent"
-            className="mx-auto bigSingleCard">
+            className="big-single-card">
             <Card.Header className="text-center">
                 لیست دوستان و آمار بازی ها
             </Card.Header>
@@ -52,7 +52,7 @@ const MyGamesAndFriends = () => {
                     defaultActiveKey={filterID}
                     onSelect={(key) => setFilterID(key)}>
                     <Row>
-                        <Col xs={2}>
+                        <Col className="friend-list-name-length" xs={2}>
                             <Nav
                                 variant="pills"
                                 className="flex-column text-right">

@@ -3,7 +3,7 @@ import './info.css'
 
 const ContactUs = () => {
     return ( 
-        <Card border="dark" className="mb-3 singleCard" >
+        <Card border="dark" className="simple-single-card" >
             <Card.Header className="text-center">اطلاعات تماس</Card.Header>
             <Card.Body className="text-right">
                 <Card.Text>دانشگاه علم و صنعت ایران</Card.Text>

@@ -16,7 +16,7 @@ import chatServices from "../services/http/chatServices";
 
 import Message from "./Message";
 
-const ChatMessageBox = ({ friendID }) => {
+const ChatBox = ({ friendID }) => {
     const [myMessage, setMyMessage] = useState("");
     const message = useSelector((state) => state.message);
     const device = useSelector((state) => state.device);
@@ -96,17 +96,17 @@ const ChatMessageBox = ({ friendID }) => {
                     <Card
                         border="dark"
                         bg="transparent"
-                        className={`mx-auto bigSingleCard ${
+                        className={`big-single-card ${
                             device !== Device.SmartPhone
-                                ? "chatBoxScrollable"
-                                : "smartphoneChatBoxScrollable"
+                                ? "chat-box-scrollable"
+                                : "smartphone-chat-box-scrollable"
                         }`}>
                         <Card.Body>
                             {allMsgs.map((msg, index) => (
                                 <div ref={mostRecentMessageRef}>
                                     <Message
                                         msg={msg}
-                                        inSmartphone={!device}
+                                        inDesktop={!device}
                                         previousDay={
                                             index !== 0
                                                 ? (new Date(
@@ -153,7 +153,7 @@ const ChatMessageBox = ({ friendID }) => {
                                         setMyMessage(e.target.value)
                                     }
                                     placeholder="پیام..."
-                                    className="bg-transparent chatRoomMessageBox
+                                    className="bg-transparent chat-room-message-box
                                     mx-auto text-right"></Form.Control>
                             </InputGroup.Prepend>
                         </InputGroup>
@@ -164,4 +164,4 @@ const ChatMessageBox = ({ friendID }) => {
     );
 };
 
-export default ChatMessageBox;
+export default ChatBox;

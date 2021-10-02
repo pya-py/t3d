@@ -15,11 +15,10 @@ const FriendRecords = (props) => {
     const me = useSelector(state => state.player);
 
     const friend = props.friend ? props.friend : me;
-
     return (
-        <Card border="success" bg="transparent" className="friendRecords">
+        <Card border="success" bg="transparent" className="friend-records">
             <Image
-                className="card-img-top myFriendAvatar"
+                className="card-img-top my-friend-avatar"
                 src={noAvatar}
                 alt="مشکلی در بارگذاری تصویر پیش آمد"
             />
@@ -33,7 +32,7 @@ const FriendRecords = (props) => {
                             </Col>
                             <Col className="text-left">
                                 <Badge
-                                    className="badgeFontSize"
+                                    className="friend-badge-font-size"
                                     pill
                                     variant="primary">
                                     {friend.records.points}
@@ -48,7 +47,7 @@ const FriendRecords = (props) => {
                             </Col>
                             <Col className="text-left">
                                 <Badge
-                                    className="badgeFontSize"
+                                    className="friend-badge-font-size"
                                     pill
                                     variant="primary">
                                     {friend.records.wins}
@@ -61,7 +60,7 @@ const FriendRecords = (props) => {
                             <Col className="text-right">تعداد تساوی ها</Col>
                             <Col className="text-left">
                                 <Badge
-                                    className="badgeFontSize"
+                                    className="friend-badge-font-size"
                                     pill
                                     variant="primary">
                                     {friend.records.draws}
@@ -74,7 +73,7 @@ const FriendRecords = (props) => {
                             <Col className="text-right">تعداد باخت ها</Col>
                             <Col className="text-left">
                                 <Badge
-                                    className="badgeFontSize"
+                                    className="friend-badge-font-size"
                                     pill
                                     variant="primary">
                                     {friend.records.loses}

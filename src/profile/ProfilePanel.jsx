@@ -18,7 +18,7 @@ const ProfilePanel = (props) => {
 
     return (
         <Row //bg-transparent
-            className="panelSideBar mt-2 bg-dark text-right d-flex flex-column mx-auto flex-shrink-0 p-3">
+            className="panel-sidebar mt-2 bg-dark text-right d-flex flex-column mx-auto flex-shrink-0 p-3">
             <NavLink
                 to={Configs.Routes.Client.Profile}
                 className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">

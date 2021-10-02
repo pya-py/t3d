@@ -3,7 +3,7 @@ import { Card } from 'react-bootstrap';
 
 const GameGuide = () => {
     return ( 
-        <Card border="warning" className="mb-3 singleCard" >
+        <Card border="warning" className="simple-single-card" >
             <Card.Header className="text-center">راهنمای بازی</Card.Header>
             <Card.Body className="text-right">
                 <Card.Text>دانشگاه علم و صنعت ایران</Card.Text>

@@ -3,6 +3,7 @@ import AllPlayers from "./AllPlayers";
 import userServices from "../../services/http/userServices";
 import LoadingBar from "../../common/LoadingBar";
 import Configs from '../../services/configs';
+import { Row } from "react-bootstrap";
 
 class Ranking extends Component {
     state = { players: [], loading: false };
@@ -35,12 +36,12 @@ class Ranking extends Component {
     render() {
         const { players, loading } = this.state;
         return (
-            <div className="row mt-3">
+            <Row className="mt-3">
                 {loading ? <LoadingBar loading={loading} /> : null}
-                <div className="col-12">
+                <Row className="w-100 mx-auto">
                     <AllPlayers players={players} />
-                </div>
-            </div>
+                </Row>
+            </Row>
         );
     }
 }

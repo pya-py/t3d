@@ -20,17 +20,19 @@ import GameChatRoom from "../chat/GameChatRoom";
 const PlayerInfoSideBar = (props) => {
     const { inGame } = props;
     const me = useSelector((state) => state.player);
-    const person = props.person ? props.person : me;
     const dispatch = useDispatch();
     const [personIsFriend, setPersonIsFriend] = useState(false);
 
+    const person = props.person ? props.person : me;
+    
     const onFriendRequestClick = (event) => {
         event.target.innerHTML = "ارسال شد...";
         event.target.disabled = true;
         dispatch(SendFriendRequestTo(person.userID));
     };
+    
     useEffect(() => {
-        if (person.userID !== me.userID) {
+        if (me && person.userID !== me.userID) {
             (async () => {
                 try {
                     const { status, data } = await userServices.isMyFriend(
@@ -46,15 +48,16 @@ const PlayerInfoSideBar = (props) => {
             })();
         }
     }, [person, me]);
+    if(!person) return null;
     return (
-        <Card border="info" className="playerInfoSideBar">
+        <Card border="info" className="player-info-sideBar">
             <Card.Header className="text-center text-info form-inline">
                 <Col>
                     <Card.Text className="text-left">{person.fullname}</Card.Text>
                 </Col>
                 <Col>
                     <Image
-                        className="card-img-top playerAvatar"
+                        className="card-img-top player-avatar"
                         src={noAvatar}
                         alt="مشکلی در بارگذاری تصویر پیش آمد"
                     />
@@ -80,7 +83,7 @@ const PlayerInfoSideBar = (props) => {
                             </Col>
                             <Col className="text-left">
                                 <Badge
-                                    className="badgeFontSize"
+                                    className="player-badge-font-size"
                                     pill
                                     variant="primary">
                                     {person.records.points}
@@ -95,7 +98,7 @@ const PlayerInfoSideBar = (props) => {
                             </Col>
                             <Col className="text-left">
                                 <Badge
-                                    className="badgeFontSize"
+                                    className="player-badge-font-size"
                                     pill
                                     variant="primary">
                                     {person.records.wins}
@@ -108,7 +111,7 @@ const PlayerInfoSideBar = (props) => {
                             <Col className="text-right">تعداد تساوی ها</Col>
                             <Col className="text-left">
                                 <Badge
-                                    className="badgeFontSize"
+                                    className="player-badge-font-size"
                                     pill
                                     variant="primary">
                                     {person.records.draws}
@@ -121,7 +124,7 @@ const PlayerInfoSideBar = (props) => {
                             <Col className="text-right">تعداد باخت ها</Col>
                             <Col className="text-left">
                                 <Badge
-                                    className="badgeFontSize"
+                                    className="player-badge-font-size"
                                     pill
                                     variant="primary">
                                     {person.records.loses}

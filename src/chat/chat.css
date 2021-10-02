@@ -1,45 +1,56 @@
-.bigSingleCard {
+.chat-main-card {
     width: 100%;
     border-radius: 5px;
+    margin: auto;
     margin-top: 1%;
+    
 }
 
-.chatRoomDevider {
+.chat-room-devider {
     border-left: 3px solid black;
     border-radius: 5px;
 }
 
-.chatScrollableFriends {
+.chat-scrollable-friends {
     height: 700px;
     overflow-y: scroll;
 }
 
-.smartphoneChatScrollableFriends {
+.smartphone-chat-scrollable-friends {
     height: 200px;
     overflow-y: scroll;
 }
 
-.chatBoxScrollable {
+.chat-box-scrollable {
     height: 700px;
     overflow-y: scroll;
 }
 
-.smartphoneChatBoxScrollable {
+.smartphone-chat-box-scrollable {
     height: 400px;
     overflow-y: scroll;
 }
 
-.chatRoomMessageBox {
+.chat-room-message-box {
     border: 1px solid cyan;
 }
 
-.messageTime{
+.my-message-time{
     font-size: 12px;
     color: brown;
     text-align: left;
+    border-right: 1px solid grey;
 }
 
-.messageDate {
+
+.friend-message-time{
+    font-size: 12px;
+    color: brown;
+    text-align: right;
+    border-left: 1px solid grey;
+}
+
+.message-date {
     width: 50%;
     font-size: 14px;
     color:darkviolet;
