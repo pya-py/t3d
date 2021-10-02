@@ -4,15 +4,13 @@ import DateObject from "react-date-object";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import "./chat.css";
-import { useSelector } from "react-redux";
-import { Device } from "../services/configs";
-const Message = ({ msg, previousDay }) => {
+
+const Message = ({ msg, previousDay, inSmartphone }) => {
     const { date } = msg; // destructure date from msg then make a new date object
     // reason for making new Date objects is that react throws error some time when you use it without new Date :|
     const [showDate, setShowDate] = useState(false); //for each day, the first message in that day has persian date above it
     const [time, setTime] = useState(null);
     const [persianDate, setPersianDate] = useState(null);
-    const device = useSelector((state) => state.device);
 
     useEffect(() => {
         const persianDateObject = new DateObject({
@@ -27,6 +25,7 @@ const Message = ({ msg, previousDay }) => {
         ); //     0 means this is the first message in the chat
     }, [date, previousDay]);
 
+    //note: Device.Smartphone is 0 -> so it inSmartphone is used conditionally but it actually contains device type and not a boolean
     return (
         <Fragment>
             {!showDate ? null : (
@@ -35,7 +34,7 @@ const Message = ({ msg, previousDay }) => {
                     <p className="messageDate">{persianDate}</p>
                 </Fragment>
             )}
-            {device !== Device.SmartPhone ? (
+            {!inSmartphone ? (
                 <Row>
                     <Col>
                         {msg.me && (

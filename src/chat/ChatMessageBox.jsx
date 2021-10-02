@@ -15,7 +15,6 @@ import { Device, Status } from "../services/configs";
 import chatServices from "../services/http/chatServices";
 
 import Message from "./Message";
-import { toast } from "react-toastify";
 
 const ChatMessageBox = ({ friendID }) => {
     const [myMessage, setMyMessage] = useState("");
@@ -107,6 +106,7 @@ const ChatMessageBox = ({ friendID }) => {
                                 <div ref={mostRecentMessageRef}>
                                     <Message
                                         msg={msg}
+                                        inSmartphone={device}
                                         previousDay={
                                             index !== 0
                                                 ? (new Date(

@@ -10,5 +10,5 @@ module.exports = {
     Routes: { Server: ServerRoutes, Client: ClientRoutes },
     Status,
     GameSetting,
-    Device: { Desktop: 0, Tablet: 1, SmartPhone: 2 }
+    Device: { SmartPhone: 0, Tablet: 1, Desktop: 2 }
 }
