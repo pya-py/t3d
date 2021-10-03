@@ -1,5 +1,5 @@
 import http from "./httpService";
-import { BrowserStorage, Routes } from "../configs";
+import { Routes } from "../configs";
 
 const {Server} = Routes;
 
@@ -11,6 +11,7 @@ const userServices = {
         );
     },
     signIn: (user) => {
+        console.log(`${Server.Root}/${Server.Users}/${Server.SignIn}`);
         return http.post(
             `${Server.Root}/${Server.Users}/${Server.SignIn}`,
             JSON.stringify(user)
@@ -52,17 +53,7 @@ const userServices = {
         return http.get(
             `${Server.Root}/${Server.Users}/${Server.Administrators}/${userID}`
         );
-    }, // check is admin via token? or this?:|
-    saveUser: (id, token) => {
-        // use remember me option
-        sessionStorage.setItem(BrowserStorage.ID, id); // localStorage or sessionStorage?
-        sessionStorage.setItem(BrowserStorage.Token, token);
-    },
-    readUserID: () => {
-        //from browser
-        // consider local storage
-        return sessionStorage.getItem(BrowserStorage.ID);
-    },
+    }
 };
 
 export default userServices;

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { SendMessageTo } from "../dashboard/actions";
 
 const GameChatRoom = ({ friendID }) => {
-    const [myMessage, setMyMessage] = useState(null);
+    const [myMessage, setMyMessage] = useState("");
     const message = useSelector((state) => state.message);
     const dispatch = useDispatch();
     const me = useSelector((state) => state.player);

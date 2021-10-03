@@ -2,7 +2,6 @@
 import { connect } from "react-redux";
 import {
     LoadMe,
-    UpdateMyRecords,
     LoadOpponent,
     ResetOpponent,
     SetRoom,
@@ -11,13 +10,13 @@ import {
     CleanScoreboard,
     ResetRoom,
     TriggerRecordUpdate,
+    SaveNewToken
     // UpdateStatistics,
     // TriggerOpponentSearch,
     // SendFriendRequestTo,
     // SendMessageTo,
     // RecieveMessageFrom,
     // ResetMessages,
-    // SetDeviceType,
 } from "./actions";
 // ***** remove the ones that arent used in class components => for memory management/ not necessary though
 // useSelector for functional components
@@ -35,7 +34,6 @@ function withReduxDashboard(component) {
     const mapDispatchToProps = (dispatch) => ({
         LoadMe: (player) => dispatch(LoadMe(player)),
         LoadOpponent: (opponent) => dispatch(LoadOpponent(opponent)),
-        UpdateMyRecords: () => dispatch(UpdateMyRecords()),
         ResetOpponent: () => dispatch(ResetOpponent()),
         SetRoom: (room) => dispatch(SetRoom(room)),
         ResetRoom: () => dispatch(ResetRoom()),
@@ -43,6 +41,7 @@ function withReduxDashboard(component) {
         UpdateScoreboard: (details) => dispatch(UpdateScoreboard(details)),
         CleanScoreboard: () => dispatch(CleanScoreboard()),
         TriggerRecordUpdate: () => dispatch(TriggerRecordUpdate()),
+        SaveNewToken: () => dispatch(SaveNewToken())
         //for memory managment these are commented because they arent used in Class Components yet
         //UpdateStatistics: (stat) => dispatch(UpdateStatistics(stat)),
         //TriggerOpponentSearch: () => dispatch(TriggerOpponentSearch()),
@@ -50,7 +49,6 @@ function withReduxDashboard(component) {
         //SendMessageTo: (name, friendID, text) => dispatch(SendMessageTo(name, friendID, text)),
         //RecieveMessageFrom: (name, friendID, text) => dispatch(RecieveMessageFrom(name, friendID, text)),
         //ResetMessages: () => dispatch(ResetMessages())
-        //SetDeviceType: () => dispatch(SetDeviceType()),
     });
     return connect(mapStateToProps, mapDispatchToProps)(component);
 }

@@ -1,6 +1,17 @@
-.panel-sidebar {
+.profile-panel-sidebar {
     height: 90vh; /*what to do about this*/
     border-radius: 10px;
+    margin: auto;
+    background-color: black ;
+    text-align: right;
+    margin-top:2%;
+    padding: 3%;
+    opacity: 0.8;
+}
+
+.profile-panel-sidebar button {
+    /* all buttons inside the panel menu */
+    border: none;
 }
 
 .notice-manager-card {
@@ -36,7 +47,6 @@
 .friend-records {
     color: black;
     border-radius: 5px;
-    margin-top: 1%;
     width: 100%;
 }
 
@@ -52,4 +62,10 @@
 
 .friend-badge-font-size {
     font-size: 16px;
+}
+
+.tabs-list-friends-in-games-scrollable {
+/* .nav nav-items{ */
+    height: 750px;
+    overflow-y: scroll;
 }

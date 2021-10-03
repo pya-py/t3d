@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { SetRoom, TriggerOpponentSearch } from "../dashboard/actions";
 import { Button, Form, InputGroup } from "react-bootstrap";
-import LoadingBar from '../common/LoadingBar';
+import LoadingBar from '../commons/LoadingBar';
 
 const RoomManager = ({ friendlyGame }) => {
     const [roomName, setRoomName] = useState("");

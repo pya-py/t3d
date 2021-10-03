@@ -1,4 +1,4 @@
-import { Routes } from "../configs";
+import { browserStorage, Routes } from "../configs";
 import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -31,19 +31,20 @@ const GlobalSocketManager = () => {
 
     const enableGlobalTimer = useCallback(() => {
         return setInterval(() => {
-            
-            if (socketGlobal){
+            if (socketGlobal) {
                 console.log("updating statistics...");
                 socketGlobal.send(
                     JSON.stringify({
+                        token: browserStorage.TOKEN(),
                         request: "online",
                         clientID: player.userID,
                         msg: null,
                     })
-                );}
+                );
+            }
         }, 300000); // every 5 MINUTES request number of online members to update the site
     }, [socketGlobal, player]);
-    
+
     useEffect(() => {
         console.log("global timer enabled");
         const timerID = enableGlobalTimer();
@@ -51,7 +52,7 @@ const GlobalSocketManager = () => {
         return () => {
             console.log("global timer disabled");
             clearInterval(timerID);
-        }
+        };
     }, [enableGlobalTimer]);
 
     const connect = useCallback(() => {
@@ -62,6 +63,7 @@ const GlobalSocketManager = () => {
             socket.onopen = () => {
                 socket.send(
                     JSON.stringify({
+                        token: browserStorage.TOKEN(),
                         request: "online",
                         clientID: player.userID,
                         msg: null,
@@ -90,6 +92,7 @@ const GlobalSocketManager = () => {
                             dispatch(SetRoom(msg));
                             socket.send(
                                 JSON.stringify({
+                                    token: browserStorage.TOKEN(),
                                     request: "online",
                                     clientID: player.userID,
                                     msg: null,
@@ -192,6 +195,7 @@ const GlobalSocketManager = () => {
             if (!room.name && socketGlobal && player)
                 socketGlobal.send(
                     JSON.stringify({
+                        token: browserStorage.TOKEN(),
                         request: "find",
                         clientID: player.userID,
                         msg: room.type,
@@ -202,6 +206,7 @@ const GlobalSocketManager = () => {
             if (socketGlobal)
                 socketGlobal.send(
                     JSON.stringify({
+                        token: browserStorage.TOKEN(),
                         request: "close_game",
                         clientID: player.userID,
                         msg: null,
@@ -215,6 +220,7 @@ const GlobalSocketManager = () => {
             //tools.friendRequest either contains null => no request, or contains target ID for friendship
             socketGlobal.send(
                 JSON.stringify({
+                    token: browserStorage.TOKEN(),
                     request: "ask_friendship",
                     clientID: player.userID,
                     msg: {
@@ -230,6 +236,7 @@ const GlobalSocketManager = () => {
         // handle multiple requests *************
         socketGlobal.send(
             JSON.stringify({
+                token: browserStorage.TOKEN(),
                 request: "respond_friendship",
                 clientID: player.userID,
                 msg: {
@@ -250,6 +257,7 @@ const GlobalSocketManager = () => {
             //if destination is determined, otherwise => means no message has been sent
             socketGlobal.send(
                 JSON.stringify({
+                    token: browserStorage.TOKEN(),
                     request: "chat",
                     clientID: player.userID,
                     msg: message.sent,
@@ -275,7 +283,6 @@ const GlobalSocketManager = () => {
         }
     }, 5000);
 
-    
     // is it really necessary though ?????
 
     return (

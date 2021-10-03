@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { Button, Card, Form, Col, Row } from "react-bootstrap";
-import LoadingBar from "../common/LoadingBar";
+import LoadingBar from "../commons/LoadingBar";
 import "./profile.css";
 import userServices from "../services/http/userServices";
 import Configs from "../services/configs";

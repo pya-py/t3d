@@ -4,7 +4,7 @@ import DateObject from "react-date-object";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import "./chat.css";
-
+import { v1 as uuidv1 } from 'uuid'
 const Message = ({ msg, previousDay, inDesktop }) => {
     const { date } = msg; // destructure date from msg then make a new date object
     // reason for making new Date objects is that react throws error some time when you use it without new Date :|
@@ -27,7 +27,7 @@ const Message = ({ msg, previousDay, inDesktop }) => {
 
     //note: Device.Desktop is 0 -> so it inDesktop is used conditionally but it actually contains device type and not a boolean
     return (
-        <Fragment>
+        <Fragment key={uuidv1()}>
             {!showDate ? null : (
                 <Fragment>
                     <hr />

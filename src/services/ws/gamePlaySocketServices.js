@@ -1,10 +1,11 @@
-import {Routes} from '../configs';
+import {browserStorage, Routes} from '../configs';
 
 export const createSocketRequest = (request, rname, playerID, msg) =>
     JSON.stringify({
         request,
         rname,
         playerID,
+        token: browserStorage.TOKEN(),
         msg,
     });
 

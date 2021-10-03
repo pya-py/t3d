@@ -1,29 +1,27 @@
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Container, Row, Nav, Navbar } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import {  NavLink } from "react-router-dom";
-import {Routes, Device} from '../services/configs';
+import {Devices, Routes} from '../services/configs';
 
-const NavigationBar = () => {
+const NavigationBar = ({Device}) => {
     const player = useSelector((state) => state.player);
-    const device = useSelector(state => state.device);
 
     return (
-        <Navbar bg="light" expand="lg" className="nav-pills text-right">
+        <Navbar bg="light" className="nav-pills text-right">
             <Container className="text-right">
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <NavLink
-                    border="secandary"
+                
+
+                    <Nav className="me-auto">
+                    <NavLink
                     className="nav-link"
+                    className="nav-link text-primary"
                     activeClassName="btn-success text-dark"
                     to={player ? Routes.Client.Profile : Routes.Client.SignUp}>
                     <i
                         className="fa fa-address-card px-2"
                         aria-hidden="true"></i>
-                    {player ? player.fullname : "ثبت نام"}
+                    {player ? (Device !== Devices.SmartPhone && player.fullname) : "ثبت نام"}
                 </NavLink>
-
-                <Navbar.Collapse>
-                    <Nav className="me-auto">
                         <NavLink
                             className="nav-link text-primary"
                             to={Routes.Client.Root}
@@ -32,7 +30,7 @@ const NavigationBar = () => {
                             <i
                                 className="fa fa-home px-2"
                                 aria-hidden="true"></i>
-                            صفحه اصلی
+                           {Device === Devices.Desktop && 'صفحه اصلی'}
                         </NavLink>
 
                         <NavLink
@@ -42,8 +40,18 @@ const NavigationBar = () => {
                             <i
                                 className="fa fa-gamepad px-2"
                                 aria-hidden="true"></i>
-                            بازی ها
+                            {Device === Devices.Desktop && 'بازی ها'}
                         </NavLink>
+                        {player && <NavLink
+                            className="nav-link text-primary"
+                            to={Routes.Client.ChatRoom}
+                            activeClassName="btn-outline-secondary text-dark">
+                            <i
+                                className="fa fa-weixin px-2"
+                                aria-hidden="true"></i>
+                            {Device === Devices.Desktop && 'چت روم'}
+                        </NavLink>}
+                        
                         <NavLink
                             className="nav-link text-primary"
                             to={Routes.Client.Rankings}
@@ -51,7 +59,7 @@ const NavigationBar = () => {
                             <i
                                 className="fa fa-list-ol px-2"
                                 aria-hidden="true"></i>
-                            رنکینگ
+                            {Device === Devices.Desktop && 'رنکینگ'}
                         </NavLink>
                         <NavLink
                             className="nav-link text-primary"
@@ -60,7 +68,7 @@ const NavigationBar = () => {
                             <i
                                 className="fa fa-eye px-2"
                                 aria-hidden="true"></i>
-                            راهنما
+                            {Device === Devices.Desktop && 'راهنما'}
                         </NavLink>
                         <NavLink
                             className="nav-link text-primary"
@@ -69,19 +77,10 @@ const NavigationBar = () => {
                             <i
                                 className="fa fa-phone-square px-2"
                                 aria-hidden="true"></i>
-                            تماس با ما
+                            {Device === Devices.Desktop && 'تماس با ما'}
                         </NavLink>
-                        {player && device === Device.SmartPhone && <NavLink
-                            className="nav-link text-primary"
-                            to={Routes.Client.ChatRoom}
-                            activeClassName="btn-outline-secondary text-dark">
-                            <i
-                                className="fa fa-phone-square px-2"
-                                aria-hidden="true"></i>
-                            چت روم
-                        </NavLink>}
+                        
                     </Nav>
-                </Navbar.Collapse>
             </Container>
         </Navbar>
     );

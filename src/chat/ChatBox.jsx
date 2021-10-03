@@ -11,22 +11,21 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { SendMessageTo } from "../dashboard/actions";
 import "./chat.css";
-import { Device, Status } from "../services/configs";
+import { Devices, Status } from "../services/configs";
 import chatServices from "../services/http/chatServices";
 
 import Message from "./Message";
 
-const ChatBox = ({ friendID }) => {
+const ChatBox = ({ friendID, Device }) => {
     const [myMessage, setMyMessage] = useState("");
     const message = useSelector((state) => state.message);
-    const device = useSelector((state) => state.device);
     const dispatch = useDispatch();
     const me = useSelector((state) => state.player);
     const mostRecentMessageRef = useRef(null);
 
     //...TEMP: just save msges in client side
     const [allMsgs, setAllMsgs] = useState([
-        { me: null, friend: null, date: null },
+        { me: null, friend: null, date: null, key: 0 },
     ]);
 
     const loadPreviousMessages = useCallback(async () => {
@@ -37,8 +36,18 @@ const ChatBox = ({ friendID }) => {
                 const previousMsgs = chat.map((message) => {
                     const { text, owner, date } = message;
                     if (owner === myIndex)
-                        return { me: text, friend: null, date };
-                    return { me: null, friend: text, date };
+                        return {
+                            me: text,
+                            friend: null,
+                            date,
+                            key: message._id.toString(),
+                        };
+                    return {
+                        me: null,
+                        friend: text,
+                        date,
+                        key: message._id.toString(),
+                    };
                 });
                 setAllMsgs(previousMsgs);
             }
@@ -58,7 +67,12 @@ const ChatBox = ({ friendID }) => {
     const composeMessage = (event) => {
         event.preventDefault();
         let tempMsg = [...allMsgs];
-        tempMsg.push({ me: myMessage, friend: null, date: new Date() });
+        tempMsg.push({
+            me: myMessage,
+            friend: null,
+            date: new Date(),
+            key: allMsgs.length,
+        });
         setAllMsgs(tempMsg);
         dispatch(SendMessageTo(me.fullname, friendID, myMessage));
         setMyMessage("");
@@ -86,6 +100,14 @@ const ChatBox = ({ friendID }) => {
         const { recieved } = message;
         if (!message.sent && recieved && recieved.friendID === friendID) {
             setAllMsgs(recieveMessage(message.recieved));
+            if (mostRecentMessageRef && mostRecentMessageRef.current) {
+                setTimeout(() => {
+                    mostRecentMessageRef.current.scrollIntoView({
+                        behavior: "smooth",
+                        top: mostRecentMessageRef.current.offsetTop,
+                    });
+                }, 100);
+            }
         }
     }, [message, friendID]);
 
@@ -97,7 +119,7 @@ const ChatBox = ({ friendID }) => {
                         border="dark"
                         bg="transparent"
                         className={`big-single-card ${
-                            device !== Device.SmartPhone
+                            Device !== Devices.SmartPhone
                                 ? "chat-box-scrollable"
                                 : "smartphone-chat-box-scrollable"
                         }`}>
@@ -105,13 +127,14 @@ const ChatBox = ({ friendID }) => {
                             {allMsgs.map((msg, index) => (
                                 <div ref={mostRecentMessageRef}>
                                     <Message
+                                        key={msg.key}
                                         msg={msg}
-                                        inDesktop={!device}
+                                        inDesktop={Device === Devices.Desktop}
                                         previousDay={
                                             index !== 0
-                                                ? (new Date(
-                                                      allMsgs[index-1].date
-                                                  )).getDate()
+                                                ? new Date(
+                                                      allMsgs[index - 1].date
+                                                  ).getDate()
                                                 : 0
                                         }
                                     />
@@ -131,22 +154,17 @@ const ChatBox = ({ friendID }) => {
                                 }}>
                                 <Button
                                     type="submit"
-                                    style={{
-                                        border: "none",
-                                    }}
+                                    style={{ border: "none", fontSize: '22px' }}
                                     className="w-100 mx-auto"
                                     variant="outline-info">
                                     <i
-                                        className="fa fa-paper-plane"
+                                        className="fa fa-telegram"
                                         aria-hidden="true"></i>
                                 </Button>
                             </InputGroup.Prepend>
 
                             <InputGroup.Prepend
-                                style={{
-                                    margin: "auto",
-                                    width: "92%",
-                                }}>
+                                style={{ margin: "auto", width: "92%" }}>
                                 <Form.Control
                                     value={myMessage}
                                     onChange={(e) =>

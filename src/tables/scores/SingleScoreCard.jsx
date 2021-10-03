@@ -51,7 +51,7 @@ const SingleScoreCard = ({
                     block
                     size="lg"
                     className="replay-game-button">
-                    {`دوز ${Type}x${Type}x${Type} (بازپخش؟)`}
+                        مشخصات بازی
                 </Button>
             </Card.Footer>
         </Card>

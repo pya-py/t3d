@@ -4,8 +4,8 @@ import "./users.css";
 import { toast } from "react-toastify";
 import userServices from "../services/http/userServices";
 import { withRouter } from "react-router-dom";
-import LoadingBar from "../common/LoadingBar";
-import Configs from '../services/configs';
+import LoadingBar from "../commons/LoadingBar";
+import Configs, { browserStorage } from '../services/configs';
 import { Card, Form , Button} from "react-bootstrap";
 
 class SignUp extends Component {
@@ -70,7 +70,7 @@ class SignUp extends Component {
                         position: "top-right",
                         closeOnClick: true,
                     });
-                    userServices.saveUser(data.userID, data.token);
+                    browserStorage.writeUser(data.userID, data.token);
                     this.props.history.replace("/");
                     // this.props.history.replace('/signIn')
                     // ******* change server to return user token and auto sign in

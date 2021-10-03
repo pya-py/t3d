@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import LoadingBar from "../common/LoadingBar";
-import userServices from "../services/http/userServices";
-import Configs from "../services/configs";
-import gameServices from "../services/http/gameServices";
+import LoadingBar from "../../commons/LoadingBar";
+import userServices from "../../services/http/userServices";
+import Configs from "../../services/configs";
+import gameServices from "../../services/http/gameServices";
 import { Card, Col, Nav, Row, Tab } from "react-bootstrap";
-import AllScores from "../tables/scores/AllScores";
-import './profile.css';
+import AllScores from "../../tables/scores/AllScores";
+import '../profile.css';
 import FriendRecords from "./FriendRecords";
 
 const MyGamesAndFriends = () => {
@@ -51,8 +51,8 @@ const MyGamesAndFriends = () => {
                 <Tab.Container
                     defaultActiveKey={filterID}
                     onSelect={(key) => setFilterID(key)}>
-                    <Row>
-                        <Col className="friend-list-name-length" xs={2}>
+                    <Row className="tabs-list-friends-in-games-scrollable">
+                        <Col className="friend-list-name-length" xs={3}>
                             <Nav
                                 variant="pills"
                                 className="flex-column text-right">
@@ -71,6 +71,10 @@ const MyGamesAndFriends = () => {
                             </Nav>
                         </Col>
                         {/* EDIT MAIL LAYOUT <Col> LIKE THIS */}
+                        <Col xs={9}>
+                            <FriendRecords friend={selectedFriendIndex !== -1 ? myFriends[selectedFriendIndex] : null} />
+                        </Col>
+
                         <Col>
                             <Tab.Content >
                                 <Tab.Pane eventKey="me">
@@ -92,9 +96,7 @@ const MyGamesAndFriends = () => {
                             </Tab.Content>
                         </Col>
                         {/* EDIT MAIL LAYOUT <Col> LIKE THIS */}
-                        {<Col xs={4}>
-                            <FriendRecords friend={selectedFriendIndex !== -1 ? myFriends[selectedFriendIndex] : null} />
-                        </Col>}
+                        
                     </Row>
                 </Tab.Container>
             </Card.Body>

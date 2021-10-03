@@ -3,9 +3,9 @@ export const LoadMe = (player) => ({
     payload: player,
 });
 
-export const UpdateMyRecords = () => ({
-    type: "UPDATE_ME",
-});
+export const SaveNewToken = () => ({
+    type: "SAVE_TOKEN"
+})
 
 export const TriggerRecordUpdate = () => ({
     type: "TRIGGER_UPDATE",
@@ -71,9 +71,4 @@ export const RecieveMessageFrom = (name, friendID, text) => ({
 
 export const ResetMessages = () => ({
     type: "RESET_MESSAGES"
-});
-
-export const SetDeviceType = (Type) => ({
-    type: "SET_DEVICE",
-    payload: Type
 });

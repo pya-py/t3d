@@ -1,6 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Status, BrowserStorage } from "../configs";
+import { Status, browserStorage } from "../configs";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers.put["Content-Type"] = "application/json";
@@ -8,7 +8,7 @@ axios.defaults.headers.put["Content-Type"] = "application/json";
 // put token in all request headers:
 axios.interceptors.request.use(
     (config) => {
-        const token = sessionStorage.getItem(BrowserStorage.Token);
+        const token = browserStorage.TOKEN();
         if (token) config.headers.Authorization = `Bearer ${token}`;
         else config.headers.Authorization = "";
         // console.log(config.headers.Authorization);

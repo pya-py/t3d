@@ -2,8 +2,8 @@ import { Component } from "react";
 import "./sidebars.css";
 import userServices from "../services/http/userServices";
 import { withRouter } from "react-router-dom";
-import LoadingBar from "../common/LoadingBar";
-import Configs from "../services/configs";
+import LoadingBar from "../commons/LoadingBar";
+import Configs, { browserStorage } from "../services/configs";
 import { toast } from "react-toastify";
 import { Card, Form, Button, Col, Row } from "react-bootstrap";
 
@@ -24,12 +24,13 @@ class SignInSideBar extends Component {
         try {
             const { status, data } = await userServices.signIn(user);
             if (status === Configs.Status.Successful) {
-                userServices.saveUser(data.userID, data.token);
+                console.log(data);
+                browserStorage.writeUser(data.userID, data.token);
                 this.props.history.replace("/");
             }
         } catch (err) {
             // check nonserver errors
-            // console.log(err);
+            console.log(err);
             this.setState({ password: "" });
             if (!Configs.Status.isErrorExpected(err))
                 toast.error(

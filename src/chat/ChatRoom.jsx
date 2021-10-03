@@ -1,15 +1,13 @@
 import { Card, Row, Col, Nav, Tab } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import Configs from "../services/configs";
+import {Status, Devices} from "../services/configs";
 import userServices from "../services/http/userServices";
 import ChatBox from "./ChatBox";
-import { useSelector } from "react-redux";
 import "./chat.css";
-import LoadingBar from '../common/LoadingBar';
-
-const ChatRoom = () => {
+import LoadingBar from '../commons/LoadingBar';
+import { v1 as uuidv1 } from 'uuid'
+const ChatRoom = ({Device}) => {
     const [loading, setLoading] = useState(false);
-    const device = useSelector((state) => state.device);
     const [myFriends, setMyFriends] = useState([]);
 
     useEffect(() => {
@@ -17,7 +15,7 @@ const ChatRoom = () => {
             try {
                 setLoading(true); // use preloader here?
                 const { status, data } = await userServices.getMyFriends();
-                if (status === Configs.Status.Successful)
+                if (status === Status.Successful)
                     setMyFriends(data.friends);
             } catch (err) {
                 setLoading(false);
@@ -42,7 +40,7 @@ const ChatRoom = () => {
                     <Row>
                         <Col
                             className={
-                                device !== Configs.Device.SmartPhone
+                                Device !== Devices.SmartPhone
                                     ? "chat-room-devider chat-scrollable-friends"
                                     : "smartphone-chat-scrollable-friends"
                             }
@@ -52,7 +50,7 @@ const ChatRoom = () => {
                                 className="flex-column text-right">
                                 {myFriends.map((friend) => (
                                     <Nav.Item>
-                                        <Nav.Link eventKey={friend.userID}>
+                                        <Nav.Link key={friend.userID} eventKey={friend.userID}>
                                             {friend.fullname}
                                         </Nav.Link>
                                     </Nav.Item>
@@ -63,7 +61,7 @@ const ChatRoom = () => {
                         <Col>
                             <Tab.Content>
                                 {myFriends.map((friend) => (
-                                    <ChatBox friendID={friend.userID} />
+                                    <ChatBox key={uuidv1()} friendID={friend.userID} Device={Device} />
                                 ))}
                             </Tab.Content>
                         </Col>

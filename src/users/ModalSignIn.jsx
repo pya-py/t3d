@@ -2,8 +2,8 @@ import { Button, Form, Modal, Row } from "react-bootstrap";
 import { Component, Fragment } from "react";
 import userServices from "../services/http/userServices";
 import { withRouter } from "react-router-dom";
-import LoadingBar from "../common/LoadingBar";
-import Configs from "../services/configs";
+import LoadingBar from "../commons/LoadingBar";
+import Configs, { browserStorage } from "../services/configs";
 import { toast } from "react-toastify";
 
 class ModalSignIn extends Component {
@@ -27,7 +27,7 @@ class ModalSignIn extends Component {
         try {
             const { status, data } = await userServices.signIn(user);
             if (status === Configs.Status.Successful) {
-                userServices.saveUser(data.userID, data.token);
+                browserStorage.writeUser(data.userID, data.token);
                 this.props.history.replace("/");
             }
         } catch (err) {
