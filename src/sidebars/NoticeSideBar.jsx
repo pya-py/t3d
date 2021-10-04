@@ -4,6 +4,7 @@ import noticeServices from "../services/http/noticeServices";
 import Configs from "../services/configs";
 import { Alert, Card } from "react-bootstrap";
 import { v1 as uuidv1 } from "uuid";
+import { toast } from "react-toastify";
 const NoticeSideBar = () => {
     const [notices, setNotices] = useState([]);
 
@@ -14,14 +15,14 @@ const NoticeSideBar = () => {
                 const { status, data } = await noticeServices.getShortNotices();
                 if (status === Configs.Status.Successful) {
                     //return data.notices;
-
+                    
                     if (data.notices.length) setNotices(data.notices.reverse());
                     //if all is empty
-                    else {
-                        setNotices({
+                    if(data.notices.length === 0) {
+                        setNotices([{
                             title: "پیام",
                             text: "اطلاعیه جدیدی وجود ندارد",
-                        });
+                        }]);
                     }
                 }
             } catch (err) {
@@ -38,15 +39,16 @@ const NoticeSideBar = () => {
                 ]);
             }
         })();
+        
     }, []);
-
+    
     return (
         <Card className="notice-sidebar" border="success">
             <Card.Header className="text-center text-success">
                 اطلاعیه ها
             </Card.Header>
             <Card.Body className="text-right">
-                {notices.map((notice) => {
+                {notices.length > 0 && notices.map((notice) => {
                     return (
                         <Fragment key={uuidv1()}>
                             <Alert variant="info">
