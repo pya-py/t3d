@@ -40,13 +40,11 @@ const ChatBox = ({ friendID, Device }) => {
                             me: text,
                             friend: null,
                             date,
-                            key: message._id.toString(),
                         };
                     return {
                         me: null,
                         friend: text,
                         date,
-                        key: message._id.toString(),
                     };
                 });
                 setAllMsgs(previousMsgs);
@@ -127,7 +125,7 @@ const ChatBox = ({ friendID, Device }) => {
                             {allMsgs.map((msg, index) => (
                                 <div ref={mostRecentMessageRef}>
                                     <Message
-                                        key={msg.key}
+                                        // key={msg.key}
                                         msg={msg}
                                         inDesktop={Device === Devices.Desktop}
                                         previousDay={

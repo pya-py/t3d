@@ -1,10 +1,10 @@
 import { Fragment, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import { SetRoom, TriggerOpponentSearch } from "../dashboard/actions";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import LoadingBar from '../commons/LoadingBar';
+import { Notify } from "../tools/msgbox";
 
 const RoomManager = ({ friendlyGame }) => {
     const [roomName, setRoomName] = useState("");
@@ -17,7 +17,7 @@ const RoomManager = ({ friendlyGame }) => {
     const onStartGameClick = (event) => {
         event.preventDefault();
         if (!player) {
-            toast.error("ابتدا وارد حساب کاربری خود شوید");
+            Notify("ابتدا باید وارد حساب کاربری خود شوید");
             return;
         }
         if (friendlyGame) dispatch(SetRoom({ name: roomName, type: gameType }));

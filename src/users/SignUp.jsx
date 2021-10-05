@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import ModalSignIn from "./ModalSignIn";
 import "./users.css";
-import { toast } from "react-toastify";
 import userServices from "../services/http/userServices";
 import { withRouter } from "react-router-dom";
 import LoadingBar from "../commons/LoadingBar";
-import Configs, { browserStorage } from '../services/configs';
-import { Card, Form , Button} from "react-bootstrap";
+import Configs, { browserStorage } from "../services/configs";
+import { Card, Form, Button } from "react-bootstrap";
+import { Sorry, OK, Notify } from "../tools/msgbox";
 
 class SignUp extends Component {
     // *********************Objectives***********************
@@ -42,10 +42,7 @@ class SignUp extends Component {
             email,
         } = this.state;
         if (firstname.trim().length < 3 || lastname.trim().length < 3) {
-            toast.error("نام و نام خانوادگی باید حداقل شام سه حرف فارسی باشد", {
-                position: "top-right",
-                closeOnClick: true,
-            });
+            Sorry("نام و نام خانوادگی باید حداقل شام سه حرف فارسی باشد");
             this.setState({
                 firstname: firstname.trim(),
                 lastname: lastname.trim(),
@@ -66,10 +63,7 @@ class SignUp extends Component {
 
                 if (status === Configs.Status.CreatedSuccessfully) {
                     //console.log(data);
-                    toast.success(`ثبت نام با موفقیت انجام شد`, {
-                        position: "top-right",
-                        closeOnClick: true,
-                    });
+                    OK("ثبت نام با موفقیت انجام شد");
                     browserStorage.writeUser(data.userID, data.token);
                     this.props.history.replace("/");
                     // this.props.history.replace('/signIn')
@@ -79,35 +73,16 @@ class SignUp extends Component {
                 // console.log(err);
                 this.setState({ loading: false });
                 if (err.response.status === Configs.Status.Conflict) {
-                    // toast.error(
-                    //     "کاربری با این شماره دانشجویی یا ایمیل قبلا ثبت نام کرده است",
-                    //     {
-                    //         position: "top-right",
-                    //         closeOnClick: true,
-                    //     }
-                    // );
-                    toast.warn(
-                        "اگر رمز عبور خود را فراموش کرده اید، از گزینه بازیابی رمز عبور در صفحه ی ورود استفاده نمایید",
-                        {
-                            position: "top-right",
-                            closeOnClick: true,
-                        }
-                    );
-                } else if(!Configs.Status.isErrorExpected(err)){
-                    toast.error(
-                        "ثبت نام با مشکل رو به رو شد. لطفا دوباره تلاش کتنید",
-                        {
-                            position: "top-right",
-                            closeOnClick: true,
-                        }
+
+                    Notify("اگر رمز عبور خود را فراموش کرده اید، از گزینه بازیابی رمز عبور در صفحه ی ورود استفاده نمایید");
+                } else if (!Configs.Status.isErrorExpected(err)) {
+                    Sorry(
+                        "ثبت نام با مشکل رو به رو شد. لطفا دوباره تلاش کتنید"
                     );
                 }
             }
         } else {
-            toast.error("رمز عبورها مطابقت ندارند", {
-                position: "top-right",
-                closeOnClick: true,
-            });
+            Sorry("رمز عبورها مطابقت ندارند");
         }
         this.setState({ loading: false });
     };
@@ -155,7 +130,9 @@ class SignUp extends Component {
                         </Form.Group>
 
                         <Form.Group className="form-inline">
-                            <Form.Label className="w-25">نام خانوادگی</Form.Label>
+                            <Form.Label className="w-25">
+                                نام خانوادگی
+                            </Form.Label>
                             <Form.Control
                                 type="text"
                                 className="sign-up-textbox w-75"
@@ -178,7 +155,9 @@ class SignUp extends Component {
                         </Form.Group>
 
                         <Form.Group className="form-inline">
-                            <Form.Label className="w-25">شماره دانشجویی</Form.Label>
+                            <Form.Label className="w-25">
+                                شماره دانشجویی
+                            </Form.Label>
                             <Form.Control
                                 type="text"
                                 pattern="[0-9]{8}"
@@ -247,7 +226,9 @@ class SignUp extends Component {
                         </Form.Group>
 
                         <Form.Group className="form-inline">
-                            <Form.Label className="w-25">تایید رمز عبور</Form.Label>
+                            <Form.Label className="w-25">
+                                تایید رمز عبور
+                            </Form.Label>
                             <Form.Control
                                 type="password"
                                 className="sign-up-textbox w-75"
@@ -271,7 +252,7 @@ class SignUp extends Component {
                     </Form>
                 </Card.Body>
                 <Card.Footer className="border-primary bg-transparent">
-                        اگر قبلا ثبت نام کردی، به صفحه ی <ModalSignIn /> برو !
+                    اگر قبلا ثبت نام کردی، به صفحه ی <ModalSignIn /> برو !
                 </Card.Footer>
             </Card>
         );

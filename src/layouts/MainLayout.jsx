@@ -2,12 +2,13 @@ import SignInSideBar from "../sidebars/SignInSideBar";
 import NoticeSideBar from "../sidebars/NoticeSideBar";
 import { withRouter } from "react-router";
 import PlayerInfoSideBar from "../sidebars/PlayerInfoSideBar";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Fragment, useState, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import GlobalSocketManager from "../services/ws/GlobalSocketManager";
 import { Devices, Routes } from "../services/configs";
-import AutoSignIn from './../users/AutoSignIn';
+import AutoSignIn from '../tools/AutoSignIn';
+
 
 const MainLayout = (props) => {
     const { Device } = props;
@@ -16,7 +17,6 @@ const MainLayout = (props) => {
     const player = useSelector((state) => state.player);
     const opponent = useSelector((state) => state.opponent);
     const scoreboard = useSelector((state) => state.scoreboard);
-    const dispatch = useDispatch();
 
     const [leftSideBar, setLeftSideBar] = useState(null);
     const [rightSideBar, setRightSideBar] = useState(null);

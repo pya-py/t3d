@@ -5,7 +5,7 @@ import CollapsedPanel from "../profile/panel/CollapsedPanel";
 import { Col, Row } from "react-bootstrap";
 import GlobalSocketManager from "./../services/ws/GlobalSocketManager";
 import { useSelector } from "react-redux";
-import AutoSignIn from "./../users/AutoSignIn";
+import AutoSignIn from "../tools/AutoSignIn";
 
 const ProfilePanelLayout = ({ Device, children }) => {
     const user = useSelector((state) => state.player);

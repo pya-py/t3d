@@ -1,6 +1,5 @@
 import { Component } from "react";
 import "../games.css";
-import { toast } from "react-toastify";
 import gameServices from "../../services/http/gameServices";
 import {
     connect,
@@ -10,6 +9,7 @@ import withReduxDashboard from "../../dashboard/withReduxDashboard";
 import { withRouter } from "react-router";
 import TableDesign from "./TableDesign";
 import { GameSetting } from "../../services/configs";
+import { Attention, Notify } from "../../tools/msgbox";
 
 class GamePlay extends Component {
     //**** game resets on device change. fix it */
@@ -54,7 +54,7 @@ class GamePlay extends Component {
                 .loadPlayerData(opponentID)
                 .then((result) => {
                     LoadOpponent(result ? result : null);
-                    toast.warn("حرف شما وارد بازی شد");
+                    Attention("حریف شما وارد بازی شد");
                 })
                 .catch((err) => {
                     //console.log(err);
@@ -123,14 +123,11 @@ class GamePlay extends Component {
 
             this.LoadOpponentData(IDs[opponentIndex]);
         } else if (command === "LOAD") {
-            const { table, xScore, oScore, turn } = msg;
-            const { players } = this.state;
-            players[0].score = xScore;
-            players[1].score = oScore;
+            this.updatePlayerStates(msg);
+            const { table } = msg;
+
             this.setState({
                 table,
-                players,
-                turn,
             });
             this.updateGameScorebaord();
         } else if (command === "TIMER") {
@@ -196,9 +193,8 @@ class GamePlay extends Component {
             this.endThisGame();
             this.disableAllTimers();
         } else if (command === "CLOSE") {
-            toast.warn(
-                "بدلیل حاضر نبودن هیچ کدام از بازیکینان، بازی شما کنسل شد",
-                { position: "top-right", closeOnClick: true }
+            Attention(
+                "بدلیل حاضر نبودن هیچ کدام از بازیکینان، بازی شما کنسل شد"
             );
             this.closeThisGame();
         } else {
@@ -466,10 +462,10 @@ class GamePlay extends Component {
         const oppTurn = Number(!myTurn);
         //NOTE: u can deliver this message to socket global to make sure toast shows all the tie but its no need really :|
         if (players[myTurn].score > players[oppTurn].score)
-            toast.success("شما برنده شدید و سه امتیاز کسب کردید");
+            Notify("شما برنده شدید و سه امتیاز کسب کردید");
         else if (players[myTurn].score === players[oppTurn].score)
-            toast.info("شما مساوی شدید و یک امتیاز کسب کردید");
-        else toast.error("تکبیر!");
+            Notify("شما مساوی شدید و یک امتیاز کسب کردید");
+        else Notify("شما باختید");
         //reset everything:
         this.closeThisGame();
     };

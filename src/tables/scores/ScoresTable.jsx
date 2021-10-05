@@ -47,7 +47,9 @@ class ScoresTable extends Component {
         this.setState({ showLiveOnes: false });
     };
 
+    
     render() {
+       
         // game replay? is it a good idea DataBase Size-Wise ? ===> if true: see 1st page of the notebook
         /* add a NextGames button maybe? (گزینه بازی های اینده) */
         let { liveScores, finalScores, showLiveOnes } = this.state;

@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import userServices from "./../services/http/userServices";
 import Configs from "../services/configs";
-import GameChatRoom from "../chat/GameChatRoom";
+import GameChatBox from "../chat/GameChatBox";
 
 const PlayerInfoSideBar = (props) => {
     const { inGame } = props;
@@ -138,7 +138,7 @@ const PlayerInfoSideBar = (props) => {
                 {me === person ? (
                     <OnlineStatistics />
                 ) : personIsFriend ? (
-                    <GameChatRoom friendID={person.userID} />
+                    <GameChatBox friendID={person.userID} />
                 ) : (
                     <Button
                         variant={"outline-info"}

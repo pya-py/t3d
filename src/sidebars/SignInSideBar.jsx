@@ -4,8 +4,8 @@ import userServices from "../services/http/userServices";
 import { withRouter } from "react-router-dom";
 import LoadingBar from "../commons/LoadingBar";
 import Configs, { browserStorage } from "../services/configs";
-import { toast } from "react-toastify";
 import { Card, Form, Button, Col, Row } from "react-bootstrap";
+import { Sorry } from "../tools/msgbox";
 
 class SignInSideBar extends Component {
     // *********************Objectives***********************
@@ -33,7 +33,7 @@ class SignInSideBar extends Component {
             console.log(err);
             this.setState({ password: "" });
             if (!Configs.Status.isErrorExpected(err))
-                toast.error(
+                Sorry(
                     ".ورود با مشکل رو به رو شد. لطفا دوباره تلاش کتنید.",
                     { position: "top-left", closeOnClick: true }
                 );

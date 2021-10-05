@@ -3,7 +3,7 @@ import {  useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { SendMessageTo } from "../dashboard/actions";
 
-const GameChatRoom = ({ friendID }) => {
+const GameChatBox = ({ friendID }) => {
     const [myMessage, setMyMessage] = useState("");
     const message = useSelector((state) => state.message);
     const dispatch = useDispatch();
@@ -12,13 +12,14 @@ const GameChatRoom = ({ friendID }) => {
     const composeMessage = (event) => {
         event.preventDefault();
         dispatch(SendMessageTo(me.fullname, friendID, myMessage));
+        setMyMessage("");
     };
 
     return (
         <Form onSubmit={(event) => composeMessage(event)}>
             <Row className="w-100 mt-3 mx-auto">
-                <Alert className="w-100 text-right" variant="info">
-                    {message.recieved ? message.recieved.text : null}
+                <Alert   className="w-100 text-right" variant="info">
+                    {message && message.recieved ? message.recieved.text : <p className="p-1"> </p>}
                 </Alert>
             </Row>
             <Row className="w-100 mx-auto mb-3">
@@ -47,4 +48,4 @@ const GameChatRoom = ({ friendID }) => {
     );
 };
 
-export default GameChatRoom;
+export default GameChatBox;

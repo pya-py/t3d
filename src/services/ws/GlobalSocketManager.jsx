@@ -12,7 +12,7 @@ import {
     ResetMessages,
 } from "../../dashboard/actions";
 import { Modal, Button, Row, Col, Badge } from "react-bootstrap";
-import { toast } from "react-toastify";
+import { Attention, OK } from "../../tools/msgbox";
 
 const GlobalSocketManager = () => {
     // I actually used .jsx format to make this Component EventBased
@@ -122,11 +122,12 @@ const GlobalSocketManager = () => {
                     case "FRIENDSHIP_RESPONSE": {
                         const { answer, targetName } = msg;
                         //if(answer) dispatch(TriggerRecordUpdate());
-                        toast.warning(
-                            `کاربر ${targetName} درخواست دوستی شما را ${
-                                answer ? "پذیرفت" : "رد کرد"
-                            }`
-                        );
+                        if (answer)
+                            OK(`${targetName} درخواست دوستی شما را پذیرفت`);
+                        else
+                            Attention(
+                                `${targetName} درخواست دوستی شما را رد کرد`
+                            );
                         dispatch(SendFriendRequestTo(null));
                         break;
                     }

@@ -1,7 +1,6 @@
 import axios from "axios";
-import { toast } from "react-toastify";
 import { Status, browserStorage } from "../configs";
-
+import { Attention, Sorry } from "../../tools/msgbox";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers.put["Content-Type"] = "application/json";
 
@@ -39,65 +38,28 @@ axios.interceptors.response.use(null, (error) => {
         error.response.status >= Status.BadRequest && // >= 400
         error.response.status < Status.InternalServerError; // < 500
 
-        //*****notice: */
-        //remove some oftheese errors... because they need to be costomized in every use in each components
+    //*****notice: */
+    //remove some oftheese errors... because they need to be costomized in every use in each components
     // change to switch
     if (error.response.status === Status.BadRequest) {
-        toast.error(
-            "مشکلی در ارسال درخواست شما به سرور وجود داشت، لطفا دوباره تلاش کنید",
-            {
-                position: "top-right",
-                closeOnClick: true,
-            }
-        );
+        Sorry("مشکلی در ارسال درخواست شما به سرور وجود داشت، لطفا دوباره تلاش کنید");
     } else if (error.response.status === Status.Unauthorized) {
-        toast.error(
-            "احراز هویت موفقیت آمیز نبود. لطفا وارد حساب کاربری خود شوید",
-            {
-                position: "top-right",
-                closeOnClick: true,
-            }
-        );
+        Sorry("احراز هویت موفقیت آمیز نبود. لطفا وارد حساب کاربری خود شوید");
     } else if (error.response.status === Status.Forbidden) {
-        toast.error("شماره دانشجویی یا رمز عبور نادرست است", {
-            position: "top-right",
-            closeOnClick: true,
-        });
-    } else if (error.response.status === Status.NotAcceptable) {//or used Locked: 423
-        toast.error("این قسمت فقط مختص کاربران ادمین می باشد", {
-            position: "top-right",
-            closeOnClick: true,
-        });
+        Sorry("شماره دانشجویی یا رمز عبور نادرست است");
+    } else if (error.response.status === Status.NotAcceptable) {
+        //or used Locked: 423
+        Sorry("این قسمت فقط مختص کاربران ادمین می باشد");
     } else if (error.response.status === Status.Conflict) {
-        toast.error(
-            "کاربری با این شماره دانشجویی یا ایمیل قبلا ثبت نام کرده است",
-            {
-                position: "top-right",
-                closeOnClick: true,
-            }
-        );
-    }
-    else if(error.response.status === Status.SessionExpired){
-        toast.error("نشست شما منقضی شده است، لطفا دوباره وارد حساب خود شوید.", {
-            position: "top-right",
-            closeOnClick: true,
-        });
+        Attention("کاربری با این شماره دانشجویی یا ایمیل قبلا ثبت نام کرده است");
+    } else if (error.response.status === Status.SessionExpired) {
+        Sorry("نشست شما منقضی شده است، لطفا دوباره وارد حساب خود شوید.");
         //redirect to sign in page !
-    }
-    else if (error.response.status === Status.UnprocessableEntity) {
-        toast.error("ورودی شما با استانداردهای سایت مطابقت ندارد", {
-            position: "top-right",
-            closeOnClick: true,
-        });
+    } else if (error.response.status === Status.UnprocessableEntity) {
+        Sorry("ورودی شما با استانداردهای سایت مطابقت ندارد");
     } else if (!expectedErrors) {
         // console.log(error);
-        toast.error(
-            "مشکلی از سمت سرور پیش آمده است ... لطفا لحظاتی بعد دوباره تلاش کنید",
-            {
-                position: "top-right",
-                closeOnClick: true,
-            }
-        );
+        Sorry("مشکلی از سمت سرور پیش آمده است ... لطفا لحظاتی بعد دوباره تلاش کنید");
     }
 
     return Promise.reject(error);

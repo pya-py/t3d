@@ -4,9 +4,9 @@ import LoadingBar from "../commons/LoadingBar";
 import "./profile.css";
 import userServices from "../services/http/userServices";
 import Configs from "../services/configs";
-import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { TriggerRecordUpdate } from "../dashboard/actions";
+import { OK, Sorry } from "../tools/msgbox";
 
 const MODES = { READ_ONLY: 0, EDIT: 1, CHANGE_PASS: 2 };
 const AccountCredentials = () => {
@@ -38,9 +38,8 @@ const AccountCredentials = () => {
                 }
             } catch (err) {
                 if (!Configs.Status.isErrorExpected(err))
-                    toast.error(
-                        "حین دریافت اطلاعات کاربر ایرادی پیش آمد. ... لطفا دوباره تلاش کنید.",
-                        { position: "top-left", closeOnClick: true }
+                    Error(
+                        "حین دریافت اطلاعات کاربر ایرادی پیش آمد. ... لطفا دوباره تلاش کنید."
                     );
                 setLoading(false);
             }
@@ -65,17 +64,14 @@ const AccountCredentials = () => {
                 password,
             });
             if (status === Configs.Status.Successful) {
-                toast.success(`تغییرات با موفقیت اعمال شد`, {
-                    position: "top-right",
-                    closeOnClick: true,
-                });
+                OK(`تغییرات با موفقیت اعمال شد`);
                 dispatch(TriggerRecordUpdate());
 
                 reloadPage();
             }
         } catch (err) {
             if (!Configs.Status.isErrorExpected(err))
-                toast.error(
+                Error(
                     "خطایی در ذخیره تغییرات بوجود امد ... لطفا دوباره تلاش کنید",
                     { position: "top-left", closeOnClick: true }
                 );
@@ -92,18 +88,14 @@ const AccountCredentials = () => {
                 newPassword,
             });
             if (status === Configs.Status.Successful) {
-                toast.success(`رمز شما با موفقیت تغییر داده شد`, {
-                    position: "top-right",
-                    closeOnClick: true,
-                });
+                OK("رمز شما با موفقیت تغییر داده شد");
                 dispatch(TriggerRecordUpdate());
                 reloadPage();
             }
         } catch (err) {
             if (!Configs.Status.isErrorExpected(err))
-                toast.error(
-                    "خطایی در ذخیره تغییرات بوجود امد ... لطفا دوباره تلاش کنید",
-                    { position: "top-left", closeOnClick: true }
+                Sorry(
+                    "خطایی در ذخیره تغییرات بوجود امد ... لطفا دوباره تلاش کنید"
                 );
         }
         setLoading(false);

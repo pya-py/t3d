@@ -33,7 +33,6 @@ const App = () => {
         <BrowserRouter>
             <NavigationBar Device={device}/>
             <ToastContainer />
-            
             <Switch>
                 <Route path={`${Routes.Client.Profile}/:path?`} exact>
                     <ProfilePanelLayout Device={device}>
