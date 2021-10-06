@@ -4,7 +4,7 @@ import { GameSetting } from "../../services/configs";
 import BriefScoreboard from "./BriefScoreboard";
 import "../games.css";
 
-const TableDesign = ({ timeRemaining, dimension, players, table, onEachCellClick }) => {
+const TableDesign = ({ timeRemaining, dimension, players, table, onEachCellClick,normalCell }) => {
     let dimens = [];
     for (let i = 0; i < dimension; i++) dimens.push(i);
 
@@ -32,7 +32,7 @@ const TableDesign = ({ timeRemaining, dimension, players, table, onEachCellClick
                                                 row * dimension +
                                                 column
                                             }
-                                            variant="btn btn-outline-dark"
+                                            variant={normalCell}
                                             className="game-table-cells"
                                             style={
                                                 table[floor][row][column] !==
