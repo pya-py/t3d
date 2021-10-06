@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { LoadMe, SignOut } from "../dashboard/actions";
+import { LoadMe, SignOut } from "../globals/redux/actions";
 import { browserStorage } from "../services/configs";
 import gameServices from "../services/http/gameServices";
 import { useEffect } from "react";

@@ -1,5 +1,5 @@
 import { browserStorage, Routes } from "../configs";
-import { useCallback, useState } from "react";
+import { Fragment, useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -10,9 +10,10 @@ import {
     SendFriendRequestTo,
     RecieveMessageFrom,
     ResetMessages,
-} from "../../dashboard/actions";
+} from "../../globals/redux/actions";
 import { Modal, Button, Row, Col, Badge } from "react-bootstrap";
 import { Attention, OK } from "../../tools/msgbox";
+import NotificationCenter from '../../tools/NotificationCenter';
 
 const GlobalSocketManager = () => {
     // I actually used .jsx format to make this Component EventBased
@@ -135,6 +136,7 @@ const GlobalSocketManager = () => {
                         dispatch(
                             RecieveMessageFrom(msg.name, msg.friendID, msg.text)
                         );
+
                         break;
                     }
                     default: {
@@ -264,7 +266,6 @@ const GlobalSocketManager = () => {
                     msg: message.sent,
                 })
             );
-            console.log("sent: " + message.sent.text);
             dispatch(ResetMessages());
         }
     }, [player, message, socketGlobal, dispatch]);
@@ -288,45 +289,53 @@ const GlobalSocketManager = () => {
 
     return (
         //this is just for firendship request in games
-        <Modal
-            show={showFriendshipModal}
-            onHide={() => respondToFriendshipRequest(false)}>
-            <Modal.Header closeButton />
-            <Modal.Body className="text-right">
-                <p>
-                    {!incommingFriendRequest ? null : (
-                        <Badge
-                            style={{ fontSize: "18px", margin: "2%" }}
-                            pill
-                            variant="warning">
-                            {incommingFriendRequest.askerName}
-                        </Badge>
-                    )}
-                    به شما پیشنهاد دوستی داده است.
-                </p>
-                <p>اگر تمایل به دوستی ندارید میتواند درخواست را رد کنید.</p>
-            </Modal.Body>
-            <Modal.Footer className="w-100 text-right">
-                <Row className="w-100">
-                    <Col>
-                        <Button
-                            variant="success"
-                            block
-                            onClick={() => respondToFriendshipRequest(true)}>
-                            پذیرفتن
-                        </Button>
-                    </Col>
-                    <Col>
-                        <Button
-                            block
-                            variant="danger"
-                            onClick={() => respondToFriendshipRequest(false)}>
-                            رد
-                        </Button>
-                    </Col>
-                </Row>
-            </Modal.Footer>
-        </Modal>
+        <Fragment>
+            <NotificationCenter />
+
+            <Modal
+                show={showFriendshipModal}
+                onHide={() => respondToFriendshipRequest(false)}>
+                <Modal.Header closeButton />
+                <Modal.Body className="text-right">
+                    <p>
+                        {!incommingFriendRequest ? null : (
+                            <Badge
+                                style={{ fontSize: "18px", margin: "2%" }}
+                                pill
+                                variant="warning">
+                                {incommingFriendRequest.askerName}
+                            </Badge>
+                        )}
+                        به شما پیشنهاد دوستی داده است.
+                    </p>
+                    <p>اگر تمایل به دوستی ندارید میتواند درخواست را رد کنید.</p>
+                </Modal.Body>
+                <Modal.Footer className="w-100 text-right">
+                    <Row className="w-100">
+                        <Col>
+                            <Button
+                                variant="success"
+                                block
+                                onClick={() =>
+                                    respondToFriendshipRequest(true)
+                                }>
+                                پذیرفتن
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button
+                                block
+                                variant="danger"
+                                onClick={() =>
+                                    respondToFriendshipRequest(false)
+                                }>
+                                رد
+                            </Button>
+                        </Col>
+                    </Row>
+                </Modal.Footer>
+            </Modal>
+        </Fragment>
     );
 };
 

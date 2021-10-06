@@ -1,14 +1,16 @@
 import { Card, Row, Col, Nav, Tab } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {Status, Devices} from "../services/configs";
 import userServices from "../services/http/userServices";
 import ChatBox from "./ChatBox";
 import "./chat.css";
 import LoadingBar from '../commons/LoadingBar';
 import { v1 as uuidv1 } from 'uuid'
+import GlobalContext from "../globals/state/GlobalContext";
 const ChatRoom = ({Device}) => {
     const [loading, setLoading] = useState(false);
     const [myFriends, setMyFriends] = useState([]);
+    const context = useContext(GlobalContext);
 
     useEffect(() => {
         (async () => {
@@ -40,7 +42,7 @@ const ChatRoom = ({Device}) => {
                     <Row>
                         <Col
                             className={
-                                Device !== Devices.SmartPhone
+                                context.device !== Devices.SmartPhone
                                     ? "chat-room-devider chat-scrollable-friends"
                                     : "smartphone-chat-scrollable-friends"
                             }
@@ -61,7 +63,7 @@ const ChatRoom = ({Device}) => {
                         <Col>
                             <Tab.Content>
                                 {myFriends.map((friend) => (
-                                    <ChatBox key={uuidv1()} friendID={friend.userID} Device={Device} />
+                                    <ChatBox key={uuidv1()} friendID={friend.userID} />
                                 ))}
                             </Tab.Content>
                         </Col>

@@ -67,7 +67,7 @@ const TableDesign = ({ timeRemaining, dimension, players, table, onEachCellClick
                         </Fragment>
                     ))
                 ) : (
-                    <p> در حال اتصال... </p>
+                    <p className="text-center"> در حال اتصال... </p>
                 )}
             </Card.Body>
         </Card>

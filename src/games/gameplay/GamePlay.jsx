@@ -5,11 +5,12 @@ import {
     connect,
     createSocketRequest,
 } from "../../services/ws/gamePlaySocketServices";
-import withReduxDashboard from "../../dashboard/withReduxDashboard";
+import withReduxDashboard from "../../globals/redux/withReduxDashboard";
 import { withRouter } from "react-router";
 import TableDesign from "./TableDesign";
 import { GameSetting } from "../../services/configs";
 import { Attention, Notify } from "../../tools/msgbox";
+import { toTimeShort } from "../../tools/format";
 
 class GamePlay extends Component {
     //**** game resets on device change. fix it */
@@ -54,7 +55,6 @@ class GamePlay extends Component {
                 .loadPlayerData(opponentID)
                 .then((result) => {
                     LoadOpponent(result ? result : null);
-                    Attention("حریف شما وارد بازی شد");
                 })
                 .catch((err) => {
                     //console.log(err);
@@ -113,16 +113,16 @@ class GamePlay extends Component {
 
     socketOnMessage = (response) => {
         const { data } = response;
-        const { command, msg } = JSON.parse(data);
-        if (command === "SET_TURN") this.setState({ myTurn: Number(msg) });
-        else if (command === "START") {
-            const { myTurn } = this.state;
-            const { IDs, gameType } = msg;
+        const { cmd, msg } = JSON.parse(data);
+        if (cmd === "START") {
+            const startTime = toTimeShort(msg);
+            Attention(`بازی راس ساعت ${startTime} آغاز شد.`);
+        } else if (cmd === "GAME") {
+            const { IDs, dimension, myTurn } = msg;
+            this.setState({ dimension, myTurn });
             const opponentIndex = Number(!myTurn);
-            this.setState({ dimension: gameType });
-
             this.LoadOpponentData(IDs[opponentIndex]);
-        } else if (command === "LOAD") {
+        } else if (cmd === "LOAD") {
             this.updatePlayerStates(msg);
             const { table } = msg;
 
@@ -130,7 +130,7 @@ class GamePlay extends Component {
                 table,
             });
             this.updateGameScorebaord();
-        } else if (command === "TIMER") {
+        } else if (cmd === "TIMER") {
             //you can calculate request respone time -> then minimize it from tiem sent by server -> to gain acurate time
             //but its real neccessary, Math.floor on the server side does this nearly
             //but for accurate approach remember: remove Math.floor from server side
@@ -138,11 +138,12 @@ class GamePlay extends Component {
             this.setState({ timeRemaining: msg });
             clearTimeout(this.state.timerID); //clear move time out timers, though their disabled before, this is for assurance
             this.enableTimerForMyMove(msg);
-        } else if (command === "SCORES") this.updatePlayerStates(msg);
-        else if (command === "UPDATE") {
+        } else if (cmd === "SCORES") this.updatePlayerStates(msg);
+        else if (cmd === "UPDATE") {
             const { player, room } = this.props;
             const { dimension } = this.state;
             const cellID = Number(msg.nextMove);
+
             //*************** */
             //is this needed to check the move in client? considering that complete check has been made in client
             //and consder that: checking move in client may cause some bugs
@@ -170,29 +171,16 @@ class GamePlay extends Component {
             );
             // server time out is set and now setInterval for this client to show how much time left
             this.enableTimerForMyMove();
-        } else if (command === "MOVE_MISSED") {
+        } else if (cmd === "MOVE_MISSED") {
             const { myTurn } = this.state;
-            const { player, room } = this.props;
             //msg --> forced set turn
             this.setState({ turn: msg });
-            if (msg === myTurn) {
-                //send a move_recieved request to inform the server to set the new timeout
-                //force connect it?
-                this.state.socketGamePlay.send(
-                    createSocketRequest(
-                        "move_recieved",
-                        room.name,
-                        player.userID,
-                        true
-                    )
-                );
-                this.enableTimerForMyMove();
-            }
-        } else if (command === "END") {
+            if (msg === myTurn) this.enableTimerForMyMove();
+        } else if (cmd === "END") {
             this.updatePlayerStates(msg);
             this.endThisGame();
             this.disableAllTimers();
-        } else if (command === "CLOSE") {
+        } else if (cmd === "CLOSE") {
             Attention(
                 "بدلیل حاضر نبودن هیچ کدام از بازیکینان، بازی شما کنسل شد"
             );
@@ -279,13 +267,13 @@ class GamePlay extends Component {
     onEachCellClick = (event) => {
         const { dimension, turn, timerID } = this.state;
         const { player, opponent, room } = this.props;
-
         if (opponent) {
             try {
                 const selectedCellButton = event.target;
 
                 //this is just for when the connection is not automatically came back, so the user via clicking cells can initiate connection
                 if (this.state.turn !== this.state.myTurn) {
+                    console.log(this.state.myTurn);
                     //is this needed really?
                     this.forceConnectWS(null);
                     return;
@@ -309,6 +297,7 @@ class GamePlay extends Component {
                                 selectedCellButton.id
                             )
                         );
+
                         //load is not needed cause i updated server to send back new scores immediately
                         /*this.state.socketGamePlay.send(
                             createSocketRequest(

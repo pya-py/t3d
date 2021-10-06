@@ -10,7 +10,7 @@ import {
     Button,
 } from "react-bootstrap";
 import OnlineStatistics from "./OnlineStatistics";
-import { SendFriendRequestTo } from "../dashboard/actions";
+import { SendFriendRequestTo } from "../globals/redux/actions";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import userServices from "./../services/http/userServices";

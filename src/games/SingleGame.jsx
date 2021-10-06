@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { SetRoom, TriggerOpponentSearch } from "../dashboard/actions";
+import { SetRoom, TriggerOpponentSearch } from "../globals/redux/actions";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import LoadingBar from '../commons/LoadingBar';
 import { Notify } from "../tools/msgbox";

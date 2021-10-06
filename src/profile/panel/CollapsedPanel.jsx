@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { Button, Row } from "react-bootstrap";
 import "../profile.css";
 import { useDispatch, useSelector } from "react-redux";
-import { SignOut } from "../../dashboard/actions";
+import { SignOut } from "../../globals/redux/actions";
 import { withRouter } from "react-router";
 import { Fragment } from "react";
 import Configs from "../../services/configs";

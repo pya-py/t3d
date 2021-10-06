@@ -3,15 +3,16 @@ import NoticeSideBar from "../sidebars/NoticeSideBar";
 import { withRouter } from "react-router";
 import PlayerInfoSideBar from "../sidebars/PlayerInfoSideBar";
 import { useSelector } from "react-redux";
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useContext } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import GlobalSocketManager from "../services/ws/GlobalSocketManager";
 import { Devices, Routes } from "../services/configs";
 import AutoSignIn from '../tools/AutoSignIn';
+import GlobalContext from "../globals/state/GlobalContext";
 
 
 const MainLayout = (props) => {
-    const { Device } = props;
+    const context = useContext(GlobalContext)
     const { pathname } = props.location;
     //redux
     const player = useSelector((state) => state.player);
@@ -20,7 +21,7 @@ const MainLayout = (props) => {
 
     const [leftSideBar, setLeftSideBar] = useState(null);
     const [rightSideBar, setRightSideBar] = useState(null);
-
+    console.log(context);
     useEffect(() => {
         setLeftSideBar(<NoticeSideBar />);
     }, []);
@@ -28,9 +29,9 @@ const MainLayout = (props) => {
     //teste
     //determine sidebar
     useEffect(() => {
-        console.log("device responsive manager called");
+        console.log("context.device responsive manager called");
         const setPrimaryRightSideBar = () => {
-            if (Device !== Devices.Tablet)
+            if (context.device !== Devices.Tablet)
                 setRightSideBar(
                     player ? (
                         <PlayerInfoSideBar inGame={scoreboard.me} />
@@ -49,7 +50,7 @@ const MainLayout = (props) => {
             // SOMETIMES: ERROR: cannout read .fullname of undefined person
             setPrimaryRightSideBar();
             if (opponent) {
-                if (Device !== Devices.SmartPhone) {
+                if (context.device !== Devices.SmartPhone) {
                     setLeftSideBar(
                         <PlayerInfoSideBar
                             person={opponent}
@@ -65,14 +66,14 @@ const MainLayout = (props) => {
             setLeftSideBar(<NoticeSideBar />); //EDIT THIS
             setPrimaryRightSideBar();
         }
-    }, [player, opponent, pathname, scoreboard, Device]);
+    }, [player, opponent, pathname, scoreboard, context.device]);
 
     return (
         <Fragment>
             <AutoSignIn />
             {player && <GlobalSocketManager />}
 
-            {Device !== Devices.SmartPhone ? (
+            {context.device !== Devices.SmartPhone ? (
                 <Row className="w-100 mx-auto">
                     {rightSideBar && <Col xs={3}>{rightSideBar}</Col>}
                     <Col
@@ -81,7 +82,7 @@ const MainLayout = (props) => {
                         {props.children}
                     </Col>
                     {leftSideBar && (
-                        <Col xs={Device !== Device.Tablet ? 3 : 4}>
+                        <Col xs={context.device !== Devices.Tablet ? 3 : 4}>
                             {leftSideBar}
                         </Col>
                     )}

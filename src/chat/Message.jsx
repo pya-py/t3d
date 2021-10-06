@@ -1,25 +1,18 @@
 import { Fragment, useState, useEffect } from "react";
 import { Alert, Col, Row } from "react-bootstrap";
-import DateObject from "react-date-object";
-import persian from "react-date-object/calendars/persian";
-import persian_fa from "react-date-object/locales/persian_fa";
 import "./chat.css";
 import { v1 as uuidv1 } from 'uuid'
+import { toHijri } from "../tools/format";
 const Message = ({ msg, previousDay, inDesktop }) => {
     const { date } = msg; // destructure date from msg then make a new date object
     // reason for making new Date objects is that react throws error some time when you use it without new Date :|
     const [showDate, setShowDate] = useState(false); //for each day, the first message in that day has persian date above it
     const [time, setTime] = useState(null);
-    const [persianDate, setPersianDate] = useState(null);
+    const [hijriDate, setHijriDate] = useState(null);
 
     useEffect(() => {
-        const persianDateObject = new DateObject({
-            date: new Date(date),
-            calendar: persian,
-            locale: persian_fa,
-        });
-        setPersianDate(persianDateObject.format("dddd DD MMMM YYYY"));
-        setTime(persianDateObject.format("hh:mm"));
+        const [hDate, hTime] = toHijri(date);
+        setTime(hTime); setHijriDate(hDate);
         setShowDate(
             new Date(date).getDate() !== previousDay || previousDay === 0
         ); //     0 means this is the first message in the chat
@@ -31,7 +24,7 @@ const Message = ({ msg, previousDay, inDesktop }) => {
             {!showDate ? null : (
                 <Fragment>
                     <hr />
-                    <p className="message-date">{persianDate}</p>
+                    <p className="message-date">{hijriDate}</p>
                 </Fragment>
             )}
             <Row>

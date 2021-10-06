@@ -9,6 +9,7 @@ const AllScores = ({scores}) => {
             { scores.length ? scores.map(score => (
                 <SingleScoreCard key={score.gameID}
                     Type={score.Type}
+                    date={score.date}
                     playerXName={score.players[0].name}
                     playerOName={score.players[1].name}
                     xScore={score.players[0].score}
@@ -18,7 +19,7 @@ const AllScores = ({scores}) => {
             <Card className="bg-transparent mx-auto mt-3" border="danger">
                 <Card.Body className="text-center">
                     <Card.Text>
-                        هیچ بازی ای انجام نگرفته اس
+                        هیچ بازی ای انجام نگرفته است
                     </Card.Text>
                 </Card.Body>
                 </Card>}

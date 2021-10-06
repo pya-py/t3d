@@ -1,4 +1,4 @@
-import { browserStorage } from "../../services/configs";
+import { browserStorage } from "../../../services/configs";
 
 export const tokenReducer = (state = null, action) => {
     switch (action.type) {

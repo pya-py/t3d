@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { Button, Row } from "react-bootstrap";
 import "../profile.css";
 import { useDispatch, useSelector } from "react-redux";
-import { SignOut } from "../../dashboard/actions";
+import { SignOut } from "../../globals/redux/actions";
 import { withRouter } from "react-router";
 import { Fragment } from "react";
 import Configs from "../../services/configs";
@@ -53,7 +53,7 @@ const ProfilePanel = (props) => {
                             className="nav-link link-dark"
                             to={Configs.Routes.Client.ChatRoom}>
                             <i
-                                className="fa fa-weixin px-2"
+                                className="fa fa-comment px-2"
                                 aria-hidden="true"></i>
                             چت روم
                         </NavLink>

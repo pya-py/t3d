@@ -8,20 +8,22 @@ import {
     Tab,
 } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect, useCallback, useRef } from "react";
-import { SendMessageTo } from "../dashboard/actions";
+import { useState, useEffect, useCallback, useRef, useContext } from "react";
+import { SendMessageTo } from "../globals/redux/actions";
 import "./chat.css";
 import { Devices, Status } from "../services/configs";
 import chatServices from "../services/http/chatServices";
 
 import Message from "./Message";
+import GlobalContext from "../globals/state/GlobalContext";
 
-const ChatBox = ({ friendID, Device }) => {
+const ChatBox = ({ friendID }) => {
     const [myMessage, setMyMessage] = useState("");
     const message = useSelector((state) => state.message);
     const dispatch = useDispatch();
     const me = useSelector((state) => state.player);
     const mostRecentMessageRef = useRef(null);
+    const context = useContext(GlobalContext);
 
     //...TEMP: just save msges in client side
     const [allMsgs, setAllMsgs] = useState([
@@ -64,24 +66,26 @@ const ChatBox = ({ friendID, Device }) => {
 
     const composeMessage = (event) => {
         event.preventDefault();
-        let tempMsg = [...allMsgs];
-        tempMsg.push({
-            me: myMessage,
-            friend: null,
-            date: new Date(),
-            key: allMsgs.length,
-        });
-        setAllMsgs(tempMsg);
-        dispatch(SendMessageTo(me.fullname, friendID, myMessage));
-        setMyMessage("");
+        if (myMessage) {
+            let tempMsg = [...allMsgs];
+            tempMsg.push({
+                me: myMessage,
+                friend: null,
+                date: new Date(),
+                key: allMsgs.length,
+            });
+            setAllMsgs(tempMsg);
+            dispatch(SendMessageTo(me.fullname, friendID, myMessage));
+            setMyMessage("");
 
-        if (mostRecentMessageRef && mostRecentMessageRef.current) {
-            setTimeout(() => {
-                mostRecentMessageRef.current.scrollIntoView({
-                    behavior: "smooth",
-                    top: mostRecentMessageRef.current.offsetTop,
-                });
-            }, 100);
+            if (mostRecentMessageRef && mostRecentMessageRef.current) {
+                setTimeout(() => {
+                    mostRecentMessageRef.current.scrollIntoView({
+                        behavior: "smooth",
+                        top: mostRecentMessageRef.current.offsetTop,
+                    });
+                }, 100);
+            }
         }
     };
 
@@ -98,14 +102,14 @@ const ChatBox = ({ friendID, Device }) => {
         const { recieved } = message;
         if (!message.sent && recieved && recieved.friendID === friendID) {
             setAllMsgs(recieveMessage(message.recieved));
-            if (mostRecentMessageRef && mostRecentMessageRef.current) {
-                setTimeout(() => {
+
+            setTimeout(() => {
+                if (mostRecentMessageRef && mostRecentMessageRef.current)
                     mostRecentMessageRef.current.scrollIntoView({
                         behavior: "smooth",
                         top: mostRecentMessageRef.current.offsetTop,
                     });
-                }, 100);
-            }
+            }, 100);
         }
     }, [message, friendID]);
 
@@ -117,7 +121,7 @@ const ChatBox = ({ friendID, Device }) => {
                         border="dark"
                         bg="transparent"
                         className={`big-single-card ${
-                            Device !== Devices.SmartPhone
+                            context.device !== Devices.SmartPhone
                                 ? "chat-box-scrollable"
                                 : "smartphone-chat-box-scrollable"
                         }`}>
@@ -127,7 +131,7 @@ const ChatBox = ({ friendID, Device }) => {
                                     <Message
                                         // key={msg.key}
                                         msg={msg}
-                                        inDesktop={Device === Devices.Desktop}
+                                        inDesktop={context.device === Devices.Desktop}
                                         previousDay={
                                             index !== 0
                                                 ? new Date(
@@ -152,11 +156,11 @@ const ChatBox = ({ friendID, Device }) => {
                                 }}>
                                 <Button
                                     type="submit"
-                                    style={{ border: "none", fontSize: '22px' }}
+                                    style={{ border: "none", fontSize: "22px" }}
                                     className="w-100 mx-auto"
                                     variant="outline-info">
                                     <i
-                                        className="fa fa-telegram"
+                                        className="fa fa-paper-plane"
                                         aria-hidden="true"></i>
                                 </Button>
                             </InputGroup.Prepend>

@@ -4,8 +4,8 @@ export const LoadMe = (player) => ({
 });
 
 export const SaveNewToken = () => ({
-    type: "SAVE_TOKEN"
-})
+    type: "SAVE_TOKEN",
+});
 
 export const TriggerRecordUpdate = () => ({
     type: "TRIGGER_UPDATE",
@@ -51,24 +51,27 @@ export const UpdateStatistics = (statistics) => ({
 });
 
 export const TriggerOpponentSearch = () => ({
-    type: "TRIGGER_OPPONENT_SEARCH"
-})
+    type: "TRIGGER_OPPONENT_SEARCH",
+});
 
 export const SendFriendRequestTo = (targetID) => ({
     type: "SEND_FRIEND_REQUEST",
-    payload: targetID
-})
+    payload: targetID,
+});
 
 export const SendMessageTo = (name, friendID, text) => ({
     type: "SEND_MESSAGE",
-    payload: { name, friendID, text }
+    payload: { name, friendID, text },
 });
 
 export const RecieveMessageFrom = (name, friendID, text) => ({
     type: "RECIEVE_MESSAGE",
-    payload: { name, friendID, text }
+    payload: { name, friendID, text },
 });
 
+export const MessagePushed = () => ({
+    type: "MEESAGE_PUSHED",
+});
 export const ResetMessages = () => ({
-    type: "RESET_MESSAGES"
+    type: "RESET_MESSAGES",
 });

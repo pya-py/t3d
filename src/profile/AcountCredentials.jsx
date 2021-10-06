@@ -5,7 +5,7 @@ import "./profile.css";
 import userServices from "../services/http/userServices";
 import Configs from "../services/configs";
 import { useDispatch } from "react-redux";
-import { TriggerRecordUpdate } from "../dashboard/actions";
+import { TriggerRecordUpdate } from "../globals/redux/actions";
 import { OK, Sorry } from "../tools/msgbox";
 
 const MODES = { READ_ONLY: 0, EDIT: 1, CHANGE_PASS: 2 };
