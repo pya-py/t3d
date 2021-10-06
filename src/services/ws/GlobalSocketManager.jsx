@@ -12,10 +12,11 @@ import {
 	ResetMessages,
 } from "../../globals/redux/actions";
 import { Modal, Button, Row, Col, Badge } from "react-bootstrap";
-import { Attention, OK } from "../../tools/msgbox";
+import { Attention, OK, Sorry } from "../../tools/msgbox";
 import NotificationCenter from "../../tools/NotificationCenter";
+import { withRouter } from "react-router";
 
-const GlobalSocketManager = () => {
+const GlobalSocketManager = (props) => {
 	// I actually used .jsx format to make this Component EventBased
 	// On Each event called socket will do some specific operation
 	// events are actually useEffects bound to special state changes
@@ -85,6 +86,14 @@ const GlobalSocketManager = () => {
 								games,
 							})
 						); //playing temp
+						break;
+					}
+					case "NOT_AUTHORIZED":{
+						Sorry('نشست شما منقضی شده، لطفا دوباره وارد حساب کاربری خود شوید');
+						browserStorage.writeUser(null,null); //sign out
+						props.history.replace(Routes.Client.SignUp);
+						// edit .replace; use a function that doesnt recent BACK key on browser
+						
 						break;
 					}
 					case "FIND_RESULT": {
@@ -353,4 +362,4 @@ const GlobalSocketManager = () => {
 	);
 };
 
-export default GlobalSocketManager;
+export default withRouter(GlobalSocketManager);
