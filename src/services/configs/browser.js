@@ -1,13 +1,12 @@
 //browser storage keywords
-const KeyToken = "ptk",
-    KeyID = "pid";
-
+const KeyToken = "ptk";
 module.exports = {
-    writeUser: (id, token) => {
+    save: (token) => {
         // use remember me option
-        sessionStorage.setItem(KeyID, id); // localStorage or sessionStorage?
         sessionStorage.setItem(KeyToken, token);
     },
+    reset: () => {
+        sessionStorage.clear();
+    },
     TOKEN: () => sessionStorage.getItem(KeyToken),
-    ID: () => sessionStorage.getItem(KeyID),
 };

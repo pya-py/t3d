@@ -1,6 +1,5 @@
 import { Component } from "react";
 import "../games.css";
-import gameServices from "../../services/http/gameServices";
 import {
 	connect,
 	createSocketRequest,
@@ -9,7 +8,7 @@ import withReduxDashboard from "../../globals/redux/withReduxDashboard";
 import { withRouter } from "react-router";
 import TableDesign from "./TableDesign";
 import { GameSetting } from "../../services/configs";
-import { Attention, Notify } from "../../tools/msgbox";
+import { Attention, Notify } from "../../tools/notification";
 import { toTimeShort } from "../../tools/format";
 
 class GamePlay extends Component {
@@ -50,21 +49,6 @@ class GamePlay extends Component {
 		super();
 		this.cellButtons = [];
 	}
-
-	LoadOpponentData = (opponentID) => {
-		const { opponent, LoadOpponent } = this.props;
-		if (!opponent && opponentID) {
-			gameServices
-				.loadPlayerData(opponentID)
-				.then((result) => {
-					LoadOpponent(result ? result : null);
-				})
-				.catch((err) => {
-					//console.log(err);
-					LoadOpponent(null);
-				});
-		}
-	};
 
 	updateGameScorebaord = () => {
 		const { myTurn, players } = this.state;
@@ -124,8 +108,11 @@ class GamePlay extends Component {
 		} else if (cmd === "GAME") {
 			const { IDs, dimension, myTurn } = msg;
 			this.setState({ dimension, myTurn });
-			const opponentIndex = Number(!myTurn);
-			this.LoadOpponentData(IDs[opponentIndex]);
+			const opponentID = IDs[Number(!myTurn)];
+			const { opponent, LoadThisPlayer } = this.props;
+			if (!opponent && opponentID)  //if opponent is not null -> means this was called before and there's no need to run again
+				LoadThisPlayer(opponentID);
+			
 		} else if (cmd === "LOAD") {
 			this.updatePlayerStates(msg);
 			const { table } = msg;
@@ -144,7 +131,7 @@ class GamePlay extends Component {
 			this.enableTimerForMyMove(msg);
 		} else if (cmd === "SCORES") this.updatePlayerStates(msg);
 		else if (cmd === "UPDATE") {
-			const { player, room } = this.props;
+			const { me, room } = this.props;
 			const { dimension } = this.state;
 			const cellID = Number(msg.nextMove);
 
@@ -169,7 +156,7 @@ class GamePlay extends Component {
 				createSocketRequest(
 					"move_recieved",
 					room.name,
-					player.userID,
+					me.userID,
 					true
 				)
 			);
@@ -195,10 +182,10 @@ class GamePlay extends Component {
 	};
 
 	forceConnectWS = async (nextJob) => {
-		const { player, room } = this.props;
+		const { me, room } = this.props;
 
 		try {
-			let socket = await connect(room.name, player.userID, room.type);
+			let socket = await connect(room.name, me.userID, room.type);
 			socket.onmessage = this.socketOnMessage;
 			this.setState({ socketGamePlay: socket });
 			if (nextJob) nextJob();
@@ -214,6 +201,7 @@ class GamePlay extends Component {
 				nextJob ? 1000 : 3000
 			);
 			//if there is a next job --> then player is sending a move or something important and
+			//time out needs to be called quicker 'cause players have timeout in serimport { LoadPlayer } from './../../globals/redux/actions/player';
 			//time out needs to be called quicker 'cause players have timeout in server for sending moves
 		}
 	};
@@ -223,13 +211,11 @@ class GamePlay extends Component {
 			if (window.navigator.onLine) {
 				if (!this.state.playerOnline) {
 					//player JUST became online
-					console.log("connected");
 					this.setState({ playerOnline: true }); // toggle online status
 					this.forceConnectWS(null); // reconnect to gamePlayWebSocket
 				}
 			} else if (this.state.playerOnline) {
 				//player JUST became offline
-				console.log("dissconnected");
 				this.setState({ playerOnline: false });
 			}
 		}, 2500); //2.5 sec is it ok?
@@ -238,20 +224,19 @@ class GamePlay extends Component {
 	componentDidMount() {
 		this.cellButtons = document.getElementsByClassName("game-table-cells"); // pay attension to searched className! may cause an error
 
-		const { player, room } = this.props;
+		const { me, room } = this.props;
 		const { myTurn } = this.state;
 		this.setState({ dimension: room.type });
 
 		this.forceConnectWS(() => {
 			this.state.socketGamePlay.send(
-				createSocketRequest("load", room.name, player.userID, null)
+				createSocketRequest("load", room.name, me.userID, null)
 			);
 			this.state.socketGamePlay.send(
-				createSocketRequest("mytimer", room.name, player.userID, myTurn)
+				createSocketRequest("mytimer", room.name, me.userID, myTurn)
 			);
 		});
 
-		console.log("TOO MANY UNNEEDED PROPS SENT: ", this.props);
 		this.setState({
 			connectionCheckTimerID: this.enableConnectionCheckTimer(),
 		});
@@ -270,14 +255,13 @@ class GamePlay extends Component {
 	};
 	onEachCellClick = (event) => {
 		const { dimension, turn, timerID } = this.state;
-		const { player, opponent, room } = this.props;
+		const { me, opponent, room } = this.props;
 		if (opponent) {
 			try {
 				const selectedCellButton = event.target;
 
 				//this is just for when the connection is not automatically came back, so the user via clicking cells can initiate connection
 				if (this.state.turn !== this.state.myTurn) {
-					console.log(this.state.myTurn);
 					//is this needed really?
 					this.forceConnectWS(null);
 					return;
@@ -297,20 +281,10 @@ class GamePlay extends Component {
 							createSocketRequest(
 								"move",
 								room.name,
-								player.userID,
+								me.userID,
 								selectedCellButton.id
 							)
 						);
-
-						//load is not needed cause i updated server to send back new scores immediately
-						/*this.state.socketGamePlay.send(
-                            createSocketRequest(
-                                "load",
-                                room.name,
-                                player.userID,
-                                null
-                            )
-                        );*/
 					});
 					clearInterval(timerID);
 					this.setState({ timeRemaining: 0 });
@@ -331,7 +305,9 @@ class GamePlay extends Component {
 			// cellButton.value = players[turn].shape;
 			// cellButton.style.color = players[turn].color;
 			cellButton.className = `game-table-cells btn btn-${players[turn].selected}`;
-            setTimeout(() => {cellButton.className = `game-table-cells btn btn-${normalCell}`;}, 1000);
+			setTimeout(() => {
+				cellButton.className = `game-table-cells btn btn-${normalCell}`;
+			}, 1000);
 			// time to inspect the new cell:
 			this.inspectAreaAroundTheCell(cell.floor, cell.row, cell.column);
 
@@ -449,8 +425,7 @@ class GamePlay extends Component {
 		setTimeout(() => {
 			this.props.CleanScoreboard();
 			this.props.ResetOpponent();
-			this.props.ResetRoom();
-			this.props.TriggerRecordUpdate();
+			this.props.ExitRoom();
 			this.props.history.replace("/"); // in competition mode must be send back to competition page
 		}, 5000);
 	};
@@ -476,7 +451,7 @@ class GamePlay extends Component {
 				table={this.state.table}
 				timeRemaining={this.state.timeRemaining}
 				onEachCellClick={this.onEachCellClick}
-                normalCell={this.state.normalCell}
+				normalCell={this.state.normalCell}
 			/>
 		);
 	}

@@ -1,13 +1,12 @@
 import { Alert, Button, Form, Row, InputGroup } from "react-bootstrap";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { SendMessageTo } from "../globals/redux/actions";
-
+import { SendMessageTo } from "../globals/redux/actions/message";
 const GameChatBox = ({ friendID }) => {
     const [myMessage, setMyMessage] = useState("");
     const message = useSelector((state) => state.message);
     const dispatch = useDispatch();
-    const me = useSelector((state) => state.player);
+    const me = useSelector((state) => state.me);
 
     const composeMessage = (event) => {
         if (myMessage) {

@@ -7,16 +7,15 @@ import { Fragment, useState, useEffect, useContext } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import GlobalSocketManager from "../services/ws/GlobalSocketManager";
 import { Devices, Routes } from "../services/configs";
-import AutoSignIn from "../tools/AutoSignIn";
+import AutoSignIn from "../users/AutoSignIn";
 import GlobalContext from "../globals/state/GlobalContext";
 
 const MainLayout = (props) => {
 	const context = useContext(GlobalContext);
 	const { pathname } = props.location;
 	//redux
-	const player = useSelector((state) => state.player);
+	const me = useSelector((state) => state.me);
 	const opponent = useSelector((state) => state.opponent);
-	const scoreboard = useSelector((state) => state.scoreboard);
 
 	const [leftSideBar, setLeftSideBar] = useState(null);
 	const [rightSideBar, setRightSideBar] = useState(null);
@@ -26,12 +25,13 @@ const MainLayout = (props) => {
 
 	//teste
 	//determine sidebar
+	const {device} = context;
 	useEffect(() => {
-		console.log("context.device responsive manager called");
+		console.log("sidebar manager called");
 		const setPrimaryRightSideBar = () => {
-			if (context.device !== Devices.Tablet)
+			if (device !== Devices.Tablet)
 				setRightSideBar(
-					player ? <PlayerInfoSideBar /> : <SignInSideBar />
+					me ? <PlayerInfoSideBar /> : <SignInSideBar />
 				);
 			else setRightSideBar(null);
 		};
@@ -44,7 +44,7 @@ const MainLayout = (props) => {
 			// SOMETIMES: ERROR: cannout read .fullname of undefined person
 			setPrimaryRightSideBar();
 			if (opponent) {
-				if (context.device !== Devices.SmartPhone) {
+				if (device !== Devices.SmartPhone) {
 					setLeftSideBar(<PlayerInfoSideBar person={opponent} />);
 				} else {
 					setLeftSideBar(null);
@@ -55,12 +55,12 @@ const MainLayout = (props) => {
 			setLeftSideBar(<NoticeSideBar />); //EDIT THIS
 			setPrimaryRightSideBar();
 		}
-	}, [player, opponent, pathname, scoreboard, context.device]);
+	}, [me, opponent, pathname, device]);
 
 	return (
 		<Fragment>
 			<AutoSignIn />
-			{player && <GlobalSocketManager />}
+			{me && <GlobalSocketManager />}
 
 			{context.device !== Devices.SmartPhone ? (
 				<Row className="w-100 mx-auto">
@@ -79,7 +79,7 @@ const MainLayout = (props) => {
 			) : (
 				<Container>
 					{/* what to do for control panelk sidebar in smartphone */}
-					{player ? (
+					{me ? (
 						<Row className="w-100 mx-auto">{rightSideBar}</Row>
 					) : null}
 					<Row className="w-100 mx-auto">{leftSideBar}</Row>

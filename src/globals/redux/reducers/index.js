@@ -1,20 +1,22 @@
 import { combineReducers } from "redux";
-import { playerReducer } from "./player";
+import { meReducer } from "./me";
 import { opponentReducer } from "./opponent";
 import { roomReducer } from './room';
 import { scoreboardReducer } from './scoreboard';
 import { toolsReducer } from "./tools";
 import { statisticsReducer } from "./statistics";
 import { messageReducer } from './message';
-import { tokenReducer } from './token';
+import { chatsReducer } from './chats';
+import { friendsReducer } from './freinds';
 
 export const reducers = combineReducers({
-    player: playerReducer,
+    me: meReducer,
     opponent: opponentReducer,
     room: roomReducer,
     scoreboard: scoreboardReducer,
     tools: toolsReducer,
     statistics: statisticsReducer,
     message: messageReducer,
-    token: tokenReducer
+    chats: chatsReducer,
+    friends: friendsReducer
 });

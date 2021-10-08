@@ -27,7 +27,7 @@ class ModalSignIn extends Component {
         try {
             const { status, data } = await userServices.signIn(user);
             if (status === Configs.Status.Successful) {
-                browserStorage.writeUser(data.userID, data.token);
+                browserStorage.save(data.token);
                 this.props.history.replace("/");
             }
         } catch (err) {

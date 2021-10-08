@@ -1,14 +1,34 @@
-import { Button, Card, Col, Image, ListGroup, Row } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { Button, Card, Col, ListGroup, Row } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
 import "../profile.css";
 import noAvatar from "./no-avatar.png"; // definitely must be changed bro!
 import Record from "./Record";
 import Avatar from "react-avatar";
+import { Notify, Sorry } from "./../../tools/notification";
+import { EndFriendlyInvitation, InviteToFriendlyGame } from "../../globals/redux/actions/tools";
+
 const FriendRecords = (props) => {
-	const me = useSelector((state) => state.player);
+	const me = useSelector((state) => state.me);
+	const room = useSelector((state) => state.room);
+	const dispatch = useDispatch();
 	if (!me) return null; //because of time delay to load player data, component crashes below
 	//fix the bug in a better way
-	const { records } = props.friend ? props.friend : me;
+	const { userID, records } = props.friend ? props.friend : me;
+
+	const onInviteToGameClick = () => {
+		if (!room.type && !room.type && userID !== me.userID) {
+			//if you want to enable players play multiple games then remove this
+			// if player isnt still in a game
+			//check room info?
+			dispatch(InviteToFriendlyGame(userID));
+			setTimeout(() => {
+				//Notify('دوست مورد نظر درخواست شما را نپذیرفت')
+				dispatch(EndFriendlyInvitation());
+			}, 10000);
+		} else {
+			Sorry("برای شروع بازی جدید، باید بازی قبلی شما به اتمام برسد");
+		}
+	};
 	return (
 		<Card border="success" bg="transparent" className="friend-records">
 			<Card.Body>
@@ -17,11 +37,10 @@ const FriendRecords = (props) => {
 					<Col xs={3} className="text-center mx-auuto">
 						<Avatar
 							style={{
-								width: "100%",
-								height: "100%",
 								margin: "auto",
 								textAlign: "center",
 							}}
+							size="128"
 							round={true}
 							src={noAvatar}
 						/>
@@ -63,7 +82,7 @@ const FriendRecords = (props) => {
 							<Button
 								variant="secondary"
 								block
-								onClick={null}>
+								onClick={onInviteToGameClick}>
 								<i
 									className="fa fa-handshake-o px-2"
 									aria-hidden="true"></i>
@@ -71,10 +90,7 @@ const FriendRecords = (props) => {
 							</Button>
 						</Col>
 						<Col>
-							<Button
-								variant="danger"
-								block
-								onClick={null}>
+							<Button variant="danger" block onClick={null}>
 								تست
 							</Button>
 						</Col>

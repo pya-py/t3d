@@ -3,7 +3,6 @@ import { Card } from "react-bootstrap";
 import SingleScoreCard from "./SingleScoreCard";
 
 const AllScores = ({scores}) => {
-    console.log(scores);
     return ( 
         <Fragment>
             { scores.length ? scores.map(score => (

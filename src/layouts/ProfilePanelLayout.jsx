@@ -5,16 +5,16 @@ import CollapsedPanel from "../profile/panel/CollapsedPanel";
 import { Col, Row } from "react-bootstrap";
 import GlobalSocketManager from "./../services/ws/GlobalSocketManager";
 import { useSelector } from "react-redux";
-import AutoSignIn from "../tools/AutoSignIn";
+import AutoSignIn from "../users/AutoSignIn";
 import GlobalContext from "../globals/state/GlobalContext";
 
-const ProfilePanelLayout = ({ Device, children }) => {
-    const user = useSelector((state) => state.player);
+const ProfilePanelLayout = ({ children }) => {
+    const me = useSelector((state) => state.me);
     const context = useContext(GlobalContext);
     return (
         <Fragment>
             <AutoSignIn />
-            {user && <GlobalSocketManager />}
+            {me && <GlobalSocketManager />}
             {(context.device === Devices.Desktop) ? (
                 <Row className="w-100 mx-auto">
                     <Col xs={3}>

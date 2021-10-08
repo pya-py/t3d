@@ -1,19 +1,14 @@
 import { NavLink } from "react-router-dom";
 import { Button, Row } from "react-bootstrap";
 import "../profile.css";
-import { useDispatch, useSelector } from "react-redux";
-import { SignOut } from "../../globals/redux/actions";
-import { withRouter } from "react-router";
-import { Fragment } from "react";
+import { useSelector } from "react-redux";
+import { Fragment, useContext } from "react";
 import Configs from "../../services/configs";
+import GlobalContext from './../../globals/state/GlobalContext';
 
 const ProfilePanel = (props) => {
-    const player = useSelector((state) => state.player);
-    const dispatch = useDispatch();
-    const signMeOut = () => {
-        dispatch(SignOut());
-        props.history.replace("/"); //what the f is wrong
-    };
+    const me = useSelector((state) => state.me);
+    const context = useContext(GlobalContext);
 
     return (
             <Row className="profile-panel-sidebar d-flex flex-column flex-shrink-0">
@@ -59,7 +54,7 @@ const ProfilePanel = (props) => {
                         </NavLink>
                     </li>
                     <hr />
-                    {player && player.isAdmin && (
+                    {me && me.isAdmin && (
                         <Fragment>
                             {/* admin tools */}
                             <li>
@@ -87,7 +82,7 @@ const ProfilePanel = (props) => {
                     )}
                 </ul>
                 <hr />
-                <Button variant="outline-danger" onClick={signMeOut}>
+                <Button variant="outline-danger" onClick={context.signOut}>
                     <i className="fa fa-sign-out px-2" aria-hidden="true"></i>
                     خروج از حساب کاربری
                 </Button>
@@ -95,4 +90,4 @@ const ProfilePanel = (props) => {
     );
 };
 
-export default withRouter(ProfilePanel);
+export default ProfilePanel;

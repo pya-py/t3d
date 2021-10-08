@@ -1,187 +1,140 @@
 import {
-    Button,
-    Card,
-    Container,
-    Form,
-    InputGroup,
-    Row,
-    Tab,
+	Button,
+	Card,
+	Container,
+	Form,
+	InputGroup,
+	Row,
+	Tab,
 } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect, useCallback, useRef, useContext } from "react";
-import { SendMessageTo } from "../globals/redux/actions";
+import { useState, useEffect, useRef, useContext } from "react";
 import "./chat.css";
-import { Devices, Status } from "../services/configs";
-import chatServices from "../services/http/chatServices";
-
+import { Devices } from "../services/configs";
+import { SendMessageTo } from "../globals/redux/actions/message";
 import Message from "./Message";
 import GlobalContext from "../globals/state/GlobalContext";
 
 const ChatBox = ({ friendID }) => {
-    const [myMessage, setMyMessage] = useState("");
-    const message = useSelector((state) => state.message);
-    const dispatch = useDispatch();
-    const me = useSelector((state) => state.player);
-    const mostRecentMessageRef = useRef(null);
-    const context = useContext(GlobalContext);
+	const [myMessage, setMyMessage] = useState("");
+	const message = useSelector((state) => state.message);
+	const dispatch = useDispatch();
+	const me = useSelector((state) => state.me);
+	const mostRecentMessageRef = useRef(null);
+	const context = useContext(GlobalContext);
+	const chats = useSelector(state => state.chats);
+	const [ourChat, setOurChat] = useState([]);
 
-    //...TEMP: just save msges in client side
-    const [allMsgs, setAllMsgs] = useState([
-        { me: null, friend: null, date: null, key: 0 },
-    ]);
+	useEffect(() => {
+		let ours = chats.find(chat => chat.with === friendID);
+		setOurChat((ours && ours.messages) ? ours.messages : []);
+	}, [chats, friendID]);
+	
+	const composeMessage = (event) => {
+		event.preventDefault();
+		// init state vears ro get chat
+		if (myMessage) {
+			dispatch(SendMessageTo(me.fullname, friendID, myMessage));
+			setMyMessage("");
 
-    const loadPreviousMessages = useCallback(async () => {
-        try {
-            const { status, data } = await chatServices.getOurChat(friendID);
-            if (status === Status.Successful) {
-                const { myIndex, chat } = data;
-                const previousMsgs = chat.map((message) => {
-                    const { text, owner, date } = message;
-                    if (owner === myIndex)
-                        return {
-                            me: text,
-                            friend: null,
-                            date,
-                        };
-                    return {
-                        me: null,
-                        friend: text,
-                        date,
-                    };
-                });
-                setAllMsgs(previousMsgs);
-            }
-        } catch (err) {
-            //consider a special place in chat box to show status change or error messages
+			if (mostRecentMessageRef && mostRecentMessageRef.current) {
+				setTimeout(() => {
+					mostRecentMessageRef.current.scrollIntoView({
+						behavior: "smooth",
+						top: mostRecentMessageRef.current.offsetTop,
+					});
+				}, 100);
+			}
+		}
+	};
+
+	useEffect(() => {
+		const { recieved } = message;
+		if (!message.sent && recieved && recieved.friendID === friendID) {
+			setTimeout(() => {
+				if (mostRecentMessageRef && mostRecentMessageRef.current)
+					mostRecentMessageRef.current.scrollIntoView({
+						behavior: "smooth",
+						top: mostRecentMessageRef.current.offsetTop,
+					});
+			}, 100);
         }
-    }, [friendID]);
+	}, [message,ourChat, friendID, dispatch]);
 
-    useEffect(() => {
-        loadPreviousMessages();
+	return (
+		<Tab.Pane eventKey={friendID}>
+			<Container>
+				<Row>
+					<Card
+						border="dark"
+						bg="transparent"
+						className={`big-single-card ${
+							context.device !== Devices.SmartPhone
+								? "chat-box-scrollable"
+								: "smartphone-chat-box-scrollable"
+						}`}>
+						<Card.Body>
+							{ourChat && ourChat instanceof Array && ourChat.map((msg, index) => (
+									<div ref={mostRecentMessageRef}>
+										<Message
+											// key={msg.key}
+											msg={msg}
+											inDesktop={
+												context.device ===
+												Devices.Desktop
+											}
+											previousDay={
+												index !== 0
+													? new Date(
+															ourChat[
+																index - 1
+															].date
+													  ).getDate()
+													: 0
+											}
+										/>
+									</div>
+								))}
+						</Card.Body>
+					</Card>
+				</Row>
+				<Row>
+					<Form
+						onSubmit={(event) => composeMessage(event)}
+						className="w-100 mt-3">
+						<InputGroup className="w-100">
+							<InputGroup.Prepend
+								style={{
+									width: "8%",
+								}}>
+								<Button
+									type="submit"
+									style={{ border: "none", fontSize: "22px" }}
+									className="w-100 mx-auto"
+									variant="outline-info">
+									<i
+										className="fa fa-paper-plane"
+										aria-hidden="true"></i>
+								</Button>
+							</InputGroup.Prepend>
 
-        return () => {
-            setAllMsgs([]);
-        };
-    }, [loadPreviousMessages]);
-
-    const composeMessage = (event) => {
-        event.preventDefault();
-        if (myMessage) {
-            let tempMsg = [...allMsgs];
-            tempMsg.push({
-                me: myMessage,
-                friend: null,
-                date: new Date(),
-                key: allMsgs.length,
-            });
-            setAllMsgs(tempMsg);
-            dispatch(SendMessageTo(me.fullname, friendID, myMessage));
-            setMyMessage("");
-
-            if (mostRecentMessageRef && mostRecentMessageRef.current) {
-                setTimeout(() => {
-                    mostRecentMessageRef.current.scrollIntoView({
-                        behavior: "smooth",
-                        top: mostRecentMessageRef.current.offsetTop,
-                    });
-                }, 100);
-            }
-        }
-    };
-
-    const recieveMessage = useCallback(
-        (msg) => {
-            let tempMsg = [...allMsgs];
-            tempMsg.push({ me: null, friend: msg.text, date: new Date() });
-            return tempMsg;
-        },
-        [allMsgs]
-    );
-
-    useEffect(() => {
-        const { recieved } = message;
-        if (!message.sent && recieved && recieved.friendID === friendID) {
-            setAllMsgs(recieveMessage(message.recieved));
-
-            setTimeout(() => {
-                if (mostRecentMessageRef && mostRecentMessageRef.current)
-                    mostRecentMessageRef.current.scrollIntoView({
-                        behavior: "smooth",
-                        top: mostRecentMessageRef.current.offsetTop,
-                    });
-            }, 100);
-        }
-    }, [message, friendID]);
-
-    return (
-        <Tab.Pane eventKey={friendID}>
-            <Container>
-                <Row>
-                    <Card
-                        border="dark"
-                        bg="transparent"
-                        className={`big-single-card ${
-                            context.device !== Devices.SmartPhone
-                                ? "chat-box-scrollable"
-                                : "smartphone-chat-box-scrollable"
-                        }`}>
-                        <Card.Body>
-                            {allMsgs.map((msg, index) => (
-                                <div ref={mostRecentMessageRef}>
-                                    <Message
-                                        // key={msg.key}
-                                        msg={msg}
-                                        inDesktop={context.device === Devices.Desktop}
-                                        previousDay={
-                                            index !== 0
-                                                ? new Date(
-                                                      allMsgs[index - 1].date
-                                                  ).getDate()
-                                                : 0
-                                        }
-                                    />
-                                </div>
-                            ))}
-                        </Card.Body>
-                    </Card>
-                </Row>
-                <Row>
-                    <Form
-                        onSubmit={(event) => composeMessage(event)}
-                        className="w-100 mt-3">
-                        <InputGroup className="w-100">
-                            <InputGroup.Prepend
-                                style={{
-                                    width: "8%",
-                                }}>
-                                <Button
-                                    type="submit"
-                                    style={{ border: "none", fontSize: "22px" }}
-                                    className="w-100 mx-auto"
-                                    variant="outline-info">
-                                    <i
-                                        className="fa fa-paper-plane"
-                                        aria-hidden="true"></i>
-                                </Button>
-                            </InputGroup.Prepend>
-
-                            <InputGroup.Prepend
-                                style={{ margin: "auto", width: "92%" }}>
-                                <Form.Control
-                                    value={myMessage}
-                                    onChange={(e) =>
-                                        setMyMessage(e.target.value)
-                                    }
-                                    placeholder="پیام..."
-                                    className="bg-transparent chat-room-message-box
+							<InputGroup.Prepend
+								style={{ margin: "auto", width: "92%" }}>
+								<Form.Control
+									value={myMessage}
+									onChange={(e) =>
+										setMyMessage(e.target.value)
+									}
+									placeholder="پیام..."
+									className="bg-transparent chat-room-message-box
                                     mx-auto text-right"></Form.Control>
-                            </InputGroup.Prepend>
-                        </InputGroup>
-                    </Form>
-                </Row>
-            </Container>
-        </Tab.Pane>
-    );
+							</InputGroup.Prepend>
+						</InputGroup>
+					</Form>
+				</Row>
+			</Container>
+		</Tab.Pane>
+	);
 };
 
 export default ChatBox;

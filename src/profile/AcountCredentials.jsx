@@ -1,12 +1,11 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useContext } from "react";
 import { Button, Card, Form, Col, Row } from "react-bootstrap";
 import LoadingBar from "../commons/LoadingBar";
 import "./profile.css";
 import userServices from "../services/http/userServices";
 import Configs from "../services/configs";
-import { useDispatch } from "react-redux";
-import { TriggerRecordUpdate } from "../globals/redux/actions";
-import { OK, Sorry } from "../tools/msgbox";
+import { OK, Sorry } from "../tools/notification";
+import GlobalContext from './../globals/state/GlobalContext';
 
 const MODES = { READ_ONLY: 0, EDIT: 1, CHANGE_PASS: 2 };
 const AccountCredentials = () => {
@@ -21,8 +20,7 @@ const AccountCredentials = () => {
     const [pageUpdateTrigger, triggerPageUpdate] = useState(false); // true <=> false -> triggers page , ==> see useEffect
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
-
-    const dispatch = useDispatch();
+    const context = useContext(GlobalContext);
     //on component mount download user credentials
 
     useEffect(() => {
@@ -65,7 +63,8 @@ const AccountCredentials = () => {
             });
             if (status === Configs.Status.Successful) {
                 OK(`تغییرات با موفقیت اعمال شد`);
-                dispatch(TriggerRecordUpdate());
+                // dispatch(TriggerRecordUpdate());
+                // find another way to update
 
                 reloadPage();
             }
@@ -89,8 +88,7 @@ const AccountCredentials = () => {
             });
             if (status === Configs.Status.Successful) {
                 OK("رمز شما با موفقیت تغییر داده شد");
-                dispatch(TriggerRecordUpdate());
-                reloadPage();
+                context.signOut();
             }
         } catch (err) {
             if (!Configs.Status.isErrorExpected(err))

@@ -1,25 +1,17 @@
 import noAvatar from "./no-avatar.png"; // definitely must be changed bro!
-import {
-	Card,
-	Row,
-	Col,
-	Alert,
-	Badge,
-	Image,
-	ListGroup,
-	Button,
-} from "react-bootstrap";
+import { Card, Col, Alert, ListGroup, Button } from "react-bootstrap";
 import OnlineStatistics from "./OnlineStatistics";
-import { SendFriendRequestTo } from "../globals/redux/actions";
+import { SendFriendRequestTo } from "../globals/redux/actions/tools";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import userServices from "./../services/http/userServices";
 import Configs from "../services/configs";
 import GameChatBox from "../chat/GameChatBox";
 import Record from "../profile/friendgames/Record";
+import Avatar from "react-avatar";
 
 const PlayerInfoSideBar = (props) => {
-	const me = useSelector((state) => state.player);
+	const me = useSelector((state) => state.me);
 	const scoreboard = useSelector((state) => state.scoreboard);
 
 	const dispatch = useDispatch();
@@ -67,10 +59,15 @@ const PlayerInfoSideBar = (props) => {
 					</Card.Text>
 				</Col>
 				<Col>
-					<Image
-						className="card-img-top player-avatar"
+					<Avatar
+						style={{
+							
+							margin: "auto",
+							textAlign: "center",
+						}}
+						size="60"
+						round={true}
 						src={noAvatar}
-						alt="مشکلی در بارگذاری تصویر پیش آمد"
 					/>
 				</Col>
 			</Card.Header>
@@ -86,10 +83,18 @@ const PlayerInfoSideBar = (props) => {
 							</Alert>
 						</ListGroup.Item>
 					)}
-					<Record small title="امتیاز بازیکن">{records.points}</Record>
-					<Record small title="تعداد بردها">{records.wins}</Record>
-					<Record small title="تعداد تساوی">{records.draws}</Record>
-					<Record small title="تعداد باختها">{records.loses}</Record>
+					<Record small title="امتیاز بازیکن">
+						{records.points}
+					</Record>
+					<Record small title="تعداد بردها">
+						{records.wins}
+					</Record>
+					<Record small title="تعداد تساوی">
+						{records.draws}
+					</Record>
+					<Record small title="تعداد باختها">
+						{records.loses}
+					</Record>
 				</ListGroup>
 			</Card.Body>
 			<Card.Footer>

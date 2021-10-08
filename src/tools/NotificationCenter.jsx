@@ -3,14 +3,18 @@ import { useSelector, useDispatch } from "react-redux";
 import { withRouter } from "react-router";
 import { MessagePushed } from "../globals/redux/actions";
 import { browserStorage, Routes } from "../services/configs";
-import { Attention, NewMsg } from "./msgbox";
+import { Attention, Invitation, NewMsg } from "./notification";
 import jwtdecode from "jwt-decode";
+import { AcceptInvitation } from "../globals/redux/actions/tools";
+import { RejectGameInvitation } from "./../globals/redux/actions/tools";
 
 const NotificationCenter = ({ location }) => {
 	const message = useSelector((state) => state.message);
 	const { pathname } = location;
+	const tools = useSelector((state) => state.tools);
 	const dispatch = useDispatch();
 	// check TOKEN EXPIRE time and notify user before he starts a game to re login
+	const { gameInvitation } = tools;
 	useEffect(() => {
 		try {
 			if (message && message.recieved && !message.recieved.pushed) {
@@ -26,28 +30,41 @@ const NotificationCenter = ({ location }) => {
 				}
 			}
 
+			if (gameInvitation) {
+				Invitation(
+					gameInvitation,
+					() => {
+						dispatch(AcceptInvitation(gameInvitation.ID));
+					},
+					() => {
+						dispatch(RejectGameInvitation());
+					}
+				);
+			}
 			const decoded_token = jwtdecode(browserStorage.TOKEN());
-            
+
 			const toMin = (mili) => mili / 1000 / 60;
 			if (decoded_token) {
 				const { exp, iat } = decoded_token;
-				const expirationLength =  (exp - iat) / 60;
-                const criticalNow = toMin(Date.now()) + expirationLength/4;
-                // ex: expiration is at 60 min
-                // after converting all values to minutes
-                // critical point is about 15 minutes to expiration
-                // so if toMin(now) + 15min passes expiration date -> inform user to take action
+				const expirationLength = (exp - iat) / 60;
+				const criticalNow = toMin(Date.now()) + expirationLength / 4;
+				// ex: expiration is at 60 min
+				// after converting all values to minutes
+				// critical point is about 15 minutes to expiration
+				// so if toMin(now) + 15min passes expiration date -> inform user to take action
 				if (criticalNow >= exp / 60) {
-					Attention("نشست شما در شرف انقضاست ... برای پیش گیری از بروز مشکل لطفا دوباره وارد حساب خود شوید");
-                    // ...some action
-                    // implement onClick for this toast
-                    // like rerouting to sing in model and etc
+					Attention(
+						"نشست شما در شرف انقضاست ... برای پیش گیری از بروز مشکل لطفا دوباره وارد حساب خود شوید"
+					);
+					// ...some action
+					// implement onClick for this toast
+					// like rerouting to sing in model and etc
 				}
 			}
 		} catch (err) {
 			console.log(err);
 		}
-	}, [message, pathname, dispatch]);
+	}, [message, pathname, gameInvitation, dispatch]);
 
 	return null;
 };

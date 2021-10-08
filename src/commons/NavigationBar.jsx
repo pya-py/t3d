@@ -6,7 +6,7 @@ import GlobalContext from "../globals/state/GlobalContext";
 import { Devices, Routes } from "../services/configs";
 
 const NavigationBar = () => {
-	const player = useSelector((state) => state.player);
+	const me = useSelector((state) => state.me);
 	const context = useContext(GlobalContext);
 
 	return (
@@ -17,15 +17,15 @@ const NavigationBar = () => {
 						className="nav-link text-primary"
 						activeClassName="btn-success text-dark"
 						to={
-							player
+							me
 								? Routes.Client.Profile
 								: Routes.Client.SignUp
 						}>
 						<i
 							className="fa fa-address-card px-2"
 							aria-hidden="true"></i>
-						{player
-							? context.device !== Devices.SmartPhone && player.fullname
+						{me
+							? context.device !== Devices.SmartPhone && me.fullname
 							: "ثبت نام"}
 					</NavLink>
 					<NavLink
@@ -46,7 +46,7 @@ const NavigationBar = () => {
 							aria-hidden="true"></i>
 						{context.device === Devices.Desktop && "بازی ها"}
 					</NavLink>
-					{player && (
+					{me && (
 						<NavLink
 							className="nav-link text-primary"
 							to={Routes.Client.ChatRoom}

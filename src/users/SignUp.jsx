@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import LoadingBar from "../commons/LoadingBar";
 import Configs, { browserStorage } from "../services/configs";
 import { Card, Form, Button } from "react-bootstrap";
-import { Sorry, OK, Notify } from "../tools/msgbox";
+import { Sorry, OK, Attention } from "../tools/notification";
 
 class SignUp extends Component {
     // *********************Objectives***********************
@@ -64,7 +64,7 @@ class SignUp extends Component {
                 if (status === Configs.Status.CreatedSuccessfully) {
                     //console.log(data);
                     OK("ثبت نام با موفقیت انجام شد");
-                    browserStorage.writeUser(data.userID, data.token);
+                    browserStorage.save(data.token);
                     this.props.history.replace("/");
                     // this.props.history.replace('/signIn')
                     // ******* change server to return user token and auto sign in
@@ -73,8 +73,7 @@ class SignUp extends Component {
                 // console.log(err);
                 this.setState({ loading: false });
                 if (err.response.status === Configs.Status.Conflict) {
-
-                    Notify("اگر رمز عبور خود را فراموش کرده اید، از گزینه بازیابی رمز عبور در صفحه ی ورود استفاده نمایید");
+                    Attention("اگر رمز عبور خود را فراموش کرده اید، از گزینه بازیابی رمز عبور در صفحه ی ورود استفاده نمایید");
                 } else if (!Configs.Status.isErrorExpected(err)) {
                     Sorry(
                         "ثبت نام با مشکل رو به رو شد. لطفا دوباره تلاش کتنید"

@@ -1,30 +1,30 @@
 import { Fragment, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { SetRoom, TriggerOpponentSearch } from "../globals/redux/actions";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import LoadingBar from '../commons/LoadingBar';
-import { Notify } from "../tools/msgbox";
-
-const RoomManager = ({ friendlyGame }) => {
+import { Notify } from "../tools/notification";
+import { TriggerRandomSearch } from "../globals/redux/actions/tools";
+import { EnterRoom } from "../globals/redux/actions/game";
+const SingleGame = ({ friendlyGame }) => {
     const [roomName, setRoomName] = useState("");
     const [gameType, setGameType] = useState(4);
-    const player = useSelector((state) => state.player);
+    const me = useSelector((state) => state.me);
     const [searching, setSearching] = useState(false);
 
     const dispatch = useDispatch();
 
     const onStartGameClick = (event) => {
         event.preventDefault();
-        if (!player) {
+        if (!me) {
             Notify("ابتدا باید وارد حساب کاربری خود شوید");
             return;
         }
-        if (friendlyGame) dispatch(SetRoom({ name: roomName, type: gameType }));
+        if (friendlyGame) dispatch(EnterRoom({ name: roomName, type: gameType }));
         // random game:
         else {
-            dispatch(SetRoom({ name: null, type: gameType }));
-            dispatch(TriggerOpponentSearch());
+            dispatch(EnterRoom({ name: null, type: gameType }));
+            dispatch(TriggerRandomSearch());
             setSearching(true);
         }
     };
@@ -109,4 +109,4 @@ const RoomManager = ({ friendlyGame }) => {
     );
 };
 
-export default RoomManager;
+export default SingleGame;

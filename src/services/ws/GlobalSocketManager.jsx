@@ -1,297 +1,298 @@
 import { browserStorage, Routes } from "../configs";
-import { Fragment, useCallback, useState } from "react";
+import { Fragment, useCallback, useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {
-	TriggerOpponentSearch,
-	UpdateStatistics,
-	SetRoom,
-	SendFriendRequestTo,
-	RecieveMessageFrom,
-	ResetMessages,
-} from "../../globals/redux/actions";
+import { UpdateStatistics, ResetMessages } from "../../globals/redux/actions";
+import { RecieveMessageFrom } from "../../globals/redux/actions/message";
 import { Modal, Button, Row, Col, Badge } from "react-bootstrap";
-import { Attention, OK, Sorry } from "../../tools/msgbox";
+import { Attention, OK, Sorry } from "../../tools/notification";
 import NotificationCenter from "../../tools/NotificationCenter";
-import { withRouter } from "react-router";
-
-const GlobalSocketManager = (props) => {
+import GlobalContext from "./../../globals/state/GlobalContext";
+import {
+	EndFriendlyInvitation,
+	EndFriendRequest,
+	RecieveGameInvitation,
+	TriggerRandomSearch,
+} from "./../../globals/redux/actions/tools";
+import { EnterRoom } from "../../globals/redux/actions/game";
+const GlobalSocketManager = () => {
 	// I actually used .jsx format to make this Component EventBased
 	// On Each event called socket will do some specific operation
 	// events are actually useEffects bound to special state changes
+	const context = useContext(GlobalContext);
 	const [socketGlobal, setSocketGlobal] = useState(null);
 	const [incommingFriendRequest, setIncommingFriendRequest] = useState(null);
 	const [showFriendshipModal, setShowFriendshipModal] = useState(false);
-	const player = useSelector((state) => state.player);
-	const opponent = useSelector((state) => state.opponent);
+	const me = useSelector((state) => state.me);
 	const tools = useSelector((state) => state.tools);
 	const room = useSelector((state) => state.room);
 	const message = useSelector((state) => state.message);
 	const [clientOnline, toggleClientOnline] = useState(true);
 	const dispatch = useDispatch();
 
+	const pack = useCallback((request, msg = null) => {
+		return JSON.stringify({
+			token: browserStorage.TOKEN(),
+			request,
+			msg,
+		});
+	}, []);
+
 	const enableGlobalTimer = useCallback(() => {
 		return setInterval(() => {
-			if (socketGlobal) {
-				console.log("updating statistics...");
-				socketGlobal.send(
-					JSON.stringify({
-						token: browserStorage.TOKEN(),
-						request: "online",
-						clientID: player.userID,
-						msg: null,
-					})
-				);
-			}
+			if (socketGlobal) socketGlobal.send(pack("online"));
 		}, 300000); // every 5 MINUTES request number of online members to update the site
-	}, [socketGlobal, player]);
+	}, [pack, socketGlobal]);
 
 	useEffect(() => {
 		console.log("global timer enabled");
 		const timerID = enableGlobalTimer();
-
 		return () => {
 			console.log("global timer disabled");
 			clearInterval(timerID);
 		};
 	}, [enableGlobalTimer]);
 
-	const connect = useCallback(() => {
-		return new Promise((resolve, reject) => {
-			var socket = new WebSocket(
-				`${Routes.Server.WebSocketRoot}/${Routes.Server.wsGlobalRoute}`
-			);
-			socket.onopen = () => {
-				socket.send(
-					JSON.stringify({
-						token: browserStorage.TOKEN(),
-						request: "online",
-						clientID: player.userID,
-						msg: null,
-					})
-				); //temp
-				resolve(socket);
-			};
+	const { signOut, redirectToGamePlay } = context;
+	const iamSignedIn = me && me.userID;
 
-			socket.onmessage = (response) => {
-				const { data } = response;
-				const { command, msg } = JSON.parse(data);
-				switch (command) {
-					case "ONLINE": {
-						const { players, games } = msg;
-						dispatch(
-							UpdateStatistics({
-								players,
-								games,
-							})
-						); //playing temp
-						break;
-					}
-					case "NOT_AUTHORIZED":{
-						Sorry('نشست شما منقضی شده، لطفا دوباره وارد حساب کاربری خود شوید');
-						browserStorage.writeUser(null,null); //sign out
-						props.history.replace(Routes.Client.SignUp);
-						// edit .replace; use a function that doesnt recent BACK key on browser
-						
-						break;
-					}
-					case "FIND_RESULT": {
-						//response from random game request
-						if (msg) {
-							console.log("your room", msg);
-							dispatch(SetRoom(msg));
-							socket.send(
-								JSON.stringify({
-									token: browserStorage.TOKEN(),
-									request: "online",
-									clientID: player.userID,
-									msg: null,
-								})
-							);
-						} else {
-							//search again 5s later
-							// **********************
-							//time out must be set with rising time out time to prevent server getting fucked up
-							setTimeout(() => {
-								dispatch(TriggerOpponentSearch());
-							}, 5000);
+	const connect = useCallback(() => {
+		console.log("global websocket connect called -> new socket returned");
+		if (!iamSignedIn) return null; //to make sure just site user trigger this connection
+		return new Promise((resolve, reject) => {
+			try {
+				var socket = new WebSocket(
+					`${Routes.Server.WebSocketRoot}/${Routes.Server.wsGlobalRoute}`
+				);
+				socket.onopen = () => {
+					socket.send(pack("online")); //temp
+					resolve(socket);
+				};
+
+				socket.onmessage = (response) => {
+					const { data } = response;
+					const { command, msg } = JSON.parse(data);
+					switch (command) {
+						case "ONLINE": {
+							const { players, games } = msg;
+							dispatch(UpdateStatistics(players, games)); //playing temp
+							break;
 						}
-						break;
-					}
-					case "FRIENDSHIP_REQUEST": {
-						if (msg.askerID === opponent.userID) {
-							//if both players are in game then ask immidiately
+						case "NOT_AUTHORIZED": {
+							Sorry(
+								"نشست شما منقضی شده، لطفا دوباره وارد حساب کاربری خود شوید"
+							);
+							signOut();
+							break;
+						}
+						case "FIND_RESULT": {
+							//response from random game request
+							if (msg) {
+								dispatch(EnterRoom(msg));
+								socket.send(pack("online"));
+							} else {
+								//search again 5s later
+								// **********************
+								//time out must be set with rising time out time to prevent server getting fucked up
+								setTimeout(() => {
+									dispatch(TriggerRandomSearch());
+								}, 5000);
+							}
+							break;
+						}
+						case "FRIENDSHIP_REQUEST": {
+							//if (msg.askerID === opponentID) {
+							//if both mes are in game then ask immidiately
 							setIncommingFriendRequest(msg);
 							setShowFriendshipModal(true);
-						} else {
-							//if the friend request is comming from some one else then manage it differently
-							//...
+
+							/*else {
+								//if the friend request is comming from some one else then manage it differently
+								//...
+							}*/
+							break;
 						}
-						break;
-					}
-					case "FRIENDSHIP_RESPONSE": {
-						const { answer, targetName } = msg;
-						//if(answer) dispatch(TriggerRecordUpdate());
-						if (answer)
-							OK(`${targetName} درخواست دوستی شما را پذیرفت`);
-						else
-							Attention(
-								`${targetName} درخواست دوستی شما را رد کرد`
+						case "FRIENDSHIP_RESPONSE": {
+							const { answer, targetName } = msg;
+							//if(answer) dispatch(TriggerRecordUpdate());
+							if (answer)
+								OK(`${targetName} درخواست دوستی شما را پذیرفت`);
+							else
+								Attention(
+									`${targetName} درخواست دوستی شما را رد کرد`
+								);
+							dispatch(EndFriendRequest());
+							break;
+						}
+						case "TARGET_OFFLINE": {
+							//... while chatting or game request
+							break;
+						}
+						case "TARGET_BUSY": {
+							//... while chatting or game request
+							break;
+						}
+						case "FRIENDLY_GAME": {
+							// ... trigger and show responding form
+							const {askerID, askerName} = msg;
+							dispatch(RecieveGameInvitation(askerID, askerName));
+							break;
+						}
+						case "INVITATION_ACCEPTED": {
+							// ... friend responded to your request
+							// ... if true -> room info has ben sent to you
+							// needed to check room state? done in server
+							dispatch(EndFriendlyInvitation()); 
+							redirectToGamePlay(msg);//msg -> room
+							break;
+						}
+						case "CHAT": {
+							dispatch(
+								RecieveMessageFrom(
+									msg.name,
+									msg.friendID,
+									msg.text
+								)
 							);
-						dispatch(SendFriendRequestTo(null));
-						break;
-					}
-                    case "TARGET_OFFLINE":{
-                        //... while chatting or game request
-                        break;
-                    }
-					case "FRIENDLY_GAME": {
-                        // ... trigger and show responding form
-						break;
-					}
-                    case "FRIENDLY_RESULT": {
-                        // ... friend responded to your request
-                        // ... if true -> room info has ben sent to you
-						break;
-					}
-					case "CHAT": {
-						dispatch(
-							RecieveMessageFrom(msg.name, msg.friendID, msg.text)
-						);
 
-						break;
-					}
-					default: {
-						//... whatever
-						break;
-					}
-				}
-				resolve(socket);
-			};
-
-			socket.onerror = (error) => {
-				// console.log(`WebSocket error: ${error}`);
-				socket.close();
-				reject(error);
-			};
-
-			socket.onclose = () => {
-				// reconnectr or what?
-				console.log("Reconnecting in  5 seconds");
-				setTimeout(() => {
-					(async () => {
-						try {
-							console.log("global socket online request");
-							let socket = player ? await connect() : null;
-							setSocketGlobal(socket);
-						} catch (err) {
-							console.log(err);
+							break;
 						}
-					})();
-				}, 5000);
-				resolve(null);
-				// this part needs editing ? maybe not
-			};
+						default: {
+							//... whatever
+							break;
+						}
+					}
+					resolve(socket);
+				};
+
+				socket.onerror = (error) => {
+					socket.close();
+					reject(error);
+				};
+
+				socket.onclose = () => {
+					// reconnectr or what?
+					console.log("Reconnecting in  5 seconds");
+					setTimeout(() => {
+						(async () => {
+							try {
+								let socket = iamSignedIn
+									? await connect()
+									: null;
+								setSocketGlobal(socket);
+							} catch (err) {
+								console.log(err);
+							}
+						})();
+					}, 5000);
+					resolve(null);
+					// this part needs editing ? maybe not
+				};
+			} catch (err) {
+				console.log(`global websocket errpr: ${err}`);
+			}
 		});
-	}, [dispatch, opponent, player]);
+	}, [dispatch, signOut, redirectToGamePlay, pack, iamSignedIn]);
 
 	// EVENT NAME: PlayerUpdateEvent
 	// happens when player sign in status changes => set ups global socket connection and then if signed in=> reads number of online users in page
 	useEffect(() => {
-		if (clientOnline && player) {
+		//updates every time record changes or common user data changes, good or what?
+		if (clientOnline && iamSignedIn) {
 			(async () => {
 				try {
-					console.log("global socket online request");
-					let socket = player ? await connect() : null;
+					let socket = iamSignedIn ? await connect() : null;
 					setSocketGlobal(socket);
 				} catch (err) {
 					console.log(err);
 				}
 			})();
 		}
-	}, [clientOnline, player, connect]);
+	}, [clientOnline, iamSignedIn, connect]);
 
+	const { fullname } = me ? me : { fullname: null };
+	const {
+		friendRequestTarget,
+		friendlyGameTarget,
+		randomSearchTriggered,
+		acceptedInviter,
+	} = tools;
 	// EVENT NAME: RandomGameInitiated Event
 	// happens when user clicks on 'Random Game" Tab search button => sends opponent search request to server
 	useEffect(() => {
+		console.log(room);
 		if (room.type) {
 			//is it necessary?
 			//completely making sure we're on right stage
-			if (!room.name && socketGlobal && player)
-				socketGlobal.send(
-					JSON.stringify({
-						token: browserStorage.TOKEN(),
-						request: "find",
-						clientID: player.userID,
-						msg: room.type,
-					})
-				);
+			if (!room.name && iamSignedIn && socketGlobal)
+				socketGlobal.send(pack("find", room.type));
 		} else if (!room.name) {
 			//room --> {null,null} --> means room has been reset hand u need to remove
+			if (socketGlobal) socketGlobal.send(pack("close_game"));
+		}
+	}, [iamSignedIn, room, randomSearchTriggered, socketGlobal, pack]);
+
+	useEffect(() => {
+		if (friendRequestTarget) {
+			//friendRequestTarget either contains null => no request, or contains target ID for friendship
 			if (socketGlobal)
 				socketGlobal.send(
-					JSON.stringify({
-						token: browserStorage.TOKEN(),
-						request: "close_game",
-						clientID: player.userID,
-						msg: null,
+					pack("friendship", {
+						targetID: friendRequestTarget,
+						askerName: fullname,
 					})
 				);
 		}
-	}, [player, room, tools.opponentSearchTriggered, socketGlobal]);
-
-	useEffect(() => {
-		if (tools.friendRequest) {
-			//tools.friendRequest either contains null => no request, or contains target ID for friendship
-			socketGlobal.send(
-				JSON.stringify({
-					token: browserStorage.TOKEN(),
-					request: "friendship",
-					clientID: player.userID,
-					msg: {
-						targetID: tools.friendRequest,
-						askerName: player.fullname,
-					},
-				})
-			);
+		if (acceptedInviter) {
+			if (socketGlobal)
+				socketGlobal.send(pack("respond_friendlygame", {
+					answer: true,
+					inviterID: acceptedInviter,
+				}));
+		} else if (friendlyGameTarget) {
+			if (socketGlobal)
+				socketGlobal.send(
+					pack("friendly_game", {
+						targetID: friendlyGameTarget,
+						askerName: fullname,
+					})
+				);
 		}
-	}, [tools.friendRequest, socketGlobal, player]);
+	}, [
+		friendRequestTarget,
+		friendlyGameTarget,
+		acceptedInviter,
+		socketGlobal,
+		pack,
+		fullname,
+	]);
 
 	const respondToFriendshipRequest = (answer) => {
 		// handle multiple requests *************
-		socketGlobal.send(
-			JSON.stringify({
-				token: browserStorage.TOKEN(),
-				request: "respond_friendship",
-				clientID: player.userID,
-				msg: {
+
+		//target reponds to requester
+		if (socketGlobal)
+			socketGlobal.send(
+				pack("respond_friendship", {
 					answer,
-					targetName: player.fullname,
+					targetName: me.fullname,
 					askerID: incommingFriendRequest.askerID,
-				},
-			})
-		);
+				})
+			);
 		// if(answer) dispatch(TriggerRecordUpdate());
 		setShowFriendshipModal(false);
 		setIncommingFriendRequest(null);
-		dispatch(SendFriendRequestTo(null)); //reset friend request targetID to prevent any future problm
+		// dispatch(SendFriendRequestTo(null)); //reset friend request targetID to prevent any future problm
 	};
 
 	useEffect(() => {
-		if (message.sent) {
+		if (message.sent && socketGlobal) {
 			//if destination is determined, otherwise => means no message has been sent
-			socketGlobal.send(
-				JSON.stringify({
-					token: browserStorage.TOKEN(),
-					request: "chat",
-					clientID: player.userID,
-					msg: message.sent,
-				})
-			);
+			socketGlobal.send(pack("chat", message.sent));
 			dispatch(ResetMessages());
 		}
-	}, [player, message, socketGlobal, dispatch]);
+	}, [message.sent, socketGlobal, pack, dispatch]);
 
 	// if online status changes
 	setInterval(() => {
@@ -309,12 +310,11 @@ const GlobalSocketManager = (props) => {
 	}, 5000);
 
 	// is it really necessary though ?????
-    // move UI to notification center 
+	// move UI to notification center
 	return (
 		//this is just for firendship request in games
 		<Fragment>
 			<NotificationCenter />
-
 			<Modal
 				show={showFriendshipModal}
 				onHide={() => respondToFriendshipRequest(false)}>
@@ -362,4 +362,4 @@ const GlobalSocketManager = (props) => {
 	);
 };
 
-export default withRouter(GlobalSocketManager);
+export default GlobalSocketManager;

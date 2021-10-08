@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import LoadingBar from "../commons/LoadingBar";
 import Configs, { browserStorage } from "../services/configs";
 import { Card, Form, Button, Col, Row } from "react-bootstrap";
-import { Sorry } from "../tools/msgbox";
+import { Sorry } from "../tools/notification";
 
 class SignInSideBar extends Component {
     // *********************Objectives***********************
@@ -25,7 +25,7 @@ class SignInSideBar extends Component {
             const { status, data } = await userServices.signIn(user);
             if (status === Configs.Status.Successful) {
                 console.log(data);
-                browserStorage.writeUser(data.userID, data.token);
+                browserStorage.save(data.token);
                 this.props.history.replace("/");
             }
         } catch (err) {

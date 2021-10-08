@@ -1,20 +1,14 @@
 import { NavLink } from "react-router-dom";
 import { Button, Row } from "react-bootstrap";
 import "../profile.css";
-import { useDispatch, useSelector } from "react-redux";
-import { SignOut } from "../../globals/redux/actions";
-import { withRouter } from "react-router";
-import { Fragment } from "react";
+import { useSelector } from "react-redux";
+import { Fragment, useContext } from "react";
 import Configs from "../../services/configs";
+import GlobalContext from "../../globals/state/GlobalContext";
 
 const CollapsedPanel = (props) => {
-    const player = useSelector((state) => state.player);
-    const dispatch = useDispatch();
-    const signMeOut = () => {
-        dispatch(SignOut());
-        props.history.replace("/"); //what the f is wrong
-    };
-
+    const me = useSelector((state) => state.me);
+    const context = useContext(GlobalContext);
     return (
         <Row bg="light" className="profile-panel-sidebar-collapsed w-100 text-right">
             <Button
@@ -41,7 +35,7 @@ const CollapsedPanel = (props) => {
                 <i className="fa fa-weixin" aria-hidden="true"></i>
             </NavLink>
             <hr />
-            {player && player.isAdmin && (
+            {me && me.isAdmin && (
                 <Fragment>
                     {/* admin tools */}
                     <NavLink
@@ -60,11 +54,11 @@ const CollapsedPanel = (props) => {
             <Button
                 className="text-right"
                 variant="outline-danger"
-                onClick={signMeOut}>
+                onClick={context.signOut}>
                 <i className="fa fa-sign-out" aria-hidden="true"></i>
             </Button>
         </Row>
     );
 };
 
-export default withRouter(CollapsedPanel);
+export default CollapsedPanel;

@@ -9,10 +9,10 @@ import { Status, browserStorage } from "../services/configs";
 import "./profile.css";
 import LoadingBar from "../commons/LoadingBar";
 import jwtdecode from "jwt-decode";
-import { OK, Sorry } from "../tools/msgbox";
+import { OK, Sorry } from "../tools/notification";
 const NoticeManager = () => {
 	//u can create another component for listing notices ?
-	const player = useSelector((state) => state.player);
+	const me = useSelector((state) => state.me);
 	const [isAllowed, setAllowed] = useState(undefined);
 	const [title, setTitle] = useState("");
 	const [text, setText] = useState("");
@@ -75,7 +75,7 @@ const NoticeManager = () => {
 				decoded_token.user.admin &&
 				decoded_token.exp > Date.now() / 1000; //user is admin and token not expired
 			// show proper message for simple users
-			if (!player || isAdmin === false) {
+			if (!me || isAdmin === false) {
 				//in first render a wronge message will be shown! find a fix
 				//2nd condition must be exactly the same
 				Sorry("متاسفانه شما مجوز دسترسی به این صفحه را ندارید.");
@@ -84,7 +84,7 @@ const NoticeManager = () => {
 		}
         else isAdmin = false;
 		setAllowed(isAdmin);
-	}, [player]);
+	}, [me]);
 	//***** in server implemented a middleware for this, is this needed? */
 
 	//runs when create notice button clicks
@@ -155,7 +155,7 @@ const NoticeManager = () => {
 	//add patern and stuff to states and inputs
 	return (
 		<Fragment>
-			{player && isAllowed && (
+			{me && isAllowed && (
 				<Row style={{ height: "100%" }}>
 					<LoadingBar loading={loading} />
 					<Col xs={5}>
