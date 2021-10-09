@@ -34,7 +34,7 @@ const FriendRecords = (props) => {
 			<Card.Body>
 				<Row className="w-100 p-0 mx-auto">
 					{/* <hr /> */}
-					<Col xs={3} className="text-center mx-auuto">
+					<Col sm={12} md={12} lg={3} className="text-center mx-auuto">
 						<Avatar
 							style={{
 								margin: "auto",
@@ -45,27 +45,27 @@ const FriendRecords = (props) => {
 							src={noAvatar}
 						/>
 					</Col>
-					<Col>
-						<ListGroup className=" list-group list-group-flush">
-							<Row>
-								<Col className="p-0 w-100">
+					<Col sm={12} md={12} lg={9}>
+						<ListGroup className="list-group list-group-flush">
+							<Row className="h-100">
+								<Col className="p-0 h-100 w-100">
 									<Record title="امتیاز بازیکن">
 										{records.points}
 									</Record>
 								</Col>
-								<Col className="p-0 w-100">
+								<Col className="p-0 h-100 w-100">
 									<Record title="تعداد بردها">
 										{records.wins}
 									</Record>
 								</Col>
 							</Row>
-							<Row>
-								<Col className="p-0 w-100">
+							<Row className="h-100">
+								<Col className="p-0 h-100 w-100">
 									<Record title="تعداد تساوی">
 										{records.draws}
 									</Record>
 								</Col>
-								<Col className="p-0 w-100">
+								<Col className="p-0 h-100 w-100">
 									<Record title="تعداد باختها">
 										{records.loses}
 									</Record>
@@ -78,7 +78,7 @@ const FriendRecords = (props) => {
 			{props.friend && (
 				<Card.Footer>
 					<Row>
-						<Col>
+						<Col sm={6} xs={12}>
 							<Button
 								variant="secondary"
 								block
@@ -89,7 +89,7 @@ const FriendRecords = (props) => {
 								درخواست بازی
 							</Button>
 						</Col>
-						<Col>
+						<Col sm={6} xs={12}>
 							<Button variant="danger" block onClick={null}>
 								تست
 							</Button>

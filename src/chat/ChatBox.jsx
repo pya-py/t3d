@@ -10,10 +10,8 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect, useRef, useContext } from "react";
 import "./chat.css";
-import { Devices } from "../services/configs";
 import { SendMessageTo } from "../globals/redux/actions/message";
 import Message from "./Message";
-import GlobalContext from "../globals/state/GlobalContext";
 
 const ChatBox = ({ friendID }) => {
 	const [myMessage, setMyMessage] = useState("");
@@ -21,15 +19,14 @@ const ChatBox = ({ friendID }) => {
 	const dispatch = useDispatch();
 	const me = useSelector((state) => state.me);
 	const mostRecentMessageRef = useRef(null);
-	const context = useContext(GlobalContext);
-	const chats = useSelector(state => state.chats);
+	const chats = useSelector((state) => state.chats);
 	const [ourChat, setOurChat] = useState([]);
 
 	useEffect(() => {
-		let ours = chats.find(chat => chat.with === friendID);
-		setOurChat((ours && ours.messages) ? ours.messages : []);
+		let ours = chats.find((chat) => chat.with === friendID);
+		setOurChat(ours && ours.messages ? ours.messages : []);
 	}, [chats, friendID]);
-	
+
 	const composeMessage = (event) => {
 		event.preventDefault();
 		// init state vears ro get chat
@@ -58,8 +55,8 @@ const ChatBox = ({ friendID }) => {
 						top: mostRecentMessageRef.current.offsetTop,
 					});
 			}, 100);
-        }
-	}, [message,ourChat, friendID, dispatch]);
+		}
+	}, [message, ourChat, friendID, dispatch]);
 
 	return (
 		<Tab.Pane eventKey={friendID}>
@@ -68,21 +65,15 @@ const ChatBox = ({ friendID }) => {
 					<Card
 						border="dark"
 						bg="transparent"
-						className={`big-single-card ${
-							context.device !== Devices.SmartPhone
-								? "chat-box-scrollable"
-								: "smartphone-chat-box-scrollable"
-						}`}>
+						className="big-single-card chat-box-scrollable">
 						<Card.Body>
-							{ourChat && ourChat instanceof Array && ourChat.map((msg, index) => (
+							{ourChat &&
+								ourChat instanceof Array &&
+								ourChat.map((msg, index) => (
 									<div ref={mostRecentMessageRef}>
 										<Message
 											// key={msg.key}
 											msg={msg}
-											inDesktop={
-												context.device ===
-												Devices.Desktop
-											}
 											previousDay={
 												index !== 0
 													? new Date(

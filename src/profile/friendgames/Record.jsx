@@ -5,8 +5,8 @@ import '../profile.css';
 
 const Record = ({children,title, small}) => {
     return (
-        <ListGroup.Item className="bg-transparent">
-            <Row className={!small && "py-2"}>
+        <ListGroup.Item className="h-100 bg-transparent">
+            <Row className={!small && "h-100 py-2"}>
                 <Col className="text-center">
                     <Card.Text>{title}</Card.Text>
                 </Col>

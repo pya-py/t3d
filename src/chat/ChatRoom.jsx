@@ -36,7 +36,7 @@ const ChatRoom = () => {
 									? "chat-room-devider chat-scrollable-friends"
 									: "smartphone-chat-scrollable-friends"
 							}
-							sm={3}>
+							md={3} sm={12}>
 							<Nav
 								variant="pills"
 								className="flex-column text-right">

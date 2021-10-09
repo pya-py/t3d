@@ -17,17 +17,12 @@
 }
 
 .smartphone-chat-scrollable-friends {
-    height: 200px;
+    height: 250px;
     overflow-y: scroll;
 }
 
 .chat-box-scrollable {
     height: 700px;
-    overflow-y: scroll;
-}
-
-.smartphone-chat-box-scrollable {
-    height: 400px;
     overflow-y: scroll;
 }
 

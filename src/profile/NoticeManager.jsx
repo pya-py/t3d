@@ -158,7 +158,7 @@ const NoticeManager = () => {
 			{me && isAllowed && (
 				<Row style={{ height: "100%" }}>
 					<LoadingBar loading={loading} />
-					<Col xs={5}>
+					<Col lg={6} md={5} sm={12}>
 						<Card
 							border="success"
 							bg="transparent"
@@ -251,8 +251,8 @@ const NoticeManager = () => {
 									</Button>
 								) : (
 									<Row>
-										<Col>
-											<Button
+										<Col lg={6} md={12}>
+											<Button 
 												block
 												variant="outline-primary"
 												onClick={saveChanges}>
@@ -262,8 +262,8 @@ const NoticeManager = () => {
 												ذخیره تغییرات
 											</Button>
 										</Col>
-										<Col>
-											<Button
+										<Col lg={6} md={12}>
+											<Button 
 												block
 												variant="outline-warning text-secondary"
 												onClick={cancelEditing}>
@@ -278,7 +278,7 @@ const NoticeManager = () => {
 							</Card.Footer>
 						</Card>
 					</Col>
-					<Col xs={7}>
+					<Col lg={6} md={7} sm={12}>
 						<Card
 							border="info"
 							bg="transparent"

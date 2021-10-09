@@ -58,7 +58,7 @@ const MyGamesAndFriends = () => {
 					defaultActiveKey={filterID}
 					onSelect={(key) => setFilterID(key)}>
 					<Row className="tabs-list-friends-in-games-scrollable">
-						<Col className="friend-list-name-length" xs={3}>
+						<Col lg={3} md={4} sm={12}  className="friend-list-name-length">
 							<Nav
 								variant="pills"
 								className="flex-column text-right">
@@ -82,7 +82,7 @@ const MyGamesAndFriends = () => {
 							</Nav>
 						</Col>
 						{/* EDIT MAIL LAYOUT <Col> LIKE THIS */}
-						<Col xs={9}>
+						<Col lg={9} md={8} sm={12}>
 							<FriendRecords
 								friend={
 									selectedFriendIndex !== -1

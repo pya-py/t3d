@@ -17,17 +17,17 @@ const ProfilePanelLayout = ({ children }) => {
             {me && <GlobalSocketManager />}
             {(context.device === Devices.Desktop) ? (
                 <Row className="w-100 mx-auto">
-                    <Col xs={3}>
+                    <Col lg={3}>
                         <ProfilePanel />
                     </Col>
                     <Col>{children}</Col>
                 </Row>
             ) : (
                 <Row className="w-100 mx-auto">
-                    <Col xs={1}>
+                    <Col className="mx-auto" sm={12}>
                         <CollapsedPanel />
                     </Col>
-                    <Col>{children}</Col>
+                    <Col sm={12}>{children}</Col>
                 </Row>
             )}
         </Fragment>

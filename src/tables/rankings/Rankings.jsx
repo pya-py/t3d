@@ -5,7 +5,7 @@ import LoadingBar from "../../commons/LoadingBar";
 import Configs from '../../services/configs';
 import { Row } from "react-bootstrap";
 
-class Ranking extends Component {
+class Rankings extends Component {
     state = { players: [], loading: false };
 
     componentDidMount() {
@@ -46,4 +46,4 @@ class Ranking extends Component {
     }
 }
 
-export default Ranking;
+export default Rankings;

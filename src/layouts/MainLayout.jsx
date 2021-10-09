@@ -64,14 +64,14 @@ const MainLayout = (props) => {
 
 			{context.device !== Devices.SmartPhone ? (
 				<Row className="w-100 mx-auto">
-					{rightSideBar && <Col xs={3}>{rightSideBar}</Col>}
+					{rightSideBar && <Col md={3}>{rightSideBar}</Col>}
 					<Col
 						className="mx-auto"
-						xs={pathname !== Routes.Client.SignUp ? null : 7}>
+						md={pathname !== Routes.Client.SignUp ? null : 7}>
 						{props.children}
 					</Col>
 					{leftSideBar && (
-						<Col xs={context.device !== Devices.Tablet ? 3 : 4}>
+						<Col md={context.device !== Devices.Tablet ? 3 : 4}>
 							{leftSideBar}
 						</Col>
 					)}
