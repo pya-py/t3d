@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { withRouter } from "react-router";
 import { MessagePushed } from "../globals/redux/actions";
@@ -7,14 +7,17 @@ import { Attention, Invitation, NewMsg } from "./notification";
 import jwtdecode from "jwt-decode";
 import { AcceptInvitation } from "../globals/redux/actions/tools";
 import { RejectGameInvitation } from "./../globals/redux/actions/tools";
+import GlobalContext from "../globals/state/GlobalContext";
 
 const NotificationCenter = ({ location }) => {
 	const message = useSelector((state) => state.message);
 	const { pathname } = location;
 	const tools = useSelector((state) => state.tools);
 	const dispatch = useDispatch();
+	const context = useContext(GlobalContext);
 	// check TOKEN EXPIRE time and notify user before he starts a game to re login
 	const { gameInvitation } = tools;
+	const {goTo} = context;
 	useEffect(() => {
 		try {
 			if (message && message.recieved && !message.recieved.pushed) {
@@ -24,7 +27,7 @@ const NotificationCenter = ({ location }) => {
 						//return;
 					}
 
-					NewMsg(message.recieved);
+					NewMsg(message.recieved, () => goTo(Routes.Client.ChatRoom));
 					//prevent recieved message from getting stuck in notificatioon loop
 					dispatch(MessagePushed());
 				}
@@ -64,7 +67,7 @@ const NotificationCenter = ({ location }) => {
 		} catch (err) {
 			console.log(err);
 		}
-	}, [message, pathname, gameInvitation, dispatch]);
+	}, [message, pathname, gameInvitation, goTo, dispatch]);
 
 	return null;
 };

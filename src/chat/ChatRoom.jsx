@@ -1,22 +1,13 @@
 import { Card, Row, Col, Nav, Tab } from "react-bootstrap";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Devices } from "../services/configs";
 import ChatBox from "./ChatBox";
 import "./chat.css";
 import GlobalContext from "../globals/state/GlobalContext";
-import { useDispatch, useSelector } from "react-redux";
-import { LoadMyFriendsChats } from "../globals/redux/actions/friends";
+import { useSelector } from "react-redux";
+
 const ChatRoom = () => {
 	const context = useContext(GlobalContext);
-	const dispatch = useDispatch();
-
-	useEffect(() => {
-		dispatch(LoadMyFriendsChats());
-		// chat room unmounted
-		return () => {
-			// remove chat list from redux to save memory
-		};
-	}, [dispatch]);
 
 	const myfriends = useSelector((state) => state.friends);
 	
@@ -36,7 +27,7 @@ const ChatRoom = () => {
 									? "chat-room-devider chat-scrollable-friends"
 									: "smartphone-chat-scrollable-friends"
 							}
-							md={3} sm={12}>
+							lg={3} md={3} sm={12}>
 							<Nav
 								variant="pills"
 								className="flex-column text-right">
@@ -52,7 +43,7 @@ const ChatRoom = () => {
 							</Nav>
 						</Col>
 						{/* EDIT MAIL LAYOUT <Col> LIKE THIS */}
-						<Col>
+						<Col lg={9} md={9} sm={12}>
 							<Tab.Content>
 								{myfriends.map((friend) => (
 									<ChatBox

@@ -30,19 +30,11 @@
     border: 1px solid cyan;
 }
 
-.my-message-time{
+.message-time{
     font-size: 12px;
     color: brown;
     text-align: left;
-    border-right: 1px solid grey;
-}
-
-
-.friend-message-time{
-    font-size: 12px;
-    color: brown;
-    text-align: right;
-    border-left: 1px solid grey;
+    /* border-right: 1px solid grey; */
 }
 
 .message-date {

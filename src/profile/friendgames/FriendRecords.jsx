@@ -4,23 +4,23 @@ import "../profile.css";
 import noAvatar from "./no-avatar.png"; // definitely must be changed bro!
 import Record from "./Record";
 import Avatar from "react-avatar";
-import { Notify, Sorry } from "./../../tools/notification";
+import { Sorry } from "./../../tools/notification";
 import { EndFriendlyInvitation, InviteToFriendlyGame } from "../../globals/redux/actions/tools";
 
 const FriendRecords = (props) => {
 	const me = useSelector((state) => state.me);
 	const room = useSelector((state) => state.room);
 	const dispatch = useDispatch();
-	if (!me) return null; //because of time delay to load player data, component crashes below
+	// if (!me) return null; //because of time delay to load player data, component crashes below
 	//fix the bug in a better way
-	const { userID, records } = props.friend ? props.friend : me;
-
+	const { records } = props.friend ? props.friend : me;
+	const currentID = props.friend ? props.friend.ID : me.userID; //need to edit?
 	const onInviteToGameClick = () => {
-		if (!room.type && !room.type && userID !== me.userID) {
+		if (!room.type && !room.type && currentID !== me.userID) {
 			//if you want to enable players play multiple games then remove this
 			// if player isnt still in a game
 			//check room info?
-			dispatch(InviteToFriendlyGame(userID));
+			dispatch(InviteToFriendlyGame(currentID));
 			setTimeout(() => {
 				//Notify('دوست مورد نظر درخواست شما را نپذیرفت')
 				dispatch(EndFriendlyInvitation());
@@ -90,8 +90,8 @@ const FriendRecords = (props) => {
 							</Button>
 						</Col>
 						<Col sm={6} xs={12}>
-							<Button variant="danger" block onClick={null}>
-								تست
+							<Button variant="secondary" block onClick={null}>
+								نوع بازی
 							</Button>
 						</Col>
 					</Row>

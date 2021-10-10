@@ -1,14 +1,6 @@
-import {
-	Button,
-	Card,
-	Container,
-	Form,
-	InputGroup,
-	Row,
-	Tab,
-} from "react-bootstrap";
+import { Button, Card, Container, Form, Row, Tab, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./chat.css";
 import { SendMessageTo } from "../globals/redux/actions/message";
 import Message from "./Message";
@@ -93,34 +85,28 @@ const ChatBox = ({ friendID }) => {
 					<Form
 						onSubmit={(event) => composeMessage(event)}
 						className="w-100 mt-3">
-						<InputGroup className="w-100">
-							<InputGroup.Prepend
-								style={{
-									width: "8%",
-								}}>
+						<Row className="w-100 p-0 m-0">
+							<Col xs={1} className="m-0 p-0 text-center">
 								<Button
 									type="submit"
-									style={{ border: "none", fontSize: "22px" }}
 									className="w-100 mx-auto"
 									variant="outline-info">
 									<i
 										className="fa fa-paper-plane"
 										aria-hidden="true"></i>
 								</Button>
-							</InputGroup.Prepend>
-
-							<InputGroup.Prepend
-								style={{ margin: "auto", width: "92%" }}>
+							</Col>
+							<Col xs={11} className="m-0 p-0 w-100">
 								<Form.Control
+									className="p-0 w-100 bg-transparent chat-room-message-box
+                                    mx-auto text-right"
 									value={myMessage}
 									onChange={(e) =>
 										setMyMessage(e.target.value)
 									}
-									placeholder="پیام..."
-									className="bg-transparent chat-room-message-box
-                                    mx-auto text-right"></Form.Control>
-							</InputGroup.Prepend>
-						</InputGroup>
+									placeholder="پیام..."></Form.Control>
+							</Col>
+						</Row>
 					</Form>
 				</Row>
 			</Container>

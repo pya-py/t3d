@@ -46,3 +46,10 @@ export const LoadMyFriendsChats = () => {
 		}
 	};
 };
+
+export const ResetMyFriendsChats = () => {
+	return async(dispatch) => {
+		await dispatch({ type: "RESET_FRIENDS" });
+		await dispatch({ type: "RESET_CHATS" });
+	}
+}

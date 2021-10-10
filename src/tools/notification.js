@@ -1,5 +1,4 @@
 import { toast } from "react-toastify";
-import { Routes } from "../services/configs";
 
 export const Sorry = (text) => {
 	toast.error(text, {
@@ -64,13 +63,8 @@ export const Attention = (text, onClick) => {
 	});
 };
 
-const onNewMessageClick = (event) => {
-    console.log('new message clicked');
-	window.location = Routes.Client.ChatRoom;
-};
-
 //add maximum number of simultanious NewMsg s
-export const NewMsg = ({ name, text }) => {
+export const NewMsg = ({ name, text }, onClick) => {
 	toast(
 		<p className="text-right">
 			{`${name} : ${text}`}
@@ -78,7 +72,7 @@ export const NewMsg = ({ name, text }) => {
 		{
 			type: "dark",
 			position: "top-left",
-			onClick: (event) => onNewMessageClick(event),
+			onClick,
 			icon: (
 				<i
 					style={{ float: "right" }}
@@ -91,13 +85,13 @@ export const NewMsg = ({ name, text }) => {
 
 export const Invitation = (by, accept, reject) => {
 	toast(
-		<p className="text-right">
+		<p className="text-right text-primary">
 			{`کاربر ${by.name} درخواست بازی با شما را دارد. برای پذیرفتن بازی اینجا کلیک کنید.`}
 		</p>,
 		{
 			position: "top-left",
 			onClick: () => accept(by.ID),
-			 onClose: () => reject(),
+			onClose: () => reject(),
 			icon: (
 				<i
 					style={{ float: "right" }}

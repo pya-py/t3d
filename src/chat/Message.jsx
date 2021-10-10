@@ -20,7 +20,7 @@ const Message = ({ msg, previousDay }) => {
 	}, [date, previousDay]);
 
 	return (
-		<Fragment key={uuidv1()}>
+		<Fragment>
 			{!showDate ? null : (
 				<Fragment>
 					<hr />
@@ -28,28 +28,28 @@ const Message = ({ msg, previousDay }) => {
 				</Fragment>
 			)}
 			<Row>
-				<Col md={6} sm={msg.me ? 8 : 4}>
+				<Col md={6} sm={msg.me ? 8 : 4} xs={msg.me ? 9 : 3}>
 					{msg.me && (
 						<Alert className="text-right" variant="dark">
 							<Row>
-								<Col lg={9} md={12}>
+								<Col lg={9} xs={12}>
 									{msg.me}
 								</Col>
-								<Col className="my-message-time" lg={3} md={12}>
+								<Col className="message-time" lg={3} xs={12}>
 									{time}
 								</Col>
 							</Row>
 						</Alert>
 					)}
 				</Col>
-				<Col md={6} sm={msg.friend ? 8 : 4}>
+				<Col md={6} sm={msg.friend ? 8 : 4} xs={msg.friend ? 9 : 3}>
 					{msg.friend && (
 						<Alert className="text-right" variant="primary">
 							<Row>
-								<Col lg={9} md={12}>
+								<Col lg={9} xs={12}>
 									{msg.friend}
 								</Col>
-								<Col className="my-message-time" lg={3} md={12}>
+								<Col className="message-time" lg={3} xs={12}>
 									{time}
 								</Col>
 							</Row>

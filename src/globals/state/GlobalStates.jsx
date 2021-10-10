@@ -25,7 +25,7 @@ const GlobalStates = ({ children, history }) => {
 	const signOut = () => {
 		try {
 			browserStorage.reset(); //sign out
-			history.replace(Routes.Client.SignUp);
+			history.push(Routes.Client.SignUp);
 			dispatch(ResetMyPlayer());
 			// edit .replace; use a function that doesnt recent BACK key on browser
 		} catch (err) {
@@ -35,10 +35,15 @@ const GlobalStates = ({ children, history }) => {
 
 	const redirectToGamePlay = (room) => {
 		dispatch(EnterRoom(room));
-		history.replace(Routes.Client.GameDeck);
+		history.push(Routes.Client.GameDeck);
 	}
+
+	const goTo = (destination) => {
+		history.push(destination);
+	}  
+
 	return (
-		<GlobalContext.Provider value={{ device, signOut, redirectToGamePlay }}>
+		<GlobalContext.Provider value={{ device, signOut, redirectToGamePlay, goTo }}>
 			{children}
 		</GlobalContext.Provider>
 	);

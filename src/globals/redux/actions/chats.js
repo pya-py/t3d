@@ -23,6 +23,12 @@ export const UpdateMyChatList = (name, friendID, text, { sent, recieved }) => {
 		}
 	};
 };
+
+export const ResetMyChats = () => {
+	return async(dispatch) => {
+		await dispatch({ type: "RESET_CHATS" });
+	}
+}
 /*
 // load all chats
 export const LoadMyChats = () => {

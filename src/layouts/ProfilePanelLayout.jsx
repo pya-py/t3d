@@ -1,16 +1,28 @@
-import { Fragment, useContext } from "react";
+import { Fragment, useContext, useEffect } from "react";
 import { Devices } from "../services/configs";
 import ProfilePanel from "../profile/panel/ProfilePanel";
 import CollapsedPanel from "../profile/panel/CollapsedPanel";
 import { Col, Row } from "react-bootstrap";
 import GlobalSocketManager from "./../services/ws/GlobalSocketManager";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import AutoSignIn from "../users/AutoSignIn";
 import GlobalContext from "../globals/state/GlobalContext";
+import { LoadMyFriendsChats, ResetMyFriendsChats } from "../globals/redux/actions/friends";
 
 const ProfilePanelLayout = ({ children }) => {
     const me = useSelector((state) => state.me);
     const context = useContext(GlobalContext);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+		dispatch(LoadMyFriendsChats());
+		// profile unmounted
+		return () => {
+			// remove chat list from redux to save memory
+            dispatch(ResetMyFriendsChats());
+		};
+	}, [dispatch]);
+
     return (
         <Fragment>
             <AutoSignIn />
@@ -20,7 +32,7 @@ const ProfilePanelLayout = ({ children }) => {
                     <Col lg={3}>
                         <ProfilePanel />
                     </Col>
-                    <Col>{children}</Col>
+                    <Col lg={9}>{children}</Col>
                 </Row>
             ) : (
                 <Row className="w-100 mx-auto">
