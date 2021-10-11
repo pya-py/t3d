@@ -1,19 +1,18 @@
 import {browserStorage, Routes} from '../configs';
 
-export const createSocketRequest = (request, rname, playerID, msg) =>
+export const createSocketRequest = (request, rname, msg) =>
     JSON.stringify({
         request,
         rname,
-        playerID,
         token: browserStorage.TOKEN(),
         msg,
     });
 
-export const connect = (roomName, playerID, gameType) => {
+export const connect = (roomName, gameType) => {
     return new Promise((resolve, reject) => {
         var server = new WebSocket(`${Routes.Server.WebSocketRoot}/${Routes.Server.wsGamePlayRoute}`);
         server.onopen = () => {
-            server.send(createSocketRequest("join", roomName, playerID, gameType)); //temp
+            server.send(createSocketRequest("join", roomName, gameType)); //temp
             resolve(server);
         };
 

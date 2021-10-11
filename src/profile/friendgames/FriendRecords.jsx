@@ -1,11 +1,14 @@
-import { Button, Card, Col, ListGroup, Row } from "react-bootstrap";
+import { Button, Card, Col, ListGroup, Row, InputGroup } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import "../profile.css";
 import noAvatar from "./no-avatar.png"; // definitely must be changed bro!
 import Record from "./Record";
 import Avatar from "react-avatar";
 import { Sorry } from "./../../tools/notification";
-import { EndFriendlyInvitation, InviteToFriendlyGame } from "../../globals/redux/actions/tools";
+import {
+	EndFriendlyInvitation,
+	InviteToFriendlyGame,
+} from "../../globals/redux/actions/tools";
 
 const FriendRecords = (props) => {
 	const me = useSelector((state) => state.me);
@@ -34,7 +37,11 @@ const FriendRecords = (props) => {
 			<Card.Body>
 				<Row className="w-100 p-0 mx-auto">
 					{/* <hr /> */}
-					<Col sm={12} md={12} lg={3} className="text-center mx-auuto">
+					<Col
+						sm={12}
+						md={12}
+						lg={3}
+						className="text-center mx-auuto">
 						<Avatar
 							style={{
 								margin: "auto",
@@ -78,7 +85,7 @@ const FriendRecords = (props) => {
 			{props.friend && (
 				<Card.Footer>
 					<Row>
-						<Col sm={6} xs={12}>
+						<Col sm={4} xs={12}>
 							<Button
 								variant="secondary"
 								block
@@ -89,10 +96,36 @@ const FriendRecords = (props) => {
 								درخواست بازی
 							</Button>
 						</Col>
-						<Col sm={6} xs={12}>
-							<Button variant="secondary" block onClick={null}>
-								نوع بازی
-							</Button>
+						<Col sm={8} xs={12}>
+							<InputGroup>
+								<InputGroup.Prepend>
+									<InputGroup.Radio
+										value="3"
+										name="tableDimension"
+										// checked={gameType === 3}
+										// onChange={() => setGameType(3)}
+									/>
+									<InputGroup.Text>3 * 3 * 3</InputGroup.Text>
+								</InputGroup.Prepend>
+								<InputGroup.Prepend>
+									<InputGroup.Radio
+										value="4"
+										name="tableDimension"
+										// checked={gameType === 4}
+										// onChange={() => setGameType(4)}
+									/>
+									<InputGroup.Text>4 * 4 * 4</InputGroup.Text>
+								</InputGroup.Prepend>
+								<InputGroup.Prepend>
+									<InputGroup.Radio
+										value="5"
+										name="tableDimension"
+										// checked={gameType === 5}
+										// onChange={() => setGameType(5)}
+									/>
+									<InputGroup.Text>5 * 5 * 5</InputGroup.Text>
+								</InputGroup.Prepend>
+							</InputGroup>
 						</Col>
 					</Row>
 				</Card.Footer>

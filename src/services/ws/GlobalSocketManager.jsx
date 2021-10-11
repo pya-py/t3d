@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { UpdateStatistics, ResetMessages } from "../../globals/redux/actions";
 import { RecieveMessageFrom } from "../../globals/redux/actions/message";
 import { Modal, Button, Row, Col, Badge } from "react-bootstrap";
-import { Attention, OK, Sorry } from "../../tools/notification";
+import { Attention, OK, Sorry, Notify } from "../../tools/notification";
 import NotificationCenter from "../../tools/NotificationCenter";
 import GlobalContext from "./../../globals/state/GlobalContext";
 import {
@@ -127,15 +127,27 @@ const GlobalSocketManager = () => {
 						}
 						case "TARGET_OFFLINE": {
 							//... while chatting or game request
+							Sorry(
+								"کاربر مورد نظر در حال حاضر آفلاین می باشد. لطفا بعدا تلاش کنید."
+							);
+							break;
+						}
+						case "YOUR_BUSY": {
+							Sorry(
+								"شما هنوز بازی اخیر خود را به اتمام نرسانده اید. پس از پایان آن دوباره تلاش کنید."
+							);
 							break;
 						}
 						case "TARGET_BUSY": {
 							//... while chatting or game request
+							Notify(
+								"در حال حاضر کاربر مشغول انجام بازی دیگری است و درخواست شما امکان پذیر نیست"
+							);
 							break;
 						}
 						case "FRIENDLY_GAME": {
 							// ... trigger and show responding form
-							const {askerID, askerName} = msg;
+							const { askerID, askerName } = msg;
 							dispatch(RecieveGameInvitation(askerID, askerName));
 							break;
 						}
@@ -143,8 +155,8 @@ const GlobalSocketManager = () => {
 							// ... friend responded to your request
 							// ... if true -> room info has ben sent to you
 							// needed to check room state? done in server
-							dispatch(EndFriendlyInvitation()); 
-							redirectToGamePlay(msg);//msg -> room
+							dispatch(EndFriendlyInvitation());
+							redirectToGamePlay(msg); //msg -> room
 							break;
 						}
 						case "CHAT": {
@@ -246,10 +258,12 @@ const GlobalSocketManager = () => {
 		}
 		if (acceptedInviter) {
 			if (socketGlobal)
-				socketGlobal.send(pack("respond_friendlygame", {
-					answer: true,
-					inviterID: acceptedInviter,
-				}));
+				socketGlobal.send(
+					pack("respond_friendlygame", {
+						answer: true,
+						inviterID: acceptedInviter,
+					})
+				);
 		} else if (friendlyGameTarget) {
 			if (socketGlobal)
 				socketGlobal.send(
