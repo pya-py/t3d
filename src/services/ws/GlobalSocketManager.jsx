@@ -56,7 +56,7 @@ const GlobalSocketManager = () => {
 
 	const { signOut, redirectToGamePlay } = context;
 	const iamSignedIn = me && me.userID;
-
+	const iamBusy = room && room.name;
 	const connect = useCallback(() => {
 		console.log("global websocket connect called -> new socket returned");
 		if (!iamSignedIn) return null; //to make sure just site user trigger this connection
@@ -96,7 +96,8 @@ const GlobalSocketManager = () => {
 								// **********************
 								//time out must be set with rising time out time to prevent server getting fucked up
 								setTimeout(() => {
-									dispatch(TriggerRandomSearch());
+									if(!iamBusy)
+										dispatch(TriggerRandomSearch());
 								}, 5000);
 							}
 							break;
@@ -205,7 +206,7 @@ const GlobalSocketManager = () => {
 				console.log(`global websocket errpr: ${err}`);
 			}
 		});
-	}, [dispatch, signOut, redirectToGamePlay, pack, iamSignedIn]);
+	}, [dispatch, signOut, redirectToGamePlay, pack, iamSignedIn, iamBusy]);
 
 	// EVENT NAME: PlayerUpdateEvent
 	// happens when player sign in status changes => set ups global socket connection and then if signed in=> reads number of online users in page
@@ -233,7 +234,6 @@ const GlobalSocketManager = () => {
 	// EVENT NAME: RandomGameInitiated Event
 	// happens when user clicks on 'Random Game" Tab search button => sends opponent search request to server
 	useEffect(() => {
-		console.log(room);
 		if (room.type) {
 			//is it necessary?
 			//completely making sure we're on right stage
