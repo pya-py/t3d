@@ -3,14 +3,12 @@ import { Devices } from "../services/configs";
 import ProfilePanel from "../profile/panel/ProfilePanel";
 import CollapsedPanel from "../profile/panel/CollapsedPanel";
 import { Col, Row } from "react-bootstrap";
-import GlobalSocketManager from "./../services/ws/GlobalSocketManager";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import AutoSignIn from "../users/AutoSignIn";
 import GlobalContext from "../globals/state/GlobalContext";
 import { LoadMyFriendsChats, ResetMyFriendsChats } from "../globals/redux/actions/friends";
 
 const ProfilePanelLayout = ({ children }) => {
-    const me = useSelector((state) => state.me);
     const context = useContext(GlobalContext);
     const dispatch = useDispatch();
 
@@ -26,7 +24,6 @@ const ProfilePanelLayout = ({ children }) => {
     return (
         <Fragment>
             <AutoSignIn />
-            {me && <GlobalSocketManager />}
             {(context.device === Devices.Desktop) ? (
                 <Row className="w-100 mx-auto">
                     <Col lg={3}>

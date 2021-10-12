@@ -14,7 +14,7 @@ const FriendRecords = (props) => {
 	const me = useSelector((state) => state.me);
 	const room = useSelector((state) => state.room);
 	const dispatch = useDispatch();
-	// if (!me) return null; //because of time delay to load player data, component crashes below
+	if (!me) return null; //because of time delay to load player data, component crashes below
 	//fix the bug in a better way
 	const { records } = props.friend ? props.friend : me;
 	const currentID = props.friend ? props.friend.ID : me.userID; //need to edit?

@@ -5,7 +5,6 @@ import PlayerInfoSideBar from "../sidebars/PlayerInfoSideBar";
 import { useSelector } from "react-redux";
 import { Fragment, useState, useEffect, useContext } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import GlobalSocketManager from "../services/ws/GlobalSocketManager";
 import { Devices, Routes } from "../services/configs";
 import AutoSignIn from "../users/AutoSignIn";
 import GlobalContext from "../globals/state/GlobalContext";
@@ -60,7 +59,7 @@ const MainLayout = (props) => {
 	return (
 		<Fragment>
 			<AutoSignIn />
-			{me && <GlobalSocketManager />}
+			
 
 			{context.device !== Devices.SmartPhone ? (
 				<Row className="w-100 mx-auto">

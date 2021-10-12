@@ -1,7 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { Alert, Col, Row } from "react-bootstrap";
 import "./chat.css";
-import { v1 as uuidv1 } from "uuid";
 import { toHijri } from "../tools/format";
 const Message = ({ msg, previousDay }) => {
 	const { date } = msg; // destructure date from msg then make a new date object
