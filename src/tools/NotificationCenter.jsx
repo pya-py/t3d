@@ -17,7 +17,7 @@ const NotificationCenter = ({ location }) => {
 	const context = useContext(GlobalContext);
 	// check TOKEN EXPIRE time and notify user before he starts a game to re login
 	const { gameInvitation } = tools;
-	const {goTo} = context;
+	const { goTo } = context;
 	useEffect(() => {
 		try {
 			if (message && message.recieved && !message.recieved.pushed) {
@@ -27,7 +27,9 @@ const NotificationCenter = ({ location }) => {
 						//return;
 					}
 
-					NewMsg(message.recieved, () => goTo(Routes.Client.ChatRoom));
+					NewMsg(message.recieved, () =>
+						goTo(Routes.Client.ChatRoom)
+					);
 					//prevent recieved message from getting stuck in notificatioon loop
 					dispatch(MessagePushed());
 				}
@@ -37,7 +39,7 @@ const NotificationCenter = ({ location }) => {
 				Invitation(
 					gameInvitation,
 					() => {
-						dispatch(AcceptInvitation(gameInvitation.ID));
+						dispatch(AcceptInvitation(gameInvitation.ID, gameInvitation.type));
 					},
 					() => {
 						dispatch(RejectGameInvitation());

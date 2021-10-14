@@ -148,8 +148,8 @@ const GlobalSocketManager = () => {
 						}
 						case "FRIENDLY_GAME": {
 							// ... trigger and show responding form
-							const { askerID, askerName } = msg;
-							dispatch(RecieveGameInvitation(askerID, askerName));
+							const { askerID, askerName, gameType } = msg;
+							dispatch(RecieveGameInvitation(askerID, askerName, gameType));
 							break;
 						}
 						case "INVITATION_ACCEPTED": {
@@ -229,7 +229,7 @@ const GlobalSocketManager = () => {
 		friendRequestTarget,
 		friendlyGameTarget,
 		randomSearchTriggered,
-		acceptedInviter,
+		acceptedGame,
 	} = tools;
 	// EVENT NAME: RandomGameInitiated Event
 	// happens when user clicks on 'Random Game" Tab search button => sends opponent search request to server
@@ -256,19 +256,21 @@ const GlobalSocketManager = () => {
 					})
 				);
 		}
-		if (acceptedInviter) {
+		if (acceptedGame) {
 			if (socketGlobal)
 				socketGlobal.send(
 					pack("respond_friendlygame", {
 						answer: true,
-						inviterID: acceptedInviter,
+						inviterID: acceptedGame.inviterID,
+						gameType: acceptedGame.type
 					})
 				);
 		} else if (friendlyGameTarget) {
 			if (socketGlobal)
 				socketGlobal.send(
 					pack("friendly_game", {
-						targetID: friendlyGameTarget,
+						targetID: friendlyGameTarget.targetID,
+						gameType: friendlyGameTarget.type,
 						askerName: fullname,
 					})
 				);
@@ -276,7 +278,7 @@ const GlobalSocketManager = () => {
 	}, [
 		friendRequestTarget,
 		friendlyGameTarget,
-		acceptedInviter,
+		acceptedGame,
 		socketGlobal,
 		pack,
 		fullname,

@@ -2,7 +2,9 @@ import { createContext } from "react";
 
 const GlobalContext = createContext({
     device: 0,
-    signOut: () => {}
+    signOut: () => {},
+    goTo: () => {},
+    redirectToGamePlay: () => {}
 });
 
 export default GlobalContext;

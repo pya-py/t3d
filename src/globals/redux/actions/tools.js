@@ -22,10 +22,10 @@ export const EndFriendRequest = () => {
 	};
 };
 
-export const InviteToFriendlyGame = (targetID) => {
+export const InviteToFriendlyGame = (targetID, gameType) => {
 	return async (dispatch, getState) => {
 		const previous = { ...getState() };
-		previous.friendlyGameTarget = targetID;
+		previous.friendlyGameTarget = { targetID, type: gameType };
 		await dispatch({ type: "UPDATE_TOOLS", payload: previous });
 	};
 };
@@ -38,15 +38,15 @@ export const EndFriendlyInvitation = () => {
 	};
 };
 
-export const RecieveGameInvitation = (ID, name) => {
+export const RecieveGameInvitation = (ID, name, gameType) => {
 	return async (dispatch, getState) => {
 		const previous = { ...getState() };
-		previous.gameInvitation = { ID, name };
+		previous.gameInvitation = { ID, name, type: gameType };
 		await dispatch({ type: "UPDATE_TOOLS", payload: previous });
 	};
 };
 
-export const RejectGameInvitation = (ID, name) => {
+export const RejectGameInvitation = () => {
 	return async (dispatch, getState) => {
 		const previous = { ...getState() };
 		previous.gameInvitation = null;
@@ -54,10 +54,10 @@ export const RejectGameInvitation = (ID, name) => {
 	};
 };
 
-export const AcceptInvitation = (invitorID) => {
+export const AcceptInvitation = (inviterID, gameType) => {
 	return async (dispatch, getState) => {
 		const previous = { ...getState() };
-		previous.acceptedInviter = invitorID;
+		previous.acceptedGame = {inviterID, type: gameType};
 		previous.gameInvitation = null;
 		await dispatch({ type: "UPDATE_TOOLS", payload: previous });
 	};

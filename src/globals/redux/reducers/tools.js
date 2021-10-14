@@ -3,7 +3,8 @@ export const toolsReducer = (
 		randomSearchTriggered: false,
 		friendRequestTarget: null,
 		friendlyGameTarget: null,
-		gameInvitation: null
+		gameInvitation: null,
+		acceptedGame: null,
 	},
 	action
 ) => {

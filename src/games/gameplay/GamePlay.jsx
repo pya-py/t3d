@@ -71,6 +71,7 @@ class GamePlay extends Component {
 	enableTimerForMyMove = (timeout = GameSetting.T3D.TurnTimeOut) => {
 		this.setState({ timeRemaining: timeout });
 		//is it needed to declare timerID as state?
+		clearInterval(this.state.timerID);
 		const timerID = setInterval(() => {
 			const { timeRemaining, timerID } = this.state;
 			if (timeRemaining <= 0) {

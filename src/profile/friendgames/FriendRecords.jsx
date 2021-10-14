@@ -5,6 +5,7 @@ import noAvatar from "./no-avatar.png"; // definitely must be changed bro!
 import Record from "./Record";
 import Avatar from "react-avatar";
 import { Sorry } from "./../../tools/notification";
+import { useState } from 'react';
 import {
 	EndFriendlyInvitation,
 	InviteToFriendlyGame,
@@ -13,6 +14,7 @@ import {
 const FriendRecords = (props) => {
 	const me = useSelector((state) => state.me);
 	const room = useSelector((state) => state.room);
+	const [gameType, setGameType] = useState(4);
 	const dispatch = useDispatch();
 	if (!me) return null; //because of time delay to load player data, component crashes below
 	//fix the bug in a better way
@@ -23,7 +25,7 @@ const FriendRecords = (props) => {
 			//if you want to enable players play multiple games then remove this
 			// if player isnt still in a game
 			//check room info?
-			dispatch(InviteToFriendlyGame(currentID));
+			dispatch(InviteToFriendlyGame(currentID,gameType));
 			setTimeout(() => {
 				//Notify('دوست مورد نظر درخواست شما را نپذیرفت')
 				dispatch(EndFriendlyInvitation());
@@ -102,8 +104,8 @@ const FriendRecords = (props) => {
 									<InputGroup.Radio
 										value="3"
 										name="tableDimension"
-										// checked={gameType === 3}
-										// onChange={() => setGameType(3)}
+										checked={gameType === 3}
+										onChange={() => setGameType(3)}
 									/>
 									<InputGroup.Text>3 * 3 * 3</InputGroup.Text>
 								</InputGroup.Prepend>
@@ -111,8 +113,8 @@ const FriendRecords = (props) => {
 									<InputGroup.Radio
 										value="4"
 										name="tableDimension"
-										// checked={gameType === 4}
-										// onChange={() => setGameType(4)}
+										checked={gameType === 4}
+										onChange={() => setGameType(4)}
 									/>
 									<InputGroup.Text>4 * 4 * 4</InputGroup.Text>
 								</InputGroup.Prepend>
@@ -120,8 +122,8 @@ const FriendRecords = (props) => {
 									<InputGroup.Radio
 										value="5"
 										name="tableDimension"
-										// checked={gameType === 5}
-										// onChange={() => setGameType(5)}
+										checked={gameType === 5}
+										onChange={() => setGameType(5)}
 									/>
 									<InputGroup.Text>5 * 5 * 5</InputGroup.Text>
 								</InputGroup.Prepend>

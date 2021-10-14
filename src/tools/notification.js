@@ -86,11 +86,11 @@ export const NewMsg = ({ name, text }, onClick) => {
 export const Invitation = (by, accept, reject) => {
 	toast(
 		<p className="text-right text-primary">
-			{`کاربر ${by.name} درخواست بازی با شما را دارد. برای پذیرفتن بازی اینجا کلیک کنید.`}
+			{`درخواست بازی ${by.type}*${by.type}*${by.type} از ${by.name}\n برای پذیرفتن دعوت کلیک کنید`}
 		</p>,
 		{
 			position: "top-left",
-			onClick: () => accept(by.ID),
+			onClick: () => accept(by.ID, by.type),
 			onClose: () => reject(),
 			icon: (
 				<i
