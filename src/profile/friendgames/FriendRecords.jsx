@@ -1,9 +1,7 @@
-import { Button, Card, Col, ListGroup, Row, InputGroup } from "react-bootstrap";
+import { Button, Card, Col, ListGroup, Row, InputGroup, Image } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import "../profile.css";
-import noAvatar from "./no-avatar.png"; // definitely must be changed bro!
 import Record from "./Record";
-import Avatar from "react-avatar";
 import { Sorry } from "./../../tools/notification";
 import { useState } from 'react';
 import {
@@ -18,8 +16,8 @@ const FriendRecords = (props) => {
 	const dispatch = useDispatch();
 	if (!me) return null; //because of time delay to load player data, component crashes below
 	//fix the bug in a better way
-	const { records } = props.friend ? props.friend : me;
-	const currentID = props.friend ? props.friend.ID : me.userID; //need to edit?
+	const person = props.friend ? props.friend : me;
+	const {records, avatar, userID: currentID} = person;
 	const onInviteToGameClick = () => {
 		if (!room.type && !room.type && currentID !== me.userID) {
 			//if you want to enable players play multiple games then remove this
@@ -44,15 +42,7 @@ const FriendRecords = (props) => {
 						md={12}
 						lg={3}
 						className="text-center mx-auuto">
-						<Avatar
-							style={{
-								margin: "auto",
-								textAlign: "center",
-							}}
-							size="128"
-							round={true}
-							src={noAvatar}
-						/>
+						<Image className="friends-section-avatar" src={avatar} roundedCircle />
 					</Col>
 					<Col sm={12} md={12} lg={9}>
 						<ListGroup className="list-group list-group-flush">

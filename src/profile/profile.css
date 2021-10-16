@@ -39,8 +39,8 @@
     background-color: white;
     color: black;
     font-size: 16px;
-    text-align: left;
-    margin-top: 2%;
+    text-align: right;
+    margin-top: 1%;
     /* width: 100%; */
 }
 
@@ -50,12 +50,14 @@
     width: 100%;
 }
 
-.my-friend-avatar {
-    
-    border-radius: 50%;
+.friends-section-avatar {
+    width: 128px;
+    height: 128px;
+    /* border-radius: 50%; */
     float: center;
     margin: auto;
-    margin-top: 2%;
+    margin-top: 1%;
+    margin-bottom: 1%;
 }
 
 

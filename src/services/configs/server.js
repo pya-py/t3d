@@ -9,15 +9,16 @@ module.exports = {
     Users: "users",
     Private: "private",
     Credentials: "credentials",
+    MyAvatar: "avatar",
     PasswordChange: "password",
-    Friends: 'friends',
+    Friends: "friends",
     Public: "public",
     Administrators: "administrators",
     Games: "games",
     Mine: "mine",
     Chats: "chats",
     Interactions: "interact",
-    SingleChat: 'single',
+    SingleChat: "single",
     Notices: "notices",
     NoticeManagement: "manage"
 };

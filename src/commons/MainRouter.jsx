@@ -5,7 +5,7 @@ import ProfilePanelLayout from './../layouts/ProfilePanelLayout';
 import MyGamesAndFriends from './../profile/friendgames/MyGamesAndFriends';
 import NoticeManager from './../profile/NoticeManager';
 import ChatRoom from './../chat/ChatRoom';
-import AccountCredentials from './../profile/AcountCredentials';
+import AcountManager from './../profile/edit/AcountManager';
 import MainLayout from '../layouts/MainLayout';
 import GameDeck from './../games/GameDeck';
 import GameGuide from './../informations/GameGuide';
@@ -31,7 +31,7 @@ const MainRouter = () => {
 						</Route>
 
 						<Route exact path={Routes.Client.Profile}>
-							<AccountCredentials />
+							<AcountManager />
 						</Route>
 					</Switch>
 				</ProfilePanelLayout>

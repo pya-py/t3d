@@ -1,5 +1,4 @@
-import noAvatar from "./no-avatar.png"; // definitely must be changed bro!
-import { Card, Col, Alert, ListGroup, Button } from "react-bootstrap";
+import { Card, Col, Alert, ListGroup, Button, Image } from "react-bootstrap";
 import OnlineStatistics from "./OnlineStatistics";
 import { SendFriendRequestTo } from "../globals/redux/actions/tools";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,7 +7,6 @@ import userServices from "./../services/http/userServices";
 import Configs from "../services/configs";
 import GameChatBox from "../chat/GameChatBox";
 import Record from "../profile/friendgames/Record";
-import Avatar from "react-avatar";
 
 const PlayerInfoSideBar = (props) => {
 	const me = useSelector((state) => state.me);
@@ -17,29 +15,22 @@ const PlayerInfoSideBar = (props) => {
 	const dispatch = useDispatch();
 	const [personIsFriend, setPersonIsFriend] = useState(false);
 
-	const person = props.person ? props.person : me;
-	const onFriendRequestClick = (event) => {
-		event.target.innerHTML = "ارسال شد...";
-		event.target.disabled = true;
-		dispatch(SendFriendRequestTo(person.userID));
-	};
+	const { fullname, userID, records, avatar } = props.person ? props.person : me;
 	const [piece, setPiece] = useState(null); //piece === mohreh
-
+	const thisIsMe = me && userID === me.userID;
 	useEffect(() => {
-		console.log(scoreboard);
-		setPiece(
-			me && person.userID !== me.userID ? scoreboard.opp : scoreboard.me
-		);
-	}, [person, me, scoreboard]);
+		setPiece(!thisIsMe ? scoreboard.opp : scoreboard.me);
+	}, [thisIsMe, scoreboard]);
+	
 	useEffect(() => {
-		if (me && person.userID !== me.userID) {
+		if (!thisIsMe) {
 			(async () => {
 				try {
 					const { status, data } = await userServices.isMyFriend(
-						person.userID
-					);
-					if (status === Configs.Status.Successful) {
-						setPersonIsFriend(data.isFriend);
+						userID
+						);
+						if (status === Configs.Status.Successful) {
+							setPersonIsFriend(data.isFriend);
 					}
 				} catch (err) {
 					// handle error.
@@ -47,27 +38,27 @@ const PlayerInfoSideBar = (props) => {
 				}
 			})();
 		}
-	}, [me, person]);
-	if (!person) return null;
-	const { records } = person;
+	}, [userID, thisIsMe]);
+	
+	if (!userID) return null;
+	
+	const onFriendRequestClick = (event) => {
+		event.target.innerHTML = "ارسال شد...";
+		event.target.disabled = true;
+		dispatch(SendFriendRequestTo(userID));
+	};
+
 	return (
 		<Card border="info" className="player-info-sidebar">
 			<Card.Header className="text-center text-info form-inline">
 				<Col>
-					<Card.Text className="text-left">
-						{person.fullname}
-					</Card.Text>
+					<Card.Text className="text-left">{fullname}</Card.Text>
 				</Col>
 				<Col>
-					<Avatar
-						style={{
-							
-							margin: "auto",
-							textAlign: "center",
-						}}
-						size="60"
-						round={true}
-						src={noAvatar}
+					<Image
+						className="player-avatar"
+						src={avatar}
+						roundedCircle
 					/>
 				</Col>
 			</Card.Header>
@@ -98,10 +89,10 @@ const PlayerInfoSideBar = (props) => {
 				</ListGroup>
 			</Card.Body>
 			<Card.Footer>
-				{me === person ? (
+				{thisIsMe ? (
 					<OnlineStatistics />
 				) : personIsFriend ? (
-					<GameChatBox friendID={person.userID} />
+					<GameChatBox friendID={userID} />
 				) : (
 					<Button
 						variant={"outline-info"}

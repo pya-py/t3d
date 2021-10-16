@@ -21,7 +21,6 @@ const GameDeck = () => {
                         <Tabs
                             defaultActiveKey="randomGame"
                             transition={false}
-                            id="noanim-tab-example"
                             variant="pills"
                             // transition={Fade}
                             className="mb-3">

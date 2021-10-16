@@ -40,9 +40,9 @@
 }
 
 .player-avatar {
-    width: 35%;
-    height: 35%;
-    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    /* border-radius: 50%; */
     float: center;
     margin: auto;
     margin-top:1%
