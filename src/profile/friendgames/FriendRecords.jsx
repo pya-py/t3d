@@ -1,29 +1,53 @@
-import { Button, Card, Col, ListGroup, Row, InputGroup, Image } from "react-bootstrap";
+import {
+	Button,
+	Card,
+	Col,
+	ListGroup,
+	Row,
+	InputGroup,
+	Image,
+} from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import "../profile.css";
 import Record from "./Record";
 import { Sorry } from "./../../tools/notification";
-import { useState } from 'react';
+import { useState, useEffect } from "react";
+import userServices from "./../../services/http/userServices";
 import {
 	EndFriendlyInvitation,
 	InviteToFriendlyGame,
 } from "../../globals/redux/actions/tools";
-
-const FriendRecords = (props) => {
-	const me = useSelector((state) => state.me);
+import { Status } from "../../services/configs";
+const FriendRecords = ({ person, thisIsMe }) => {
 	const room = useSelector((state) => state.room);
 	const [gameType, setGameType] = useState(4);
+	const [avatar, setAvatar] = useState(null);//s
 	const dispatch = useDispatch();
-	if (!me) return null; //because of time delay to load player data, component crashes below
-	//fix the bug in a better way
-	const person = props.friend ? props.friend : me;
-	const {records, avatar, userID: currentID} = person;
+
+	useEffect(() => {
+		if (person) {
+			(async () => {
+				try {
+					const { data, status } = await userServices.getAvatar(
+						person.userID
+					);
+					if (status === Status.Successful) setAvatar(data.avatar);
+				} catch (err) {
+					Sorry(
+						"مشکلی در بارگذاری آواتار این شخص پیش آمد ... لطفا اتصال اینترنت خود را بررسی کنید."
+					);
+					// use- no-avatar.png here too?
+					// in case server return wrong?
+				}
+			})();
+		}
+	}, [person]);
 	const onInviteToGameClick = () => {
-		if (!room.type && !room.type && currentID !== me.userID) {
+		if (!room.type && !room.type && !thisIsMe) {
 			//if you want to enable players play multiple games then remove this
 			// if player isnt still in a game
 			//check room info?
-			dispatch(InviteToFriendlyGame(currentID,gameType));
+			dispatch(InviteToFriendlyGame(person.userID, gameType));
 			setTimeout(() => {
 				//Notify('دوست مورد نظر درخواست شما را نپذیرفت')
 				dispatch(EndFriendlyInvitation());
@@ -32,6 +56,8 @@ const FriendRecords = (props) => {
 			Sorry("برای شروع بازی جدید، باید بازی قبلی شما به اتمام برسد");
 		}
 	};
+	const { records } = person;
+
 	return (
 		<Card border="success" bg="transparent" className="friend-records">
 			<Card.Body>
@@ -42,7 +68,12 @@ const FriendRecords = (props) => {
 						md={12}
 						lg={3}
 						className="text-center mx-auuto">
-						<Image className="friends-section-avatar" src={avatar} roundedCircle />
+						<Image
+							className="friends-section-avatar"
+							src={avatar}
+							alt="خطا"
+							roundedCircle
+						/>
 					</Col>
 					<Col sm={12} md={12} lg={9}>
 						<ListGroup className="list-group list-group-flush">
@@ -74,7 +105,7 @@ const FriendRecords = (props) => {
 					</Col>
 				</Row>
 			</Card.Body>
-			{props.friend && (
+			{!thisIsMe && person && (
 				<Card.Footer>
 					<Row>
 						<Col sm={4} xs={12}>
@@ -92,27 +123,25 @@ const FriendRecords = (props) => {
 							<InputGroup>
 								<InputGroup.Prepend>
 									<InputGroup.Radio
-										value="3"
-										name="tableDimension"
-										checked={gameType === 3}
+										value={3}
+										name="dimension"
 										onChange={() => setGameType(3)}
 									/>
 									<InputGroup.Text>3 * 3 * 3</InputGroup.Text>
 								</InputGroup.Prepend>
 								<InputGroup.Prepend>
 									<InputGroup.Radio
-										value="4"
-										name="tableDimension"
-										checked={gameType === 4}
+										value={4}
+										name="dimension"
 										onChange={() => setGameType(4)}
+										defaultChecked
 									/>
 									<InputGroup.Text>4 * 4 * 4</InputGroup.Text>
 								</InputGroup.Prepend>
 								<InputGroup.Prepend>
 									<InputGroup.Radio
-										value="5"
-										name="tableDimension"
-										checked={gameType === 5}
+										value={5}
+										name="dimension"
 										onChange={() => setGameType(5)}
 									/>
 									<InputGroup.Text>5 * 5 * 5</InputGroup.Text>

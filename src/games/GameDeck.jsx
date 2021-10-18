@@ -31,9 +31,6 @@ const GameDeck = () => {
                             <Tab eventKey="competitions" title="مسابقات">
                                 <CompetitionsMain />
                             </Tab>
-                            <Tab eventKey="friendlyGame" title="بازی با دوستان">
-                                <SingleGame friendlyGame={true} />
-                            </Tab>
                         </Tabs>
                     </Card.Body>
                 </Card>

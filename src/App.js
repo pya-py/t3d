@@ -14,7 +14,6 @@ const App = () => {
 			<GlobalStates>
 				{me && <GlobalSocketManager />}
 				<NavigationBar />
-
 				<MainRouter />
 			</GlobalStates>
 		</BrowserRouter>

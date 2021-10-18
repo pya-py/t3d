@@ -29,7 +29,7 @@ const GameChatBox = ({ friendID }) => {
 				</Alert>
 			</Row>
 			<Row className="w-100 p-0 m-0">
-				<Col xs={1} className="m-0 p-0 text-center">
+				<Col lg={2} md={3} className="m-0 p-0 text-center">
 					<Button
 						type="submit"
 						className="w-100 mx-auto"
@@ -37,7 +37,7 @@ const GameChatBox = ({ friendID }) => {
 						<i className="fa fa-paper-plane" aria-hidden="true"></i>
 					</Button>
 				</Col>
-				<Col xs={11} className="m-0 p-0 w-100">
+				<Col lg={10} md={9} className="m-0 p-0 w-100">
 					<Form.Control
 						className="p-0 w-100 bg-transparent chat-room-message-box
                                     mx-auto text-right"

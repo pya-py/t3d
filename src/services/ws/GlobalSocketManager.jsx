@@ -13,7 +13,9 @@ import {
 	EndFriendlyInvitation,
 	EndFriendRequest,
 	RecieveGameInvitation,
-	TriggerRandomSearch,
+	ReloadRecords,
+	ReapeatRandomSearch,
+	CloseRandomSearch,
 } from "./../../globals/redux/actions/tools";
 import { EnterRoom } from "../../globals/redux/actions/game";
 const GlobalSocketManager = () => {
@@ -91,13 +93,14 @@ const GlobalSocketManager = () => {
 							if (msg) {
 								dispatch(EnterRoom(msg));
 								socket.send(pack("online"));
+								dispatch(CloseRandomSearch());
 							} else {
 								//search again 5s later
 								// **********************
 								//time out must be set with rising time out time to prevent server getting fucked up
 								setTimeout(() => {
-									if(!iamBusy)
-										dispatch(TriggerRandomSearch());
+									if (!iamBusy)
+										dispatch(ReapeatRandomSearch());
 								}, 5000);
 							}
 							break;
@@ -117,9 +120,13 @@ const GlobalSocketManager = () => {
 						case "FRIENDSHIP_RESPONSE": {
 							const { answer, targetName } = msg;
 							//if(answer) dispatch(TriggerRecordUpdate());
-							if (answer)
+							if (answer) {
 								OK(`${targetName} درخواست دوستی شما را پذیرفت`);
-							else
+								setTimeout(() => {
+									//reload for changing friendship status in the game => delay is set for restin assure that database is updated
+									dispatch(ReloadRecords());
+								}, 2000);
+							} else
 								Attention(
 									`${targetName} درخواست دوستی شما را رد کرد`
 								);
@@ -131,12 +138,14 @@ const GlobalSocketManager = () => {
 							Sorry(
 								"کاربر مورد نظر در حال حاضر آفلاین می باشد. لطفا بعدا تلاش کنید."
 							);
+							dispatch(EndFriendlyInvitation());
 							break;
 						}
 						case "YOUR_BUSY": {
 							Sorry(
 								"شما هنوز بازی اخیر خود را به اتمام نرسانده اید. پس از پایان آن دوباره تلاش کنید."
 							);
+							dispatch(EndFriendlyInvitation());
 							break;
 						}
 						case "TARGET_BUSY": {
@@ -144,12 +153,19 @@ const GlobalSocketManager = () => {
 							Notify(
 								"در حال حاضر کاربر مشغول انجام بازی دیگری است و درخواست شما امکان پذیر نیست"
 							);
+							dispatch(EndFriendlyInvitation());
 							break;
 						}
 						case "FRIENDLY_GAME": {
 							// ... trigger and show responding form
 							const { askerID, askerName, gameType } = msg;
-							dispatch(RecieveGameInvitation(askerID, askerName, gameType));
+							dispatch(
+								RecieveGameInvitation(
+									askerID,
+									askerName,
+									gameType
+								)
+							);
 							break;
 						}
 						case "INVITATION_ACCEPTED": {
@@ -228,22 +244,24 @@ const GlobalSocketManager = () => {
 	const {
 		friendRequestTarget,
 		friendlyGameTarget,
-		randomSearchTriggered,
+		randomSearchRepeats,
 		acceptedGame,
 	} = tools;
 	// EVENT NAME: RandomGameInitiated Event
 	// happens when user clicks on 'Random Game" Tab search button => sends opponent search request to server
 	useEffect(() => {
-		if (room.type) {
-			//is it necessary?
-			//completely making sure we're on right stage
-			if (!room.name && iamSignedIn && socketGlobal)
-				socketGlobal.send(pack("find", room.type));
-		} else if (!room.name) {
-			//room --> {null,null} --> means room has been reset hand u need to remove
-			if (socketGlobal) socketGlobal.send(pack("close_game"));
+		if (randomSearchRepeats) {
+			if (room.type) {
+				//is it necessary?
+				//completely making sure we're on right stage
+				if (!room.name && iamSignedIn && socketGlobal)
+					socketGlobal.send(pack("find", room.type));
+			} else if (!room.name) {
+				//room --> {null,null} --> means room has been reset hand u need to remove
+				if (socketGlobal) socketGlobal.send(pack("close_game"));
+			}
 		}
-	}, [iamSignedIn, room, randomSearchTriggered, socketGlobal, pack]);
+	}, [iamSignedIn, room, randomSearchRepeats, socketGlobal, pack]);
 
 	useEffect(() => {
 		if (friendRequestTarget) {
@@ -262,7 +280,7 @@ const GlobalSocketManager = () => {
 					pack("respond_friendlygame", {
 						answer: true,
 						inviterID: acceptedGame.inviterID,
-						gameType: acceptedGame.type
+						gameType: acceptedGame.type,
 					})
 				);
 		} else if (friendlyGameTarget) {
@@ -299,6 +317,12 @@ const GlobalSocketManager = () => {
 		// if(answer) dispatch(TriggerRecordUpdate());
 		setShowFriendshipModal(false);
 		setIncommingFriendRequest(null);
+		if (answer)
+			// if request accepted => reload friendship status after some seconds, delay is set to make sure friends are linked in database
+			setTimeout(() => {
+				dispatch(ReloadRecords());
+			}, 5000);
+
 		// dispatch(SendFriendRequestTo(null)); //reset friend request targetID to prevent any future problm
 	};
 

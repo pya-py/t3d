@@ -14,7 +14,6 @@ class ScoresTable extends Component {
     };
 
     componentDidMount() {
-        console.log('CHecking prop: ', this.props.Device);
         // get all game results , live or final, handling promises
         // client and server side for this Module seriously need to be edited
         (async () => {
@@ -84,7 +83,7 @@ class ScoresTable extends Component {
                             onClick={this.btnShowFinalScores}>
                             نتایج نهایی
                             <i
-                                className="fa fa-play-circle px-3"
+                                className="fa fa-check-circle-o px-3"
                                 aria-hidden="true"></i>
                         </Button>
                     </Col>

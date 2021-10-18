@@ -9,6 +9,7 @@ import FriendRecords from "./FriendRecords";
 import { useSelector } from "react-redux";
 
 const MyGamesAndFriends = () => {
+	const me = useSelector((state) => state.me);
 	const [loading, setLoading] = useState(false);
 	const [myGames, setMyGames] = useState([]);
 	const [filterID, setFilterID] = useState("me");
@@ -33,7 +34,7 @@ const MyGamesAndFriends = () => {
 	useEffect(() => {
 		setSelectedFriendIndex(
 			filterID !== "me"
-				? myFriends.findIndex((friend) => friend.ID === filterID)
+				? myFriends.findIndex((friend) => friend.userID === filterID)
 				: -1
 		);
 		// if filterID === "me" || frined id wia .findIndex not found ---> returns -1
@@ -70,7 +71,7 @@ const MyGamesAndFriends = () => {
 								</Nav.Item>
 								{myFriends.map((friend) => (
 									<Nav.Item>
-										<Nav.Link eventKey={friend.ID}>
+										<Nav.Link eventKey={friend.userID}>
 											<Row className="m-0 w-100">
 												<Col>{friend.name}</Col>
 												<Col xs={1}>
@@ -91,28 +92,30 @@ const MyGamesAndFriends = () => {
 						<Col lg={9} md={8} sm={12}>
 							<Tab.Content>
 								<Tab.Pane eventKey="me">
-									<FriendRecords friend={null} />
+									{me && <FriendRecords person={me} thisIsMe={true}/>}
 									<AllScores scores={myGames} />
 								</Tab.Pane>
 								{myFriends.map((friend) => (
-									<Tab.Pane
-										
-										eventKey={friend.ID}>
+									<Tab.Pane eventKey={friend.userID}>
 										<FriendRecords
-											friend={
+											person={
 												selectedFriendIndex !== -1
 													? myFriends[
 															selectedFriendIndex
 													  ]
-													: null
+													: me
+											}
+											thisIsMe={
+												me.userID ===
+												selectedFriendIndex
 											}
 										/>
-										<AllScores 
+										<AllScores
 											scores={myGames.filter(
 												(game) =>
-													friend.ID ===
+													friend.userID ===
 														game.players[0].id ||
-													friend.ID ===
+													friend.userID ===
 														game.players[1].id
 											)}
 										/>

@@ -15,9 +15,13 @@ const userServices = {
 			JSON.stringify(user)
 		),
 	getPlayer: (userID) =>
-		http.get(`${Server.Root}/${Server.Users}/${Server.Public}/${userID}`),
+		http.get(`${Server.Root}/${Server.Users}/${Server.Records}/${userID}`),
+	getAvatar: (userID) =>
+		http.get(
+			`${Server.Root}/${Server.Users}/${Server.MyAvatar}/${userID}`
+		),
 	getAllPlayers: () =>
-		http.get(`${Server.Root}/${Server.Users}/${Server.Public}`),
+		http.get(`${Server.Root}/${Server.Users}/${Server.Records}`),
 	getMe: () => http.get(`${Server.Root}/${Server.Users}/${Server.Private}`),
 	getMyCredentials: () =>
 		http.get(
@@ -53,11 +57,7 @@ const userServices = {
 	isMyFriend: (targetID) =>
 		http.get(
 			`${Server.Root}/${Server.Users}/${Server.Private}/${Server.Credentials}/${Server.Friends}/${targetID}`
-		),
-	isAdministrator: (userID) =>
-		http.get(
-			`${Server.Root}/${Server.Users}/${Server.Administrators}/${userID}`
-		),
+		)
 };
 
 export default userServices;

@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import { Routes } from '../services/configs';
 import ProfilePanelLayout from './../layouts/ProfilePanelLayout';
 import MyGamesAndFriends from './../profile/friendgames/MyGamesAndFriends';
-import NoticeManager from './../profile/NoticeManager';
+import NoticeManager from './../profile/admin/NoticeManager';
 import ChatRoom from './../chat/ChatRoom';
 import AcountManager from './../profile/edit/AcountManager';
 import MainLayout from '../layouts/MainLayout';

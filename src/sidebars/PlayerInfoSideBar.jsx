@@ -11,26 +11,29 @@ import Record from "../profile/friendgames/Record";
 const PlayerInfoSideBar = (props) => {
 	const me = useSelector((state) => state.me);
 	const scoreboard = useSelector((state) => state.scoreboard);
-
+	const tools = useSelector((state) => state.tools);
 	const dispatch = useDispatch();
 	const [personIsFriend, setPersonIsFriend] = useState(false);
 
-	const { fullname, userID, records, avatar } = props.person ? props.person : me;
+	const { fullname, userID, records, avatar } = props.person
+		? props.person
+		: me;
 	const [piece, setPiece] = useState(null); //piece === mohreh
 	const thisIsMe = me && userID === me.userID;
 	useEffect(() => {
 		setPiece(!thisIsMe ? scoreboard.opp : scoreboard.me);
 	}, [thisIsMe, scoreboard]);
-	
+
+	const { recordReloadTrigger } = tools;
 	useEffect(() => {
 		if (!thisIsMe) {
 			(async () => {
 				try {
 					const { status, data } = await userServices.isMyFriend(
 						userID
-						);
-						if (status === Configs.Status.Successful) {
-							setPersonIsFriend(data.isFriend);
+					);
+					if (status === Configs.Status.Successful) {
+						setPersonIsFriend(data.isFriend);
 					}
 				} catch (err) {
 					// handle error.
@@ -38,10 +41,8 @@ const PlayerInfoSideBar = (props) => {
 				}
 			})();
 		}
-	}, [userID, thisIsMe]);
-	
-	if (!userID) return null;
-	
+	}, [userID, thisIsMe, recordReloadTrigger]);
+
 	const onFriendRequestClick = (event) => {
 		event.target.innerHTML = "ارسال شد...";
 		event.target.disabled = true;

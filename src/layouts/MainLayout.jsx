@@ -18,15 +18,12 @@ const MainLayout = (props) => {
 
 	const [leftSideBar, setLeftSideBar] = useState(null);
 	const [rightSideBar, setRightSideBar] = useState(null);
-	useEffect(() => {
-		setLeftSideBar(<NoticeSideBar />);
-	}, []);
 
 	//teste
 	//determine sidebar
 	const {device} = context;
 	useEffect(() => {
-		console.log("sidebar manager called");
+		setLeftSideBar(<NoticeSideBar />);
 		const setPrimaryRightSideBar = () => {
 			if (device !== Devices.Tablet)
 				setRightSideBar(
@@ -59,8 +56,6 @@ const MainLayout = (props) => {
 	return (
 		<Fragment>
 			<AutoSignIn />
-			
-
 			{context.device !== Devices.SmartPhone ? (
 				<Row className="w-100 mx-auto">
 					{rightSideBar && <Col md={3}>{rightSideBar}</Col>}

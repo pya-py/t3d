@@ -10,7 +10,7 @@ const NavigationBar = () => {
 	const context = useContext(GlobalContext);
 
 	return (
-		<Navbar bg="light" className="nav-pills text-right">
+		<Navbar style={{borderBottom: '1px solid grey'}}  bg="light" className="nav-pills text-right">
 			<Container className="text-right">
 				<Nav className="me-auto">
 					<NavLink

@@ -1,10 +1,11 @@
 export const toolsReducer = (
 	state = {
-		randomSearchTriggered: false,
+		randomSearchRepeats: 0,
 		friendRequestTarget: null,
 		friendlyGameTarget: null,
 		gameInvitation: null,
 		acceptedGame: null,
+		recordReloadTrigger: false,
 	},
 	action
 ) => {

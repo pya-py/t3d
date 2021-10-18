@@ -13,18 +13,32 @@ export const LoadMyFriendsChats = () => {
 				const { interactions } = data;
 				if (!(interactions instanceof Array))
 					throw new Error("server response is not an array!");
-				interactions.forEach((interact) => {
-					const { friend, messages, ownerOf } = interact;
-					myFriends.push(friend);
-					myChats.push({
-						with: friend.ID,
-						messages: messages.map((msg) =>
-							ownerOf === msg.owner
-								? { me: msg.text, friend: null, date: msg.date }
-								: { me: null, friend: msg.text, date: msg.date }
-						),
+				interactions
+					.sort(
+						(i1, i2) =>
+							new Date(i2.messages[i2.messages.length - 1].date).getTime() -
+							new Date(i1.messages[i1.messages.length - 1].date).getTime()
+					)
+					.forEach((interact) => {
+						const { friend, messages, ownerOf } = interact;
+						myFriends.push(friend);
+						myChats.push({
+							with: friend.userID,
+							messages: messages.map((msg) =>
+								ownerOf === msg.owner
+									? {
+											me: msg.text,
+											friend: null,
+											date: msg.date,
+									  }
+									: {
+											me: null,
+											friend: msg.text,
+											date: msg.date,
+									  }
+							),
+						});
 					});
-				});
 				await dispatch({
 					type: "LOAD_FRIENDS",
 					payload: myFriends,
@@ -48,8 +62,8 @@ export const LoadMyFriendsChats = () => {
 };
 
 export const ResetMyFriendsChats = () => {
-	return async(dispatch) => {
+	return async (dispatch) => {
 		await dispatch({ type: "RESET_FRIENDS" });
 		await dispatch({ type: "RESET_CHATS" });
-	}
-}
+	};
+};

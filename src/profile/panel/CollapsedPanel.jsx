@@ -1,30 +1,30 @@
 import { NavLink } from "react-router-dom";
-import { Button, Row } from "react-bootstrap";
+import { Button, Navbar} from "react-bootstrap";
 import "../profile.css";
 import { useSelector } from "react-redux";
 import { Fragment, useContext } from "react";
 import Configs from "../../services/configs";
 import GlobalContext from "../../globals/state/GlobalContext";
 
-const CollapsedPanel = (props) => {
+const CollapsedPanel = () => {
     const me = useSelector((state) => state.me);
     const context = useContext(GlobalContext);
     return (
-        <Row bg="light" className="profile-panel-sidebar-collapsed w-100 mx-auto pl-5">
+        <Navbar bg="transparent"  className="justify-content-center pt-2 p-0 nav-pills text-right w-100">
             <NavLink activeClassName="btn btn-primary"
                 exact
                 to={Configs.Routes.Client.Profile}
-                className="nav-link"
+                className="nav-link mx-1"
                 aria-current="page">
                 <i className="fa fa-user-o" aria-hidden="true"></i>
             </NavLink>
             <NavLink activeClassName="btn btn-primary"
-                className="nav-link"
+                className="nav-link mx-1"
                 to={Configs.Routes.Client.MyGamesAndFriends}>
                 <i className="fa fa-users" aria-hidden="true"></i>
             </NavLink>
             <NavLink activeClassName="btn btn-primary"
-                className="nav-link"
+                className="nav-link mx-1"
                 to={Configs.Routes.Client.ChatRoom}>
                 <i className="fa fa-weixin" aria-hidden="true"></i>
             </NavLink>
@@ -33,12 +33,12 @@ const CollapsedPanel = (props) => {
                 <Fragment>
                     {/* admin tools */}
                     <NavLink activeClassName="btn btn-primary"
-                        className="nav-link border-top"
+                        className="nav-link mx-1 border-top"
                         to={Configs.Routes.Client.Notices}>
                         <i className="fa fa-newspaper-o" aria-hidden="true"></i>
                     </NavLink>
                     <NavLink activeClassName="btn btn-primary"
-                        className="nav-link"
+                        className="nav-link mx-1"
                         to="/controlPanel/admin/whatever">
                         <svg className="bi me-2" width="16" height="16"></svg>
                     </NavLink>
@@ -47,10 +47,11 @@ const CollapsedPanel = (props) => {
 
             <Button
                 variant="outline-danger"
+                className="mx-3"
                 onClick={context.signOut}>
                 <i className="fa fa-sign-out" aria-hidden="true"></i>
             </Button>
-        </Row>
+        </Navbar>
     );
 };
 

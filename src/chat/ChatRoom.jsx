@@ -34,8 +34,8 @@ const ChatRoom = () => {
 								{myfriends.map((friend) => (
 									<Nav.Item>
 										<Nav.Link
-											// key={friend.ID}
-											eventKey={friend.ID}>
+											// key={friend.userID}
+											eventKey={friend.userID}>
 											{friend.name}
 										</Nav.Link>
 									</Nav.Item>
@@ -48,7 +48,7 @@ const ChatRoom = () => {
 								{myfriends.map((friend) => (
 									<ChatBox
 										// key={uuidv1()}
-										friendID={friend.ID}
+										friendID={friend.userID}
 									/>
 								))}
 							</Tab.Content>
