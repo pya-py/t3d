@@ -5,53 +5,44 @@ import "./chat.css";
 import { SendMessageTo } from "../globals/redux/actions/message";
 import Message from "./Message";
 
-const ChatBox = ({ friendID }) => {
+const ChatBox = ({ friend, chat }) => {
 	const [myMessage, setMyMessage] = useState("");
 	const message = useSelector((state) => state.message);
 	const dispatch = useDispatch();
 	const me = useSelector((state) => state.me);
 	const mostRecentMessageRef = useRef(null);
-	const chats = useSelector((state) => state.chats);
-	const [ourChat, setOurChat] = useState([]);
-
-	useEffect(() => {
-		let ours = chats.find((chat) => chat.with === friendID);
-		setOurChat(ours && ours.messages ? ours.messages : []);
-	}, [chats, friendID]);
 
 	const composeMessage = (event) => {
 		event.preventDefault();
 		// init state vears ro get chat
 		if (myMessage) {
-			dispatch(SendMessageTo(me.fullname, friendID, myMessage));
+			dispatch(SendMessageTo(me.fullname, friend.userID, myMessage));
 			setMyMessage("");
-
-			if (mostRecentMessageRef && mostRecentMessageRef.current) {
-				setTimeout(() => {
-					mostRecentMessageRef.current.scrollIntoView({
-						behavior: "smooth",
-						top: mostRecentMessageRef.current.offsetTop,
-					});
-				}, 100);
-			}
 		}
 	};
 
+	//how to scroll to last recent message in the start?
+	// useEffect(() => {
+	// 	setTimeout(() => {
+	// 		if (mostRecentMessageRef && mostRecentMessageRef.current)
+	// 			mostRecentMessageRef.current.scrollIntoView({
+	// 				behavior: "smooth",
+	// 				top: mostRecentMessageRef.current.offsetTop,
+	// 			});
+	// 	}, 1000);
+	// }, [])
 	useEffect(() => {
-		const { recieved } = message;
-		if (!message.sent && recieved && recieved.friendID === friendID) {
-			setTimeout(() => {
-				if (mostRecentMessageRef && mostRecentMessageRef.current)
-					mostRecentMessageRef.current.scrollIntoView({
-						behavior: "smooth",
-						top: mostRecentMessageRef.current.offsetTop,
-					});
-			}, 100);
-		}
-	}, [message, ourChat, friendID, dispatch]);
+		setTimeout(() => {
+			if (mostRecentMessageRef && mostRecentMessageRef.current)
+				mostRecentMessageRef.current.scrollIntoView({
+					behavior: "smooth",
+					top: mostRecentMessageRef.current.offsetTop,
+				});
+		}, 100);
+	}, [message]);
 
 	return (
-		<Tab.Pane eventKey={friendID}>
+		<Tab.Pane eventKey={friend.userID}>
 			<Container>
 				<Row>
 					<Card
@@ -59,9 +50,9 @@ const ChatBox = ({ friendID }) => {
 						bg="transparent"
 						className="big-single-card chat-box-scrollable">
 						<Card.Body>
-							{ourChat &&
-								ourChat instanceof Array &&
-								ourChat.map((msg, index) => (
+							{chat &&
+								chat instanceof Array &&
+								chat.map((msg, index) => (
 									<div ref={mostRecentMessageRef}>
 										<Message
 											// key={msg.key}
@@ -69,9 +60,7 @@ const ChatBox = ({ friendID }) => {
 											previousDay={
 												index !== 0
 													? new Date(
-															ourChat[
-																index - 1
-															].date
+															chat[index - 1].date
 													  ).getDate()
 													: 0
 											}

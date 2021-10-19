@@ -8,18 +8,18 @@ import { useSelector } from "react-redux";
 
 const ChatRoom = () => {
 	const context = useContext(GlobalContext);
+	const interactions = useSelector((state) => state.interactions).sort(
+		//first sort all by last recieved message => this makes chat list contacts sorted properly
+		(i1, i2) =>
+			new Date(i2.messages[i2.messages.length - 1].date).getTime() -
+			new Date(i1.messages[i1.messages.length - 1].date).getTime()
+	);
 
-	const myfriends = useSelector((state) => state.friends);
-	
 	return (
 		<Card border="secondary" bg="transparent" className="chat-main-card">
 			<Card.Header className="text-center">چت روم شما</Card.Header>
 			<Card.Body>
-				<Tab.Container
-				// id="left-tabs-example"
-				// defaultActiveKey={filterID}
-				// onSelect={(key) => setFilterID(key)}
-				>
+				<Tab.Container>
 					<Row>
 						<Col
 							className={
@@ -27,16 +27,18 @@ const ChatRoom = () => {
 									? "chat-room-devider chat-scrollable-friends"
 									: "smartphone-chat-scrollable-friends"
 							}
-							lg={3} md={3} sm={12}>
+							lg={3}
+							md={3}
+							sm={12}>
 							<Nav
 								variant="pills"
 								className="flex-column text-right">
-								{myfriends.map((friend) => (
+								{interactions.map((interact) => (
 									<Nav.Item>
 										<Nav.Link
 											// key={friend.userID}
-											eventKey={friend.userID}>
-											{friend.name}
+											eventKey={interact.with.userID}>
+											{interact.with.name}
 										</Nav.Link>
 									</Nav.Item>
 								))}
@@ -45,10 +47,10 @@ const ChatRoom = () => {
 						{/* EDIT MAIL LAYOUT <Col> LIKE THIS */}
 						<Col lg={9} md={9} sm={12}>
 							<Tab.Content>
-								{myfriends.map((friend) => (
+								{interactions.map((interact) => (
 									<ChatBox
-										// key={uuidv1()}
-										friendID={friend.userID}
+										friend={interact.with}
+										chat={interact.messages}
 									/>
 								))}
 							</Tab.Content>

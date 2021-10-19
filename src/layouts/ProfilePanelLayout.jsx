@@ -7,9 +7,9 @@ import { useDispatch } from "react-redux";
 import AutoSignIn from "../users/AutoSignIn";
 import GlobalContext from "../globals/state/GlobalContext";
 import {
-	LoadMyFriendsChats,
-	ResetMyFriendsChats,
-} from "../globals/redux/actions/friends";
+	LoadInteractions,
+	ResetInteractions,
+} from "../globals/redux/actions/interactions";
 import { LoadMyPlayer } from "../globals/redux/actions/player";
 import LoadingBar from "../commons/LoadingBar";
 
@@ -23,7 +23,7 @@ const ProfilePanelLayout = ({ children }) => {
 			try {
 				setLoading(true);
 				await dispatch(LoadMyPlayer());
-				await dispatch(LoadMyFriendsChats());
+				await dispatch(LoadInteractions());
 				// profile unmounted
 			} catch (err) {
 				setLoading(false);
@@ -32,7 +32,7 @@ const ProfilePanelLayout = ({ children }) => {
 		})();
 		return () => {
 			// remove chat list from redux to save memory
-			dispatch(ResetMyFriendsChats());
+			dispatch(ResetInteractions());
 		};
 	}, [dispatch]);
 

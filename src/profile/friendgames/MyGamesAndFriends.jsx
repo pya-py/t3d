@@ -14,7 +14,21 @@ const MyGamesAndFriends = () => {
 	const [myGames, setMyGames] = useState([]);
 	const [filterID, setFilterID] = useState("me");
 	const [selectedFriendIndex, setSelectedFriendIndex] = useState(-1);
-	const myFriends = useSelector((state) => state.friends);
+	const [friends, setFriends] = useState([]);
+	const [friendsCount, setFriendsCount] = useState(0);
+	const interactions = useSelector((state) => state.interactions); //.map((interact) => interact.with)
+
+	useEffect(() => {
+		if (friendsCount !== interactions.length) {
+			//thsi if checks whether change made in interaction is friend/unfriend operation or not
+			//otherwise, every new message sent or recieved cause a new .map calling!
+
+			// const temp = interactions;
+			// const sorted = temp.sort((f1, f2) => f2.name - f1.name);
+			setFriends(interactions.map((interact) => interact.with));
+			setFriendsCount(interactions.length);
+		}
+	}, [interactions, friendsCount]);
 
 	useEffect(() => {
 		(async () => {
@@ -34,11 +48,11 @@ const MyGamesAndFriends = () => {
 	useEffect(() => {
 		setSelectedFriendIndex(
 			filterID !== "me"
-				? myFriends.findIndex((friend) => friend.userID === filterID)
+				? friends.findIndex((friend) => friend.userID === filterID)
 				: -1
 		);
 		// if filterID === "me" || frined id wia .findIndex not found ---> returns -1
-	}, [filterID, myFriends]);
+	}, [filterID, friends]);
 
 	const unfriend = (friend) => {
 		//... show a modal or sth to ask if user's sure
@@ -69,7 +83,7 @@ const MyGamesAndFriends = () => {
 										همه بازی ها
 									</Nav.Link>
 								</Nav.Item>
-								{myFriends.map((friend) => (
+								{friends.map((friend) => (
 									<Nav.Item>
 										<Nav.Link eventKey={friend.userID}>
 											<Row className="m-0 w-100">
@@ -92,15 +106,20 @@ const MyGamesAndFriends = () => {
 						<Col lg={9} md={8} sm={12}>
 							<Tab.Content>
 								<Tab.Pane eventKey="me">
-									{me && <FriendRecords person={me} thisIsMe={true}/>}
+									{me && (
+										<FriendRecords
+											person={me}
+											thisIsMe={true}
+										/>
+									)}
 									<AllScores scores={myGames} />
 								</Tab.Pane>
-								{myFriends.map((friend) => (
+								{friends.map((friend) => (
 									<Tab.Pane eventKey={friend.userID}>
 										<FriendRecords
 											person={
 												selectedFriendIndex !== -1
-													? myFriends[
+													? friends[
 															selectedFriendIndex
 													  ]
 													: me

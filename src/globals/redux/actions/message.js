@@ -1,4 +1,4 @@
-import { UpdateMyChatList } from "./chats";
+import { UpdateMyChatList } from "./interactions";
 
 export const SendMessageTo = (name, friendID, text) => {
 	return async (dispatch) => {
