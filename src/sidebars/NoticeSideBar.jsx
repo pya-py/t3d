@@ -42,7 +42,7 @@ const NoticeSideBar = () => {
                 اطلاعیه ها
             </Card.Header>
             <Card.Body className="text-right">
-                {notices.length && notices.map((notice) => {
+                {Boolean(notices.length) && notices.map((notice) => {
                     return (
                         <Fragment key={uuidv1()}>
                             <Alert variant="info">

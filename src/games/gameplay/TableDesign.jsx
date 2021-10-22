@@ -17,12 +17,12 @@ const TableDesign = ({
 	for (let i = 0; i < dimension; i++) dimens.push(i);
 
 	useEffect(() => {
-		const cellWidths = [70, 60, 50, 40, 30, 20];
+		const cellWidths = [70, 65, 60, 55, 50, 45, 40, 35, 30, 25];
 		const cellHeights = [45, 40, 35, 30, 25, 20];
 		const deviceWidth = window.innerWidth,
 			deviceHeight = window.innerHeight;
 		/* first decide cell height, margin nearly equals to height */
-		let width = cellWidths[5],
+		let width = cellWidths[9],
 			height = cellHeights[5],
 			margin = cellHeights[5],
             fontSize = 25;
