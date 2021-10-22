@@ -1,6 +1,6 @@
 module.exports = {
     T3D: {
-        TableRowMargings: [0, 40, 80, 120, 160],
+        TableRowMargings: [0, 41, 82, 123, 164],
         TurnTimeOut: 45, //secs
     },
     RandomSearchRepeatLimit: 5,

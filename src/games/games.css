@@ -1,9 +1,9 @@
 .game-table-cells {
-    width: 50px;
-    height: 40px;
+    /* width: 70px;
+    height: 42px; */
     transform: skew(45deg);
     text-align: center;
-    font-size: 25px;
+    /* font-size: 25px; */
     border-radius: 0;
     border: 2px solid black;
 }

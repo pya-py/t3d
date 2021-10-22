@@ -1,7 +1,7 @@
 //local routes
 module.exports = {
-    Root: "http://localhost:4000",
-    WebSocketRoot: "ws://localhost:4000/ws",
+    Root: "https://localhost:4000",
+    WebSocketRoot: "wss://localhost:4000/ws",
     wsGamePlayRoute: "gameplay",
     wsGlobalRoute: "global",
     SignUp: "signup",
