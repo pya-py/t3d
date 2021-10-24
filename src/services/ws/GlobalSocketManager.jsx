@@ -16,6 +16,7 @@ import {
 	ReloadRecords,
 	ReapeatRandomSearch,
 	CloseRandomSearch,
+	EmptyGameInvitations,
 } from "./../../globals/redux/actions/tools";
 import { EnterRoom } from "../../globals/redux/actions/game";
 const GlobalSocketManager = () => {
@@ -268,6 +269,7 @@ const GlobalSocketManager = () => {
 						gameType: acceptedGame.type,
 					})
 				);
+			dispatch(EmptyGameInvitations());
 		} else if (friendlyGameTarget) {
 			if (socketGlobal)
 				socketGlobal.send(
