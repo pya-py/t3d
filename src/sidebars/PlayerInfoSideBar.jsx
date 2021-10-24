@@ -50,7 +50,7 @@ const PlayerInfoSideBar = (props) => {
 	};
 
 	return (
-		<Card border="info" className="player-info-sidebar">
+		<Card border="info" className="player-info-sidebar animated-sidebar">
 			<Card.Header className="text-center text-info form-inline">
 				<Col>
 					<Card.Text className="text-left">{fullname}</Card.Text>

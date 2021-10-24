@@ -13,6 +13,7 @@ import ContactUs from './../informations/ContactUs';
 import ScoresTable from './../tables/scores/ScoresTable';
 import SignUp from '../users/SignUp';
 import Rankings from './../tables/rankings/Rankings';
+import StudentsManagement from '../profile/admin/StudentsManagement';
 const MainRouter = () => {
 	return (
 		<Switch>
@@ -25,7 +26,9 @@ const MainRouter = () => {
 						<Route path={Routes.Client.Notices}>
 							<NoticeManager />
 						</Route>
-
+						<Route path={Routes.Client.StManagement}>
+							<StudentsManagement />
+						</Route>
 						<Route path={Routes.Client.ChatRoom}>
 							<ChatRoom />
 						</Route>

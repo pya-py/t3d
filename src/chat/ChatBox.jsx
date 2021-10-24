@@ -48,7 +48,7 @@ const ChatBox = ({ friend, chat }) => {
 					<Card
 						border="dark"
 						bg="transparent"
-						className="big-single-card chat-box-scrollable">
+						className="chat-main-card chat-box-scrollable">
 						<Card.Body>
 							{chat &&
 								chat instanceof Array &&
@@ -87,8 +87,7 @@ const ChatBox = ({ friend, chat }) => {
 							</Col>
 							<Col xs={11} className="m-0 p-0 w-100">
 								<Form.Control
-									className="p-0 w-100 bg-transparent chat-room-message-box
-                                    mx-auto text-right"
+									className="py-0 px-3 bg-transparent chat-room-message-box animated-textbox text-right"
 									value={myMessage}
 									onChange={(e) =>
 										setMyMessage(e.target.value)

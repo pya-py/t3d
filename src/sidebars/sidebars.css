@@ -7,12 +7,22 @@
     width: 100%;
 }
 
-.sign-in-sidebar-textBox {
-    width: 100%;
+.sign-in-sidebar-textbox {
     background-color: white;
     color: black;
     font-size: 16px;
     text-align: center;
+}
+
+.animated-sidebar{
+    margin-left:auto;
+    margin-right: auto;
+    opacity: 0.85;
+    -webkit-transition: opacity 0.25s ease-in-out;
+    transition: opacity 0.25s ease-in-out;
+}
+.animated-sidebar:hover{
+    opacity: 1.0;
 }
 
 .notice-sidebar {
@@ -26,7 +36,6 @@
 
 .sign-in-sidebar-buttons {
     font-size: 16px;
-    width: 100%;
     margin: 1%;
 }
 

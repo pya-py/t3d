@@ -6,22 +6,22 @@ import { Fragment, useContext } from "react";
 import Configs from "../../services/configs";
 import GlobalContext from './../../globals/state/GlobalContext';
 
-const ProfilePanel = (props) => {
+const ProfilePanel = () => {
     const me = useSelector((state) => state.me);
     const context = useContext(GlobalContext);
 
     return (
             <Row className="profile-panel-sidebar d-flex flex-column flex-shrink-0">
-                <Button
+                {/* <Button
                     style={{ border: "none" }}
                     variant="outline-warning"
                     className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                     <i className="fa fa-cogs px-2" aria-hidden="true"></i>
                     پنل کاربری
-                </Button>
+                </Button> */}
                 <hr />
                 <ul className="nav nav-pills flex-column mb-auto">
-                    <li className="nav-item">
+                    <li className="nav-item animated-button">
                         <NavLink
                             exact
                             to={Configs.Routes.Client.Profile}
@@ -33,7 +33,7 @@ const ProfilePanel = (props) => {
                             مشخصات
                         </NavLink>
                     </li>
-                    <li>
+                    <li className="animated-button" >
                         <NavLink
                             className="nav-link link-dark"
                             to={Configs.Routes.Client.MyGamesAndFriends}>
@@ -43,7 +43,7 @@ const ProfilePanel = (props) => {
                             دوستان و بازی ها
                         </NavLink>
                     </li>
-                    <li>
+                    <li className="animated-button" >
                         <NavLink
                             className="nav-link link-dark"
                             to={Configs.Routes.Client.ChatRoom}>
@@ -57,7 +57,7 @@ const ProfilePanel = (props) => {
                     {me && me.isAdmin && (
                         <Fragment>
                             {/* admin tools */}
-                            <li>
+                            <li className="animated-button" > 
                                 <NavLink
                                     className="nav-link link-dark border-top"
                                     to={Configs.Routes.Client.Notices}>
@@ -67,22 +67,25 @@ const ProfilePanel = (props) => {
                                     اطلاعیه ها
                                 </NavLink>
                             </li>
-                            <li>
+                            <li className="animated-button" >
                                 <NavLink
                                     className="nav-link link-dark"
-                                    to="/controlPanel/admin/whatever">
-                                    <svg
-                                        className="bi me-2"
-                                        width="16"
-                                        height="16"></svg>
-                                    امکانات ادمین
+                                    to={Configs.Routes.Client.StManagement}>
+                                    مدیریت دانشجویان
+                                </NavLink>
+                            </li>
+                            <li className="animated-button" >
+                                <NavLink
+                                    className="nav-link link-dark"
+                                    to={Configs.Routes.Client.InfoEdit}>
+                                    توضیحات سایت
                                 </NavLink>
                             </li>
                         </Fragment>
                     )}
                 </ul>
                 <hr />
-                <Button variant="outline-danger" onClick={context.signOut}>
+                <Button variant="outline-danger" className="animated-button" onClick={context.signOut}>
                     <i className="fa fa-sign-out px-2" aria-hidden="true"></i>
                     خروج از حساب کاربری
                 </Button>

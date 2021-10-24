@@ -53,7 +53,7 @@ class SignInSideBar extends Component {
 						<Form.Control
 							type="text"
 							autoComplete="username"
-							className="sign-in-sidebar-textBox"
+							className="sign-in-sidebar-textbox animated-textbox"
 							placeholder="شماره دانشجویی"
 							value={studentID}
 							onChange={(e) =>
@@ -64,7 +64,7 @@ class SignInSideBar extends Component {
 						<Form.Control
 							type="password"
 							autoComplete="current-password"
-							className="sign-in-sidebar-textBox"
+							className="sign-in-sidebar-textbox animated-textbox"
 							placeholder="رمز عبور"
 							value={password}
 							onChange={(e) =>
@@ -78,7 +78,7 @@ class SignInSideBar extends Component {
 									<Button 
 										type="submit"
 										variant="success"
-										className="sign-in-sidebar-buttons">
+										className="sign-in-sidebar-buttons animated-button">
 										<i
 											className="fa fa-sign-in px-3"
 											aria-hidden="true"></i>
@@ -86,7 +86,7 @@ class SignInSideBar extends Component {
 								</Col>
 								<Col lg={6}>
 									<Button
-										className="sign-in-sidebar-buttons"
+										className="sign-in-sidebar-buttons animated-button"
 										variant="warning">
 										<i
 											className="fa fa-recycle px-3"

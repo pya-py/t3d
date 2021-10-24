@@ -56,7 +56,7 @@ const ImagePicker = ({ selector }) => {
 			<Row>
 				<Form.Label
 					htmlFor="filepicker"
-					className="btn-outline-primary file-picker-label">
+					className="btn-outline-primary file-picker-label animated-button">
 					با کلیک روی اینجا عکس خود را انتخاب کنید و یا فایل آن را
 					بکشید و در وسط کادر سبز رنگ رها کنید ...
 				</Form.Label>

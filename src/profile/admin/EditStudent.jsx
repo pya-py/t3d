@@ -1,77 +1,24 @@
-import { Form, Card, Row, Col, Button } from "react-bootstrap";
-import Configs from "../../services/configs";
-import userServices from "../../services/http/userServices";
-import { useState, useEffect } from "react";
-import { OK, Sorry } from "../../tools/notification";
+import { Card, Col, Form, Row, Button } from "react-bootstrap";
 import LoadingBar from "../../commons/LoadingBar";
+import '../profile.css';
+import { useState, useEffect } from 'react';
 
-import "../profile.css";
-
-const Credentials = () => {
-	const [fullname, setFullname] = useState("");
+const EditStudent = ({userID}) => {
+    const [fullname, setFullname] = useState("");
 	const [studentID, setStudentID] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState("");
 
-	const [pageUpdateTrigger, triggerPageUpdate] = useState(false); // true <=> false -> triggers page , ==> see useEffect
+    useEffect(() => {
+        setLoading(true);
+        //find student via userID
 
-	const reloadPage = () => {
-		setLoading(false);
-		triggerPageUpdate(!pageUpdateTrigger);
-	};
-
-	useEffect(() => {
-		(async () => {
-			try {
-				setLoading(true);
-				const { status, data } = await userServices.getMyCredentials();
-				if (status === Configs.Status.Successful) {
-					const { me } = data;
-					setFullname(me.fullname);
-					setStudentID(me.studentID);
-					setEmail(me.email);
-				}
-			} catch (err) {
-				if (!Configs.Status.isErrorExpected(err))
-					Sorry(
-						"حین دریافت اطلاعات کاربر ایرادی پیش آمد. ... لطفا دوباره تلاش کنید."
-					);
-				setLoading(false);
-			}
-			setLoading(false);
-		})();
-	}, [pageUpdateTrigger]);
-
-	const saveChanges = async (event) => {
-		//add patern and stuff to states and inputs
-		// check all inputs plz
-		event.preventDefault();
-		setLoading(true);
-		try {
-			const { status } = await userServices.editMyCredentials({
-				studentID,
-				fullname,
-				email,
-				password,
-			});
-			if (status === Configs.Status.Successful) {
-				OK(`تغییرات با موفقیت اعمال شد`);
-				// dispatch(TriggerRecordUpdate());
-				// find another way to update
-
-				reloadPage();
-			}
-		} catch (err) {
-			if (!Configs.Status.isErrorExpected(err))
-				Sorry(
-					"خطایی در ذخیره تغییرات بوجود امد ... لطفا دوباره تلاش کنید"
-				);
-		}
-		setPassword("");
-		setLoading(false);
-	};
-
+        setLoading(false)
+    }, [])
+    const saveChanges = (event) => {
+        event.preventDefaults();
+    }
 	return (
 		<Form onSubmit={(e) => saveChanges(e)}>
 			<LoadingBar loading={loading} />
@@ -82,7 +29,6 @@ const Credentials = () => {
 				</Form.Label>
 				<Form.Control
 					type="text"
-					disabled
 					className="account-info-textbox w-75"
 					placeholder="Student ID"
 					value={studentID}
@@ -111,23 +57,15 @@ const Credentials = () => {
 				<Form.Label className="w-25 text-center">ایمیل</Form.Label>
 				<Form.Control
 					type="email"
-					pattern=".{6,}"
-					onInput={(e) => e.target.setCustomValidity("")}
-					onInvalid={(e) =>
-						e.target.setCustomValidity(
-							"ورودی باید فرمت معتبر ایمیل را رعایت کرده و حداقل 6 کاراکتر باشد"
-						)
-					}
+                    disabled
 					className="account-info-textbox w-75"
 					placeholder="E-mail"
 					value={email}
-					required="required"
-					onChange={(e) => setEmail(e.target.value)}
 				/>
 			</Form.Group>
 			<Card.Footer className="p-1 m-0">
 				<Row>
-					<Col lg={2} md={2} sm={4} xs={4}>
+                <Col lg={2} md={2} sm={4} xs={4}>
 						<Form.Label className="text-center w-100 mt-3">
 							رمزعبور فعلی
 						</Form.Label>
@@ -153,7 +91,7 @@ const Credentials = () => {
 							type="submit"
 							block
 							variant="success"
-							className="mt-2 animated-button">
+							className="mt-2 w-100">
 							<i
 								className="fa fa-floppy-o px-2"
 								aria-hidden="true"></i>
@@ -166,4 +104,4 @@ const Credentials = () => {
 	);
 };
 
-export default Credentials;
+export default EditStudent;

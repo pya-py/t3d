@@ -91,7 +91,7 @@ const SingleGame = () => {
 					</InputGroup>
 				</Form.Group>
 				<hr />
-				<Button type="submit" className="mt-4" block variant="success">
+				<Button type="submit" className="mt-4 animated-button" block variant="success">
 					<i className="fa fa-search px-2" aria-hidden="true"></i>
 					جستجو
 				</Button>

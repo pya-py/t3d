@@ -3,7 +3,6 @@
     border-radius: 5px;
     margin: auto;
     margin-top: 1%;
-    
 }
 
 .chat-room-devider {
@@ -19,6 +18,7 @@
 .smartphone-chat-scrollable-friends {
     height: 250px;
     overflow-y: scroll;
+    margin-left: 3%;
 }
 
 .chat-box-scrollable {

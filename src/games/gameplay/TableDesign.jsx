@@ -1,6 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
 import { Button, Card, Row } from "react-bootstrap";
-import { GameSetting } from "../../services/configs";
 import BriefScoreboard from "./BriefScoreboard";
 import "../games.css";
 
@@ -9,8 +8,7 @@ const TableDesign = ({
 	dimension,
 	players,
 	table,
-	onEachCellClick,
-	normalCell,
+	onEachCellClick
 }) => {
 	let dimens = [];
 	const [cell, setCell] = useState(null);
@@ -18,13 +16,13 @@ const TableDesign = ({
 
 	useEffect(() => {
 		const cellWidths = [70, 65, 60, 55, 50, 45, 40, 35, 30, 25];
-		const cellHeights = [45, 40, 35, 30, 25, 20];
+		const cellHeights = [45, 40, 35, 30, 29, 28];
 		const deviceWidth = window.innerWidth,
 			deviceHeight = window.innerHeight;
 		/* first decide cell height, margin nearly equals to height */
-		let width = cellWidths[9],
-			height = cellHeights[5],
-			margin = cellHeights[5],
+		let width = cellWidths[cellWidths.length - 1],
+			height = cellHeights[cellHeights.length - 1],
+			margin = cellHeights[cellHeights.length - 1],
             fontSize = 25;
 		for (const h of cellHeights) {
 			if (h * dimension * dimension <= deviceHeight * 0.75) {
@@ -51,7 +49,7 @@ const TableDesign = ({
 
 	//prop drilling in BriefScoreBoard
 	return (
-		<Card bg="transparent" border="dark" className="w-100 mx-auto">
+		<Card bg="transparent" border="dark" className="w-100 mt-2 mx-auto">
 			<BriefScoreboard timeRemaining={timeRemaining} players={players} />
 			<Card.Body className="game-border-card">
 				{table ? (
@@ -70,7 +68,7 @@ const TableDesign = ({
 												row * dimension +
 												column
 											}
-											variant={normalCell}
+											variant="outline-dark"
 											className="game-table-cells"
 											style={{
 												width: `${cell.width}px`,

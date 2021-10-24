@@ -78,27 +78,28 @@ const MyGamesAndFriends = () => {
 							<Nav
 								variant="pills"
 								className="flex-column text-right">
-								<Nav.Item>
-									<Nav.Link eventKey="me">
-										همه بازی ها
-									</Nav.Link>
-								</Nav.Item>
+								<Nav.Link
+									className="animated-navitem"
+									eventKey="me">
+									همه بازی ها
+								</Nav.Link>
+
 								{friends.map((friend) => (
-									<Nav.Item>
-										<Nav.Link eventKey={friend.userID}>
-											<Row className="m-0 w-100">
-												<Col>{friend.name}</Col>
-												<Col xs={1}>
-													<i
-														onClick={() =>
-															unfriend(friend)
-														}
-														className="icon-unfriend fa fa-times pl-2"
-														area-hidden="true"></i>
-												</Col>
-											</Row>
-										</Nav.Link>
-									</Nav.Item>
+									<Nav.Link
+										className="animated-navitem"
+										eventKey={friend.userID}>
+										<Row className="m-0 w-100">
+											<Col>{friend.name}</Col>
+											<Col xs={1}>
+												<i
+													onClick={() =>
+														unfriend(friend)
+													}
+													className="icon-unfriend fa fa-times pl-2"
+													area-hidden="true"></i>
+											</Col>
+										</Row>
+									</Nav.Link>
 								))}
 							</Nav>
 						</Col>

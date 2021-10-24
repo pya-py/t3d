@@ -41,21 +41,6 @@ const GlobalSocketManager = () => {
 		});
 	}, []);
 
-	const enableGlobalTimer = useCallback(() => {
-		return setInterval(() => {
-			if (socketGlobal) socketGlobal.send(pack("online"));
-		}, 300000); // every 5 MINUTES request number of online members to update the site
-	}, [pack, socketGlobal]);
-
-	useEffect(() => {
-		console.log("global timer enabled");
-		const timerID = enableGlobalTimer();
-		return () => {
-			console.log("global timer disabled");
-			clearInterval(timerID);
-		};
-	}, [enableGlobalTimer]);
-
 	const { signOut, redirectToGamePlay } = context;
 	const iamSignedIn = me && me.userID;
 	const iamBusy = room && room.name;

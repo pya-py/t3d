@@ -182,7 +182,7 @@ const NoticeManager = () => {
 											"عنوان اطلاعیه باید حداقل 3 و حداکثر 30 کاراکتر داشته باشد"
 										)
 									}
-									className="my-1 mx-auto"
+									className="my-1 mx-auto animated-textbox"
 									type="text"
 									placeholder="عنوان"
 									required="required"
@@ -202,7 +202,7 @@ const NoticeManager = () => {
 											"متن اطلاعیه باید حداقل 5 و حداکثر 200 کاراکتر داشته باشد"
 										)
 									}
-									className="my-1 mx-auto h-25"
+									className="my-1 animated-textbox h-25"
 									placeholder="متن کامل اطلاعیه را وارد کنید"
 									value={text}
 									required="required"

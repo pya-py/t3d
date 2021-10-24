@@ -56,7 +56,7 @@ class ScoresTable extends Component {
         // DESIGN : USE <Tabs> ???
         return (
             <Container>
-                <Row>
+                <Row className="scores-mode-select-layout">
                     <Col>
                         <Button
                             variant={

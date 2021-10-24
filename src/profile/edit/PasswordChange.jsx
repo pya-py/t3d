@@ -64,7 +64,7 @@ const PasswordChange = () => {
 							"رمز عبور باید حداقل 6 کاراکتر و حداکثر 15 کاراکتر داشته باشد"
 						)
 					}
-					className="account-info-textbox w-75"
+					className="account-info-textbox w-75 text-left"
 					placeholder="New Password"
 					value={newPassword}
 					required="required"
@@ -78,7 +78,7 @@ const PasswordChange = () => {
 
 				<Form.Control
 					type="password"
-					className="account-info-textbox w-75"
+					className="account-info-textbox w-75 text-left"
 					placeholder="Confirm New Password"
 					value={confirmNewPassword}
 					required
@@ -88,14 +88,14 @@ const PasswordChange = () => {
 			<Card.Footer className="p-1 m-0">
 				<Row>
 					<Col lg={2} md={2} sm={4} xs={4}>
-						<Form.Label className="text-center w-100 mt-2">
+						<Form.Label className="text-center w-100 mt-3">
 							رمزعبور فعلی
 						</Form.Label>
 					</Col>
 					<Col lg={7} md={7} sm={8} xs={8}>
 						<Form.Control
 							type="password"
-							className="account-info-textbox"
+							className="text-left account-info-textbox animated-textbox"
 							placeholder="Password"
 							value={password}
 							required
@@ -113,7 +113,7 @@ const PasswordChange = () => {
 							type="submit"
 							block
 							variant="success"
-							className="mt-2 w-100">
+							className="mt-2 animated-button">
 							<i
 								className="fa fa-key px-2"
 								aria-hidden="true"></i>

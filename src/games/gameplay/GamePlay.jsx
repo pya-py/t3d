@@ -14,13 +14,11 @@ import { toTimeShort } from "../../tools/format";
 class GamePlay extends Component {
 	//**** game resets on device change. fix it */
 	state = {
-		normalCell: "outline-dark",
 		players: [
 			{
 				// ID: '',
 				shape: <i className="fa fa-times" aria-hidden="true" />, // "X" : some device may not support font-awsome
 				color: "blue",
-				selected: "warning",
 				lineColor: "primary",
 				score: 0,
 			},
@@ -28,7 +26,6 @@ class GamePlay extends Component {
 				// ID: '',
 				shape: <i className="fa fa-sun-o" aria-hidden="true" />, // "O" : some device may not support font-awsome
 				color: "darkred",
-				selected: "warning",
 				lineColor: "danger",
 				score: 0,
 			},
@@ -295,18 +292,19 @@ class GamePlay extends Component {
 	};
 
 	verifyAndApplyTheMove = (cell, cellButton) => {
-		const { players, turn, normalCell } = this.state;
+		const { turn } = this.state;
 		let tempTable = [...this.state.table];
 		if (tempTable[cell.floor][cell.row][cell.column] === null) {
 			tempTable[cell.floor][cell.row][cell.column] = turn; //maybe its better to use players actual Id huh?
 			this.setState({ table: tempTable });
 			// cellButton.value = players[turn].shape;
 			// cellButton.style.color = players[turn].color;
-			cellButton.className = `game-table-cells btn btn-${players[turn].selected}`;
+			cellButton.style.opacity = 0.0;
 			setTimeout(() => {
-				cellButton.className = `game-table-cells btn btn-${normalCell}`;
-			}, 1000);
-			// time to inspect the new cell:
+				cellButton.className = `game-table-cells animate-new-move`;
+				cellButton.style.opacity = 1.0;
+			}, 100);
+
 			this.inspectAreaAroundTheCell(cell.floor, cell.row, cell.column);
 
 			return true;
@@ -402,7 +400,6 @@ class GamePlay extends Component {
 	// method below: checks each possible line(according to the condition that user gives it),
 	// if the line is made colorifies the line and returns 1 ( as one single score for each line checked ), otherwise returns 0
 	connectTheScoreLines = (count, firstCell, step, player, dimension) => {
-		const { normalCell } = this.state;
 		if (count === dimension) {
 			for (let i = 0; i < dimension; i++) {
 				this.cellButtons[
@@ -411,7 +408,7 @@ class GamePlay extends Component {
 				setTimeout(() => {
 					this.cellButtons[
 						firstCell + i * step
-					].className = `game-table-cells btn btn-${normalCell}`;
+					].className = "game-table-cells btn btn-outline-dark";
 				}, 1000 + i * 100);
 			}
 		}
@@ -449,7 +446,6 @@ class GamePlay extends Component {
 				table={this.state.table}
 				timeRemaining={this.state.timeRemaining}
 				onEachCellClick={this.onEachCellClick}
-				normalCell={this.state.normalCell}
 			/>
 		);
 	}

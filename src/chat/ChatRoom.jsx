@@ -24,7 +24,7 @@ const ChatRoom = () => {
 						<Col
 							className={
 								context.device !== Devices.SmartPhone
-									? "chat-room-devider chat-scrollable-friends"
+									? "chat-room-devider chat-scrollable-friends "
 									: "smartphone-chat-scrollable-friends"
 							}
 							lg={3}
@@ -34,13 +34,11 @@ const ChatRoom = () => {
 								variant="pills"
 								className="flex-column text-right">
 								{interactions.map((interact) => (
-									<Nav.Item>
-										<Nav.Link
+										<Nav.Link className="animated-navitem"
 											// key={friend.userID}
 											eventKey={interact.with.userID}>
 											{interact.with.name}
 										</Nav.Link>
-									</Nav.Item>
 								))}
 							</Nav>
 						</Col>
