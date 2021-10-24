@@ -1,4 +1,4 @@
-import { Button, Form, Modal, Row } from "react-bootstrap";
+import { Button, Form, Modal, Row, Col } from "react-bootstrap";
 import { Component, Fragment } from "react";
 import userServices from "../services/http/userServices";
 import { withRouter } from "react-router-dom";
@@ -100,25 +100,31 @@ class ModalSignIn extends Component {
 								/>
 							</Form.Group>
 							<hr />
-							<Row>
-								<Button
-									className="w-50"
-									type="submit"
-									variant="outline-success">
-									<i
-										className="fa fa-sign-in px-2"
-										aria-hidden="true"></i>
-									ورود
-								</Button>
-								<Button
-									className="w-50"
-									variant="outline-warning"
-									onClick={this.onForgotPasswordClick}>
-									<i
-										className="fa fa-recycle px-2"
-										aria-hidden="true"></i>
-									فراموشی رمز
-								</Button>
+							<Row className="p-0">
+								<Col className="text-center">
+									<Button
+										type="submit"
+										block
+										className="text-center"
+										variant="outline-success">
+										ورود
+										<i
+											className="fa fa-sign-in px-2"
+											aria-hidden="true"></i>
+									</Button>
+								</Col>
+								<Col className="text-center">
+									<Button
+										block
+										className="text-center"
+										variant="outline-warning"
+										onClick={this.onForgotPasswordClick}>
+										<i
+											className="fa fa-recycle px-2"
+											aria-hidden="true"></i>
+										فراموشی رمز
+									</Button>
+								</Col>
 							</Row>
 						</Form>
 					</Modal.Body>

@@ -37,7 +37,7 @@ const NoticeSideBar = () => {
     }, []);
 
     return (
-        <Card className="notice-sidebar animated-sidebar" border="success">
+        <Card className="notice-sidebar animated-form" border="success">
             <Card.Header className="text-center text-success">
                 اطلاعیه ها
             </Card.Header>

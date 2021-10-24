@@ -5,7 +5,7 @@ import userServices from "../services/http/userServices";
 import { withRouter } from "react-router-dom";
 import LoadingBar from "../commons/LoadingBar";
 import Configs, { browserStorage } from "../services/configs";
-import { Card, Form, Button } from "react-bootstrap";
+import { Card, Form, Button, Row, Col } from "react-bootstrap";
 import { Sorry, OK, Attention } from "../tools/notification";
 
 class SignUp extends Component {
@@ -100,147 +100,175 @@ class SignUp extends Component {
 		} = this.state;
 
 		return (
-			<Card border="success" className="sign-up-card">
+			<Card border="success" className="sign-up-card animated-form">
 				<LoadingBar loading={loading} />
 				<Card.Header className="bg-transparent text-center border-success">
 					فرم ثبت نام
 				</Card.Header>
 				<Card.Body>
 					<Form onSubmit={(event) => this.onSignUpSubmit(event)}>
-						<Form.Group className="form-inline">
-							<Form.Label className="w-25">نام</Form.Label>
-							<Form.Control
-								type="text"
-								pattern="[آ-ی ]{3,}" // persian characters and space
-								onInput={(e) => e.target.setCustomValidity("")}
-								onInvalid={(e) =>
-									e.target.setCustomValidity(
-										"نام باید با حروف فارسی و با حداقل طول سه حرف باشد"
-									)
-								}
-								className="sign-up-textbox w-75"
-								placeholder="First Name"
-								value={firstname}
-								required="required"
-								onChange={(e) =>
-									this.setState({
-										firstname: e.target.value,
-									})
-								}
-							/>
-						</Form.Group>
+						<Row className="mb-3">
+							<Col xs={2}>
+								<Form.Label>نام</Form.Label>
+							</Col>
+							<Col>
+								<Form.Control
+									type="text"
+									pattern="[آ-ی ]{3,}" // persian characters and space
+									onInput={(e) =>
+										e.target.setCustomValidity("")
+									}
+									onInvalid={(e) =>
+										e.target.setCustomValidity(
+											"نام باید با حروف فارسی و با حداقل طول سه حرف باشد"
+										)
+									}
+									className="sign-up-textbox animated-textbox"
+									placeholder="First Name"
+									value={firstname}
+									required="required"
+									onChange={(e) =>
+										this.setState({
+											firstname: e.target.value,
+										})
+									}
+								/>
+							</Col>
+						</Row>
 
-						<Form.Group className="form-inline">
-							<Form.Label className="w-25">
-								نام خانوادگی
-							</Form.Label>
-							<Form.Control
-								type="text"
-								className="sign-up-textbox w-75"
-								pattern="[آ-ی ]{3,}" // persian characters and space
-								onInput={(e) => e.target.setCustomValidity("")}
-								onInvalid={(e) =>
-									e.target.setCustomValidity(
-										"نام خانوادگی باید با حروف فارسی و با حداقل طول سه حرف باشد"
-									)
-								}
-								placeholder="Last Name"
-								value={lastname}
-								required="required"
-								onChange={(e) =>
-									this.setState({
-										lastname: e.target.value,
-									})
-								}
-							/>
-						</Form.Group>
+						<Row className="mb-3">
+							<Col xs={2}>
+								<Form.Label>نام خانوادگی</Form.Label>
+							</Col>
+							<Col>
+								<Form.Control
+									type="text"
+									className="sign-up-textbox animated-textbox"
+									pattern="[آ-ی ]{3,}" // persian characters and space
+									onInput={(e) =>
+										e.target.setCustomValidity("")
+									}
+									onInvalid={(e) =>
+										e.target.setCustomValidity(
+											"نام خانوادگی باید با حروف فارسی و با حداقل طول سه حرف باشد"
+										)
+									}
+									placeholder="Last Name"
+									value={lastname}
+									required="required"
+									onChange={(e) =>
+										this.setState({
+											lastname: e.target.value,
+										})
+									}
+								/>
+							</Col>
+						</Row>
 
-						<Form.Group className="form-inline">
-							<Form.Label className="w-25">
-								شماره دانشجویی
-							</Form.Label>
-							<Form.Control
-								type="text"
-								pattern="[0-9]{8}"
-								onInput={(e) => e.target.setCustomValidity("")}
-								onInvalid={(e) =>
-									e.target.setCustomValidity(
-										"شماره دانشجویی باید یک عدد 8 رقمی باشد"
-									)
-								}
-								className="sign-up-textbox w-75"
-								placeholder="Student ID"
-								value={studentID}
-								autoComplete="username"
-								required="required"
-								onChange={(e) =>
-									this.setState({
-										studentID: e.target.value,
-									})
-								}
-							/>
-						</Form.Group>
+						<Row className="mb-3">
+							<Col xs={2}>
+								<Form.Label>شماره دانشجویی</Form.Label>
+							</Col>
+							<Col>
+								<Form.Control
+									type="text"
+									pattern="[0-9]{8}"
+									onInput={(e) =>
+										e.target.setCustomValidity("")
+									}
+									onInvalid={(e) =>
+										e.target.setCustomValidity(
+											"شماره دانشجویی باید یک عدد 8 رقمی باشد"
+										)
+									}
+									className="sign-up-textbox animated-textbox"
+									placeholder="Student ID"
+									value={studentID}
+									autoComplete="username"
+									required="required"
+									onChange={(e) =>
+										this.setState({
+											studentID: e.target.value,
+										})
+									}
+								/>
+							</Col>
+						</Row>
 
-						<Form.Group className="form-inline">
-							<Form.Label className="w-25">ایمیل</Form.Label>
-							<Form.Control
-								type="email"
-								pattern=".{6,}"
-								onInput={(e) => e.target.setCustomValidity("")}
-								onInvalid={(e) =>
-									e.target.setCustomValidity(
-										"ورودی باید فرمت معتبر ایمیل را رعایت کرده و حداقل 6 کاراکتر باشد"
-									)
-								}
-								className="sign-up-textbox w-75"
-								placeholder="E-mail"
-								value={email}
-								required="required"
-								onChange={(e) =>
-									this.setState({ email: e.target.value })
-								}
-							/>
-						</Form.Group>
+						<Row className="mb-3">
+							<Col xs={2}>
+								<Form.Label>ایمیل</Form.Label>
+							</Col>
+							<Col>
+								<Form.Control
+									type="email"
+									pattern=".{6,}"
+									onInput={(e) =>
+										e.target.setCustomValidity("")
+									}
+									onInvalid={(e) =>
+										e.target.setCustomValidity(
+											"ورودی باید فرمت معتبر ایمیل را رعایت کرده و حداقل 6 کاراکتر باشد"
+										)
+									}
+									className="sign-up-textbox animated-textbox"
+									placeholder="E-mail"
+									value={email}
+									required="required"
+									onChange={(e) =>
+										this.setState({ email: e.target.value })
+									}
+								/>
+							</Col>
+						</Row>
 
-						<Form.Group className="form-inline">
-							<Form.Label className="w-25">رمز عبور</Form.Label>
-							<Form.Control
-								type="password"
-								pattern=".{6,15}"
-								onInput={(e) => e.target.setCustomValidity("")}
-								onInvalid={(e) =>
-									e.target.setCustomValidity(
-										"رمز عبور باید حداقل 6 کاراکتر و حداکثر 15 کاراکتر داشته باشد"
-									)
-								}
-								className="sign-up-textbox w-75"
-								placeholder="Password"
-								value={password}
-								autoComplete="new-password"
-								required="required"
-								onChange={(e) =>
-									this.setState({
-										password: e.target.value,
-									})
-								}
-							/>
-						</Form.Group>
+						<Row className="mb-3">
+							<Col xs={2}>
+								<Form.Label>رمز عبور</Form.Label>
+							</Col>
+							<Col>
+								<Form.Control
+									type="password"
+									pattern=".{6,15}"
+									onInput={(e) =>
+										e.target.setCustomValidity("")
+									}
+									onInvalid={(e) =>
+										e.target.setCustomValidity(
+											"رمز عبور باید حداقل 6 کاراکتر و حداکثر 15 کاراکتر داشته باشد"
+										)
+									}
+									className="sign-up-textbox animated-textbox"
+									placeholder="Password"
+									value={password}
+									autoComplete="new-password"
+									required="required"
+									onChange={(e) =>
+										this.setState({
+											password: e.target.value,
+										})
+									}
+								/>
+							</Col>
+						</Row>
 
-						<Form.Group className="form-inline">
-							<Form.Label className="w-25">
-								تایید رمز عبور
-							</Form.Label>
-							<Form.Control
-								type="password"
-								className="sign-up-textbox w-75"
-								placeholder="Confirm Password"
-								value={confirmPassword}
-								required="required"
-								onChange={(event) =>
-									this.checkConfirmPassword(event)
-								}
-							/>
-						</Form.Group>
+						<Row className="mb-3">
+							<Col xs={2}>
+								<Form.Label>تایید رمز عبور</Form.Label>
+							</Col>
+							<Col>
+								<Form.Control
+									type="password"
+									className="sign-up-textbox animated-textbox"
+									placeholder="Confirm Password"
+									value={confirmPassword}
+									required="required"
+									onChange={(event) =>
+										this.checkConfirmPassword(event)
+									}
+								/>
+							</Col>
+						</Row>
 
 						<Button
 							type="submit"

@@ -14,17 +14,8 @@
     text-align: center;
 }
 
-.animated-sidebar{
-    opacity: 0.85;
-    -webkit-transition: opacity 0.25s ease-in-out;
-    transition: opacity 0.25s ease-in-out;
-}
-.animated-sidebar:hover{
-    opacity: 1.0;
-}
-
 .animated-sidebar-intense{
-    opacity: 0.7;
+    opacity: 0.75;
     -webkit-transition: opacity 0.25s ease-in-out;
     transition: opacity 0.25s ease-in-out;
 }
