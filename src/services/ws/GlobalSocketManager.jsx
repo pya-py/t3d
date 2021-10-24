@@ -241,7 +241,7 @@ const GlobalSocketManager = () => {
 				//is it necessary?
 				//completely making sure we're on right stage
 				if (!room.name && iamSignedIn && socketGlobal)
-					socketGlobal.send(pack("find", room.type));
+					socketGlobal.send(pack("find", {gameType: room.type, scoreless: room.scoreless}));
 			} else if (!room.name) {
 				//room --> {null,null} --> means room has been reset hand u need to remove
 				if (socketGlobal) socketGlobal.send(pack("close_game"));

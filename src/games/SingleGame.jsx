@@ -11,24 +11,25 @@ import { EnterRoom } from "../globals/redux/actions/game";
 import GlobalContext from "../globals/state/GlobalContext";
 import { Routes } from "../services/configs";
 const SingleGame = () => {
-	const [gameType, setGameType] = useState(4);
+	const [dimension, setDimension] = useState(4);
+	const [isScoreless, setScoreless] = useState(false);
 	const me = useSelector((state) => state.me);
 	const [searching, setSearching] = useState(false);
-    const context = useContext(GlobalContext);
+	const context = useContext(GlobalContext);
 	const dispatch = useDispatch();
 	const tools = useSelector((state) => state.tools);
 
 	const onStartGameClick = (event) => {
 		event.preventDefault();
 		if (me) {
-			dispatch(EnterRoom({ name: null, type: gameType }));
+			dispatch(EnterRoom({ name: null, type: dimension, scoreless: isScoreless }));
 			dispatch(ReapeatRandomSearch());
 			setSearching(true);
 		}
 		// random game:
 		else {
 			Attention("ابتدا باید وارد حساب کاربری خود شوید");
-            context.goTo(Routes.Client.SignUp);
+			context.goTo(Routes.Client.SignUp);
 		}
 	};
 	const { randomSearchRepeats } = tools;
@@ -54,6 +55,30 @@ const SingleGame = () => {
 			<hr />
 			<Form onSubmit={(event) => onStartGameClick(event)}>
 				<Form.Group className="form-inline">
+					<Form.Label className="pb-2 w-25">نوع بازی</Form.Label>
+					<InputGroup
+						style={{
+							border: "1px solid orange",
+							borderRadius: "5px",
+							padding: "2%",
+						}}>
+						<InputGroup.Radio
+							value="0"
+							name="scoreless"
+							checked={!isScoreless}
+							onChange={() => setScoreless(false)}
+						/>
+						<InputGroup.Text className="ml-5">امتیازی</InputGroup.Text>
+						<InputGroup.Radio
+							value="1"
+							name="scoreless"
+							checked={isScoreless}
+							onChange={() => setScoreless(true)}
+						/>
+						<InputGroup.Text>سرعتی</InputGroup.Text>
+					</InputGroup>
+				</Form.Group>
+				<Form.Group className="form-inline">
 					<Form.Label className="pb-2 w-25">ابعاد جدول</Form.Label>
 					<InputGroup
 						style={{
@@ -65,8 +90,8 @@ const SingleGame = () => {
 							<InputGroup.Radio
 								value="3"
 								name="tableDimension"
-								checked={gameType === 3}
-								onChange={() => setGameType(3)}
+								checked={dimension === 3}
+								onChange={() => setDimension(3)}
 							/>
 							<InputGroup.Text>3 * 3 * 3</InputGroup.Text>
 						</InputGroup.Prepend>
@@ -74,8 +99,8 @@ const SingleGame = () => {
 							<InputGroup.Radio
 								value="4"
 								name="tableDimension"
-								checked={gameType === 4}
-								onChange={() => setGameType(4)}
+								checked={dimension === 4}
+								onChange={() => setDimension(4)}
 							/>
 							<InputGroup.Text>4 * 4 * 4</InputGroup.Text>
 						</InputGroup.Prepend>
@@ -83,15 +108,19 @@ const SingleGame = () => {
 							<InputGroup.Radio
 								value="5"
 								name="tableDimension"
-								checked={gameType === 5}
-								onChange={() => setGameType(5)}
+								checked={dimension === 5}
+								onChange={() => setDimension(5)}
 							/>
 							<InputGroup.Text>5 * 5 * 5</InputGroup.Text>
 						</InputGroup.Prepend>
 					</InputGroup>
 				</Form.Group>
 				<hr />
-				<Button type="submit" className="mt-4 animated-button" block variant="success">
+				<Button
+					type="submit"
+					className="mt-4 animated-button"
+					block
+					variant="success">
 					<i className="fa fa-search px-2" aria-hidden="true"></i>
 					جستجو
 				</Button>

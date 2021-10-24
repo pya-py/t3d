@@ -244,7 +244,7 @@ class SignUp extends Component {
 
 						<Button
 							type="submit"
-							className="btn btn-success btn-block mt-4">
+							className="btn btn-success btn-block mt-4 animated-button">
 							<i
 								className="fa fa-user-plus px-2"
 								aria-hidden="true"></i>

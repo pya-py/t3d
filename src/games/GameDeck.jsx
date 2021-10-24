@@ -1,7 +1,7 @@
 import GamePlay from "./gameplay/GamePlay";
 import { useSelector } from "react-redux";
 import SingleGame from "./SingleGame";
-import { Tab, Tabs, Card, Fade } from "react-bootstrap";
+import { Tab, Tabs, Card } from "react-bootstrap";
 import { Fragment } from "react";
 import CompetitionsMain from "./competitions/CompetitionsMain";
 

@@ -57,15 +57,15 @@ const MainLayout = (props) => {
 		<Fragment>
 			<AutoSignIn />
 			{context.device !== Devices.SmartPhone ? (
-				<Row className="w-100 mx-auto">
-					{rightSideBar && <Col md={3}>{rightSideBar}</Col>}
+				<Row className="w-100 mx-auto p-0">
+					{rightSideBar && <Col lg={3}>{rightSideBar}</Col>}
 					<Col
 						className="mx-auto"
-						md={pathname !== Routes.Client.SignUp ? null : 7}>
+						lg={pathname !== Routes.Client.SignUp ? null : 7}>
 						{props.children}
 					</Col>
 					{leftSideBar && (
-						<Col md={context.device !== Devices.Tablet ? 3 : 4}>
+						<Col className="p-0 pl-2" lg={3} md={4}>
 							{leftSideBar}
 						</Col>
 					)}

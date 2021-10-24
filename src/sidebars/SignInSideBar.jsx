@@ -41,7 +41,7 @@ class SignInSideBar extends Component {
 	render() {
 		const { studentID, password, loading } = this.state;
 		return (
-			<Card border="primary" className="sign-in-sidebar">
+			<Card border="primary" className="sign-in-sidebar animated-sidebar-intense">
 				<Card.Header
 					border="primary"
 					className="text-center text-primary">
@@ -53,7 +53,7 @@ class SignInSideBar extends Component {
 						<Form.Control
 							type="text"
 							autoComplete="username"
-							className="sign-in-sidebar-textbox animated-textbox"
+							className="sign-in-sidebar-textbox"
 							placeholder="شماره دانشجویی"
 							value={studentID}
 							onChange={(e) =>
@@ -64,7 +64,7 @@ class SignInSideBar extends Component {
 						<Form.Control
 							type="password"
 							autoComplete="current-password"
-							className="sign-in-sidebar-textbox animated-textbox"
+							className="sign-in-sidebar-textbox"
 							placeholder="رمز عبور"
 							value={password}
 							onChange={(e) =>

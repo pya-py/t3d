@@ -181,7 +181,7 @@ class GamePlay extends Component {
 		const { room } = this.props;
 
 		try {
-			let socket = await connect(room.name, room.type);
+			let socket = await connect(room);
 			socket.onmessage = this.socketOnMessage;
 			this.setState({ socketGamePlay: socket });
 			if (nextJob) nextJob();

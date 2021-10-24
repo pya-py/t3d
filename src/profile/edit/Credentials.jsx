@@ -76,39 +76,36 @@ const Credentials = () => {
 		<Form onSubmit={(e) => saveChanges(e)}>
 			<LoadingBar loading={loading} />
 
-			<Form.Group className="form-inline">
-				<Form.Label className="w-25 text-center">
-					شماره دانشجویی
-				</Form.Label>
-				<Form.Control
-					type="text"
-					disabled
-					className="account-info-textbox w-75"
-					placeholder="Student ID"
-					value={studentID}
-				/>
-			</Form.Group>
-			<Form.Group className="form-inline">
-				<Form.Label className="w-25 text-center">نام کاربر</Form.Label>
-				<Form.Control
-					type="text"
-					className="account-info-textbox w-75"
-					pattern="[آ-ی ]{6,}" // persian characters and space
-					onInput={(e) => e.target.setCustomValidity("")}
-					onInvalid={(e) =>
-						e.target.setCustomValidity(
-							"نام خانوادگی باید با حروف فارسی و با حداقل طول سه حرف باشد"
-						)
-					}
-					placeholder="Full Name"
-					value={fullname}
-					required="required"
-					onChange={(e) => setFullname(e.target.value)}
-				/>
-			</Form.Group>
+			<Row>
+				<Col className="mt-3 text-center" xs={4}>
+					<Form.Label className="text-center">نام کاربر</Form.Label>
+				</Col>
 
-			<Form.Group className="form-inline">
-				<Form.Label className="w-25 text-center">ایمیل</Form.Label>
+				<Col>
+					<Form.Control
+						type="text"
+						className="account-info-textbox"
+						pattern="[آ-ی ]{6,}" // persian characters and space
+						onInput={(e) => e.target.setCustomValidity("")}
+						onInvalid={(e) =>
+							e.target.setCustomValidity(
+								"نام خانوادگی باید با حروف فارسی و با حداقل طول سه حرف باشد"
+							)
+						}
+						placeholder="نام و نام خانوادگی"
+						value={fullname}
+						required="required"
+						onChange={(e) => setFullname(e.target.value)}
+					/>
+				</Col>
+			</Row>
+
+			<Row>
+				<Col className="mt-3 text-center" xs={4}>
+					<Form.Label className="text-center">ایمیل</Form.Label>
+				</Col>
+
+				<Col>
 				<Form.Control
 					type="email"
 					pattern=".{6,}"
@@ -118,14 +115,32 @@ const Credentials = () => {
 							"ورودی باید فرمت معتبر ایمیل را رعایت کرده و حداقل 6 کاراکتر باشد"
 						)
 					}
-					className="account-info-textbox w-75"
+					className="account-info-textbox text-left"
 					placeholder="E-mail"
 					value={email}
 					required="required"
 					onChange={(e) => setEmail(e.target.value)}
 				/>
-			</Form.Group>
-			<Card.Footer className="p-1 m-0">
+				</Col>
+
+			</Row>
+			<Row>
+				<Col className="mt-3 text-center" xs={4}>
+					<Form.Label className="text-center">
+						شماره دانشجویی
+					</Form.Label>
+				</Col>
+				<Col>
+					<Form.Control
+						type="text"
+						disabled
+						className="account-info-textbox text-left"
+						placeholder="Student ID"
+						value={studentID}
+					/>
+				</Col>
+			</Row>
+			<Card.Footer className="p-1 m-0 mt-4">
 				<Row>
 					<Col lg={2} md={2} sm={4} xs={4}>
 						<Form.Label className="text-center w-100 mt-3">

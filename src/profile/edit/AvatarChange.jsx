@@ -33,7 +33,7 @@ const AvatarChange = () => {
 		<Form onSubmit={(e) => upload(e)}>
 			<LoadingBar loading={loading} />
 			<ImagePicker selector={selectMyAvatar} />
-			<Card.Footer className="p-1 m-0">
+			<Card.Footer className="p-1 m-0  mt-4">
 				<Row>
 					<Col lg={2} md={2} sm={4} xs={4}>
 						<Form.Label className="text-center w-100 mt-3">

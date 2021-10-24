@@ -11,7 +11,7 @@ import "../profile.css";
 const PasswordChange = () => {
 	const [password, setPassword] = useState("");
 
-    const [newPassword, setNewPassword] = useState("");
+	const [newPassword, setNewPassword] = useState("");
 	const [confirmNewPassword, setConfirmNewPassword] = useState("");
 	const context = useContext(GlobalContext);
 	const [loading, setLoading] = useState("");
@@ -26,10 +26,9 @@ const PasswordChange = () => {
 		} else event.target.setCustomValidity("");
 	};
 
-
 	const changeMyPassword = async (event) => {
 		event.preventDefault();
-        setLoading(true);
+		setLoading(true);
 		try {
 			const { status } = await userServices.changeMyPassword({
 				password,
@@ -49,43 +48,52 @@ const PasswordChange = () => {
 		setLoading(false);
 	};
 	return (
-		<Form onSubmit={e => changeMyPassword(e)}>
-            <LoadingBar loading={loading} />
-			<Form.Group className="form-inline">
-				<Form.Label className="w-25 text-center">
-					رمز عبور جدید
-				</Form.Label>
-				<Form.Control
-					type="password"
-					pattern=".{6,15}"
-					onInput={(e) => e.target.setCustomValidity("")}
-					onInvalid={(e) =>
-						e.target.setCustomValidity(
-							"رمز عبور باید حداقل 6 کاراکتر و حداکثر 15 کاراکتر داشته باشد"
-						)
-					}
-					className="account-info-textbox w-75 text-left"
-					placeholder="New Password"
-					value={newPassword}
-					required="required"
-					onChange={(e) => setNewPassword(e.target.value)}
-				/>
-			</Form.Group>
-			<Form.Group className="form-inline">
-				<Form.Label className="w-25 text-center">
-					تایید رمز عبور جدید
-				</Form.Label>
+		<Form onSubmit={(e) => changeMyPassword(e)}>
+			<LoadingBar loading={loading} />
+			<Row>
+				<Col className="mt-3 text-center" xs={4}>
+					<Form.Label className="text-center">
+						رمز عبور جدید
+					</Form.Label>
+				</Col>
 
-				<Form.Control
-					type="password"
-					className="account-info-textbox w-75 text-left"
-					placeholder="Confirm New Password"
-					value={confirmNewPassword}
-					required
-					onChange={(event) => checkConfirmPassword(event)}
-				/>
-			</Form.Group>
-			<Card.Footer className="p-1 m-0">
+				<Col>
+					<Form.Control
+						type="password"
+						pattern=".{6,15}"
+						onInput={(e) => e.target.setCustomValidity("")}
+						onInvalid={(e) =>
+							e.target.setCustomValidity(
+								"رمز عبور باید حداقل 6 کاراکتر و حداکثر 15 کاراکتر داشته باشد"
+							)
+						}
+						className="account-info-textbox text-left animated-textbox"
+						placeholder="New Password"
+						value={newPassword}
+						required="required"
+						onChange={(e) => setNewPassword(e.target.value)}
+					/>
+				</Col>
+			</Row>
+			<Row>
+				<Col className="mt-3 text-center" xs={4}>
+					<Form.Label className="text-center">
+						تایید رمز عبور جدید
+					</Form.Label>
+				</Col>
+
+				<Col>
+					<Form.Control
+						type="password"
+						className="account-info-textbox text-left animated-textbox"
+						placeholder="Confirm New Password"
+						value={confirmNewPassword}
+						required
+						onChange={(event) => checkConfirmPassword(event)}
+					/>
+				</Col>
+			</Row>
+			<Card.Footer className="p-1 m-0  mt-4">
 				<Row>
 					<Col lg={2} md={2} sm={4} xs={4}>
 						<Form.Label className="text-center w-100 mt-3">
