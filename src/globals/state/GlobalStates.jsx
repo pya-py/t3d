@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import GlobalContext from "./GlobalContext";
 import { withRouter } from "react-router";
 import { browserStorage, Routes } from "../../services/configs";
-import { useDispatch } from 'react-redux';
-import { ResetMyPlayer } from './../redux/actions/player';
-import { EnterRoom } from './../redux/actions/game';
+import { useDispatch } from "react-redux";
+import { ResetMyPlayer, ResetOpponent } from "./../redux/actions/player";
+import { EnterRoom, ExitRoom } from "./../redux/actions/game";
+import { Sorry } from "./../../tools/notification";
 const GlobalStates = ({ children, history }) => {
 	const isDesktop = useMediaQuery({ query: "(min-width: 1200px)" });
 	const isSmartPhone = useMediaQuery({ query: "(max-width: 768px)" });
@@ -36,14 +37,21 @@ const GlobalStates = ({ children, history }) => {
 	const redirectToGamePlay = (room) => {
 		dispatch(EnterRoom(room));
 		history.push(Routes.Client.GameDeck);
-	}
+	};
 
+	const cancelGame = () => {
+		dispatch(ExitRoom());
+		history.push(Routes.Client.Root);
+		history.push(Routes.Client.GameDeck);
+		Sorry("بازی از سوی یکی از بازیکنان لغو شد.");
+	};
 	const goTo = (destination) => {
 		history.push(destination);
-	}  
+	};
 
 	return (
-		<GlobalContext.Provider value={{ device, signOut, redirectToGamePlay, goTo }}>
+		<GlobalContext.Provider
+			value={{ device, signOut, redirectToGamePlay, goTo, cancelGame }}>
 			{children}
 		</GlobalContext.Provider>
 	);

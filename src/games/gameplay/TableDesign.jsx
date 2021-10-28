@@ -46,13 +46,12 @@ const TableDesign = ({
             fontSize = 25;
 		setCell({ width, height, margin, fontSize });
 	}, [dimension]);
-
 	//prop drilling in BriefScoreBoard
 	return (
 		<Card bg="transparent" border="dark" className="w-100 mt-2 mx-auto">
 			<BriefScoreboard timeRemaining={timeRemaining} players={players} />
 			<Card.Body className="game-border-card">
-				{table ? (
+				{table && cell ? (
 					dimens.map((floor) => (
 						<Fragment>
 							{dimens.map((row) => (

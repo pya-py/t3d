@@ -4,7 +4,8 @@ const GlobalContext = createContext({
     device: 0,
     signOut: () => {},
     goTo: () => {},
-    redirectToGamePlay: () => {}
+    redirectToGamePlay: () => {},
+    cancelGame: () => {}
 });
 
 export default GlobalContext;

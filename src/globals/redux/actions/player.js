@@ -3,7 +3,7 @@ import userServices from "./../../../services/http/userServices";
 
 export const ResetOpponent = () =>{
     return async (dispatch) => {
-        await dispatch({type: "RESET_OPPONENT"})
+        await dispatch({type: "RESET_OPPONENT"});
     }
 }
 

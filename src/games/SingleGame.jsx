@@ -2,7 +2,7 @@ import { Fragment, useState, useEffect, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import LoadingBar from "../commons/LoadingBar";
-import { Attention, Notify } from "../tools/notification";
+import { Attention, Notify, OK } from "../tools/notification";
 import {
 	CloseRandomSearch,
 	ReapeatRandomSearch,
@@ -18,11 +18,18 @@ const SingleGame = () => {
 	const context = useContext(GlobalContext);
 	const dispatch = useDispatch();
 	const tools = useSelector((state) => state.tools);
+	const room = useSelector((state) => state.room);
 
 	const onStartGameClick = (event) => {
 		event.preventDefault();
 		if (me) {
-			dispatch(EnterRoom({ name: null, type: dimension, scoreless: isScoreless }));
+			dispatch(
+				EnterRoom({
+					name: null,
+					type: dimension,
+					scoreless: isScoreless,
+				})
+			);
 			dispatch(ReapeatRandomSearch());
 			setSearching(true);
 		}
@@ -35,10 +42,17 @@ const SingleGame = () => {
 	const { randomSearchRepeats } = tools;
 
 	useEffect(() => {
-		if (searching && !randomSearchRepeats) {
-			//means no one has been found after a specific amount of time
-			Notify("حریفی پیدا نشد ... لحظاتی دیگر مجددا تلاش کنید");
-			setSearching(false);
+		if (searching) {
+			if (room.name) {
+				OK(
+					"یک حریف تصادفی پیدا شد ... در صورت تایید هر دو طرف بازی آغاز خواهد شد."
+				);
+				setSearching(false);
+			} else if (!randomSearchRepeats) {
+				//means no one has been found after a specific amount of time
+				Notify("حریفی پیدا نشد ... لحظاتی دیگر مجددا تلاش کنید");
+				setSearching(false);
+			}
 		}
 	}, [searching, randomSearchRepeats]);
 	//on destroy
@@ -68,7 +82,9 @@ const SingleGame = () => {
 							checked={!isScoreless}
 							onChange={() => setScoreless(false)}
 						/>
-						<InputGroup.Text className="ml-5">امتیازی</InputGroup.Text>
+						<InputGroup.Text className="ml-5">
+							امتیازی
+						</InputGroup.Text>
 						<InputGroup.Radio
 							value="1"
 							name="scoreless"

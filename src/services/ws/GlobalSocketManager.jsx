@@ -42,7 +42,6 @@ const GlobalSocketManager = () => {
 		});
 	}, []);
 
-	const { signOut, redirectToGamePlay } = context;
 	const iamSignedIn = me && me.userID;
 	const iamBusy = room && room.name;
 	const connect = useCallback(() => {
@@ -65,18 +64,21 @@ const GlobalSocketManager = () => {
 						case "ONLINE": {
 							const { players, games } = msg;
 							dispatch(UpdateStatistics(players, games)); //playing temp
+							console.log("in online: ", msg.room)
+							dispatch(EnterRoom(msg.room));
 							break;
 						}
 						case "NOT_AUTHORIZED": {
 							Sorry(
 								"نشست شما منقضی شده، لطفا دوباره وارد حساب کاربری خود شوید"
 							);
-							signOut();
+							context.signOut();
 							break;
 						}
 						case "FIND_RESULT": {
 							//response from random game request
 							if (msg) {
+								console.log(msg)
 								dispatch(EnterRoom(msg));
 								socket.send(pack("online"));
 								dispatch(CloseRandomSearch());
@@ -89,6 +91,10 @@ const GlobalSocketManager = () => {
 										dispatch(ReapeatRandomSearch());
 								}, 5000);
 							}
+							break;
+						}
+						case "GAME_CANCELLED":{
+							context.cancelGame();
 							break;
 						}
 						case "FRIENDSHIP_REQUEST": {
@@ -159,7 +165,7 @@ const GlobalSocketManager = () => {
 							// ... if true -> room info has ben sent to you
 							// needed to check room state? done in server
 							dispatch(EndFriendlyInvitation());
-							redirectToGamePlay(msg); //msg -> room
+							context.redirectToGamePlay(msg); //msg -> room
 							break;
 						}
 						case "CHAT": {
@@ -208,7 +214,7 @@ const GlobalSocketManager = () => {
 				console.log(`global websocket errpr: ${err}`);
 			}
 		});
-	}, [dispatch, signOut, redirectToGamePlay, pack, iamSignedIn, iamBusy]);
+	}, [dispatch, context, pack, iamSignedIn, iamBusy]);
 
 	// EVENT NAME: PlayerUpdateEvent
 	// happens when player sign in status changes => set ups global socket connection and then if signed in=> reads number of online users in page
@@ -280,7 +286,7 @@ const GlobalSocketManager = () => {
 					})
 				);
 		}
-	}, [
+	}, [ dispatch,
 		friendRequestTarget,
 		friendlyGameTarget,
 		acceptedGame,

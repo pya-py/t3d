@@ -12,6 +12,7 @@ export const ExitRoom = () => {
 		await dispatch({
 			type: "EXIT_ROOM",
 		});
+		await dispatch({type: "RESET_OPPONENT"});
 	};
 };
 
