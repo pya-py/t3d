@@ -15,11 +15,6 @@ const GameDeck = () => {
 		setContinueGame(true);
 	};
 
-	useEffect(() => {
-		setContinueGame(false);
-		setSurrender(false);
-
-	}, []);
 	//***** */ show opponent record before game start choice
 	return (
 		<Fragment>
