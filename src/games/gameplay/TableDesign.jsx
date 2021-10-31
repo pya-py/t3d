@@ -8,6 +8,7 @@ const TableDesign = ({
 	dimension,
 	players,
 	table,
+	turn,
 	onEachCellClick
 }) => {
 	let dimens = [];
@@ -49,7 +50,7 @@ const TableDesign = ({
 	//prop drilling in BriefScoreBoard
 	return (
 		<Card bg="transparent" border="dark" className="w-100 mt-2 mx-auto">
-			<BriefScoreboard timeRemaining={timeRemaining} players={players} />
+			<BriefScoreboard timeRemaining={timeRemaining} turn={turn} players={players} />
 			<Card.Body className="game-border-card">
 				{table && cell ? (
 					dimens.map((floor) => (
@@ -67,7 +68,7 @@ const TableDesign = ({
 												row * dimension +
 												column
 											}
-											variant="outline-dark"
+											variant="border-dark"
 											className="game-table-cells"
 											style={{
 												width: `${cell.width}px`,

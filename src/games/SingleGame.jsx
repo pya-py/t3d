@@ -54,7 +54,7 @@ const SingleGame = () => {
 				setSearching(false);
 			}
 		}
-	}, [searching, randomSearchRepeats]);
+	}, [searching, room.name, randomSearchRepeats]);
 	//on destroy
 	useEffect(() => {
 		return () => {

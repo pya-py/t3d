@@ -7,6 +7,7 @@ import LoadingBar from "../commons/LoadingBar";
 import Configs, { browserStorage } from "../services/configs";
 import { Card, Form, Button, Row, Col } from "react-bootstrap";
 import { Sorry, OK, Attention } from "../tools/notification";
+import ReCAPTCHA from "react-google-recaptcha";
 
 class SignUp extends Component {
 	// *********************Objectives***********************
@@ -269,7 +270,11 @@ class SignUp extends Component {
 								/>
 							</Col>
 						</Row>
-
+						<hr />
+						<Row className="justify-content-center my-3">
+							<ReCAPTCHA sitekey="Your client site key" />
+						</Row>
+						<Row className="mb-3">
 						<Button
 							type="submit"
 							className="btn btn-success btn-block mt-4 animated-button">
@@ -278,6 +283,7 @@ class SignUp extends Component {
 								aria-hidden="true"></i>
 							ثبت نام
 						</Button>
+						</Row>
 					</Form>
 				</Card.Body>
 				<Card.Footer className="border-primary bg-transparent">

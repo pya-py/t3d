@@ -65,14 +65,22 @@ class GamePlay extends Component {
 		});
 	};
 
-	enableTimerForMyMove = (timeout = GameSetting.T3D.TurnTimeOut) => {
-		this.setState({ timeRemaining: timeout });
+	syncPlayersTurnTimer = (t0) => {
+		const remaining =
+			GameSetting.T3D.TurnTimeOut - (Date.now() - t0) / 1000;
+		this.setState({ timeRemaining: Math.floor(remaining) });
 		//is it needed to declare timerID as state?
-		clearInterval(this.state.timerID);
+		if (this.state.timerID) clearInterval(this.state.timerID);
 		const timerID = setInterval(() => {
 			const { timeRemaining, timerID } = this.state;
 			if (timeRemaining <= 0) {
+				const { socketGamePlay } = this.state;
+				const { room } = this.props;
 				clearInterval(timerID);
+				this.setState({ timerID: null });
+				socketGamePlay.send(
+					createSocketRequest("ban_move", room.name, null)
+				);
 				return;
 			}
 			this.setState({ timeRemaining: this.state.timeRemaining - 1 });
@@ -111,31 +119,27 @@ class GamePlay extends Component {
 				this.setState({ dimension, myTurn });
 				const opponentID = IDs[Number(!myTurn)];
 				const { opponent, LoadThisPlayer } = this.props;
-				if (!opponent && opponentID && !surrender) //ithink !surrender must be removed
+				if (!opponent && opponentID && !surrender)
+					//ithink !surrender must be removed
 					//if opponent is not null -> means this was called before and there's no need to run again
 					LoadThisPlayer(opponentID);
 			} else if (cmd === "LOAD") {
 				this.updatePlayerStates(msg);
-				const { table } = msg;
-
+				const { table, t0 } = msg;
+				console.log(msg);
 				this.setState({
 					table,
 				});
+				this.updatePlayerStates(msg);
 				this.updateGameScorebaord();
-			} else if (cmd === "TIMER") {
-				//you can calculate request respone time -> then minimize it from tiem sent by server -> to gain acurate time
-				//but its real neccessary, Math.floor on the server side does this nearly
-				//but for accurate approach remember: remove Math.floor from server side
-				console.log("time updated: ", msg);
-				this.setState({ timeRemaining: msg });
-				clearTimeout(this.state.timerID); //clear move time out timers, though their disabled before, this is for assurance
-				this.enableTimerForMyMove(msg);
+				this.syncPlayersTurnTimer(t0);
 			} else if (this.state.table) {
 				if (cmd === "SCORES") this.updatePlayerStates(msg);
 				else if (cmd === "UPDATE") {
-					const { room } = this.props;
+					const { room, me } = this.props;
 					const { dimension } = this.state;
-					const cellID = Number(msg.nextMove);
+					const { newMove, t0 } = msg;
+					const cellID = Number(newMove.cellIndex);
 
 					//*************** */
 					//is this needed to check the move in client? considering that complete check has been made in client
@@ -147,23 +151,28 @@ class GamePlay extends Component {
 						this.cellButtons[cellID]
 					);
 					//wrap it up this part of UPDATE and LOAD in a method
-					this.updatePlayerStates(msg);
+					this.updatePlayerStates(newMove);
 
 					this.cellButtons[cellID].focus();
 					this.updateGameScorebaord();
 
 					// now inform the server that the move is recieved
 					//force connect it?
-					this.state.socketGamePlay.send(
-						createSocketRequest("move_recieved", room.name, true)
-					);
+					if (newMove.madeBy !== me.userID)
+						this.state.socketGamePlay.send(
+							createSocketRequest(
+								"move_recieved",
+								room.name,
+								true
+							)
+						);
 					// server time out is set and now setInterval for this client to show how much time left
-					this.enableTimerForMyMove();
+					this.syncPlayersTurnTimer(t0);
 				} else if (cmd === "MOVE_MISSED") {
-					const { myTurn } = this.state;
+					const { turn, t0 } = msg;
 					//msg --> forced set turn
-					this.setState({ turn: msg });
-					if (msg === myTurn) this.enableTimerForMyMove();
+					this.setState({ turn });
+					this.syncPlayersTurnTimer(t0);
 				} else if (cmd === "NOT_AUTHORIZED") {
 					Sorry(
 						"نشست شما منقضی شده، لطفا دوباره وارد حساب کاربری خود شوید"
@@ -227,14 +236,10 @@ class GamePlay extends Component {
 
 	loadCurrentGame = () => {
 		const { room, surrender } = this.props;
-		const { myTurn } = this.state;
 		console.log(room);
 		this.forceConnectWS(() => {
 			this.state.socketGamePlay.send(
 				createSocketRequest("load", room.name, null)
-			);
-			this.state.socketGamePlay.send(
-				createSocketRequest("mytimer", room.name, myTurn)
 			);
 			if (surrender) {
 				this.state.socketGamePlay.send(
@@ -268,28 +273,18 @@ class GamePlay extends Component {
 		return { floor: cellFloor, row: cellRow, column: cellColumn };
 	};
 	onEachCellClick = (event) => {
-		const { dimension, turn, timerID } = this.state;
+		const { dimension, turn, myTurn, table } = this.state;
 		const { opponent, room } = this.props;
-		if (opponent) {
+		if (opponent && turn === myTurn) {
 			try {
 				const selectedCellButton = event.target;
-
-				//this is just for when the connection is not automatically came back, so the user via clicking cells can initiate connection
-				if (this.state.turn !== this.state.myTurn) {
-					//is this needed really?
-					this.forceConnectWS(null);
-					return;
-				}
 
 				const cell = this.getCellCoordinates(
 					selectedCellButton.id,
 					dimension
 				);
 				console.log(selectedCellButton.id, cell);
-				if (this.verifyAndApplyTheMove(cell, selectedCellButton)) {
-					//send move to WebSocket Server
-
-					this.setState({ turn: (turn + 1) % 2 });
+				if (table[cell.floor][cell.row][cell.column] === null) {
 					this.forceConnectWS(() => {
 						this.state.socketGamePlay.send(
 							createSocketRequest(
@@ -299,8 +294,6 @@ class GamePlay extends Component {
 							)
 						);
 					});
-					clearInterval(timerID);
-					this.setState({ timeRemaining: 0 });
 				}
 			} catch (err) {
 				console.log(err);
@@ -320,7 +313,9 @@ class GamePlay extends Component {
 			// cellButton.style.color = players[turn].color;
 			cellButton.style.opacity = 0.0;
 			setTimeout(() => {
-				cellButton.className = `game-table-cells animate-new-move`;
+				cellButton.className = `game-table-cells player-${
+					turn ? "o" : "x"
+				}-cell animate-new-move`;
 				cellButton.style.opacity = 1.0;
 			}, 100);
 
@@ -456,15 +451,20 @@ class GamePlay extends Component {
 	// method below: checks each possible line(according to the condition that user gives it),
 	// if the line is made colorifies the line and returns 1 ( as one single score for each line checked ), otherwise returns 0
 	connectTheScoreLines = (firstCell, step, player) => {
-		const { dimension } = this.state;
+		const { dimension, turn } = this.state;
+		const { room } = this.props;
 		for (let i = 0; i < dimension; i++) {
 			this.cellButtons[
 				firstCell + i * step
 			].className = `game-table-cells btn btn-${player.lineColor}`;
-			setTimeout(() => {
-				this.cellButtons[firstCell + i * step].className =
-					"game-table-cells btn btn-outline-dark";
-			}, 1000 + i * 100);
+			!room.scoreless &&
+				setTimeout(() => {
+					this.cellButtons[
+						firstCell + i * step
+					].className = `game-table-cells player-${
+						turn ? "o" : "x"
+					}-cell`;
+				}, 1000 + i * 100);
 		}
 	};
 
@@ -498,6 +498,7 @@ class GamePlay extends Component {
 				dimension={this.state.dimension}
 				players={this.state.players}
 				table={this.state.table}
+				turn={this.state.turn}
 				timeRemaining={this.state.timeRemaining}
 				onEachCellClick={this.onEachCellClick}
 			/>

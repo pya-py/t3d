@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { GameSetting } from "../../services/configs";
 
-const BriefScoreboard = ({ timeRemaining, players }) => {
+const BriefScoreboard = ({ timeRemaining, players, turn }) => {
     const [timeStamp, setTimeStamp] = useState(null);
     const aThird = GameSetting.T3D.TurnTimeOut / 3;
     useEffect(() => {
@@ -25,7 +25,7 @@ const BriefScoreboard = ({ timeRemaining, players }) => {
             color = "text-dark";
             icon = <i className="fa fa-hourglass-end px-2" aria-hidden="true"></i>;
         }
-        setTimeStamp(<div className={color}>{icon}{timeRemaining}</div>);
+        setTimeStamp(<div className={color}>{icon}{timeRemaining} : {players[turn].shape}</div>);
     }, [timeRemaining, aThird]);
 
     return (

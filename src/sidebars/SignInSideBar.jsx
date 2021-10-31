@@ -6,7 +6,7 @@ import LoadingBar from "../commons/LoadingBar";
 import Configs, { browserStorage } from "../services/configs";
 import { Card, Form, Button, Col, Row } from "react-bootstrap";
 import { Sorry } from "../tools/notification";
-
+import ReCAPTCHA from "react-google-recaptcha";
 class SignInSideBar extends Component {
 	// *********************Objectives***********************
 	// 1. handle errors particularly
@@ -24,7 +24,6 @@ class SignInSideBar extends Component {
 		try {
 			const { status, data } = await userServices.signIn(user);
 			if (status === Configs.Status.Successful) {
-				console.log(data);
 				browserStorage.save(data.token);
 				this.props.history.replace("/");
 			}
@@ -41,7 +40,9 @@ class SignInSideBar extends Component {
 	render() {
 		const { studentID, password, loading } = this.state;
 		return (
-			<Card border="primary" className="sign-in-sidebar animated-sidebar-intense">
+			<Card
+				border="primary"
+				className="sign-in-sidebar animated-sidebar-intense">
 				<Card.Header
 					border="primary"
 					className="text-center text-primary">
@@ -71,11 +72,14 @@ class SignInSideBar extends Component {
 								this.setState({ password: e.target.value })
 							}
 						/>
-						<br />
+						<hr />
+						<Row className="justify-content-center my-3">
+							<ReCAPTCHA sitekey="Your client site key" />
+						</Row>
 						<Card.Footer className="bg-transparent border-primary">
 							<Row>
 								<Col lg={6}>
-									<Button 
+									<Button
 										type="submit"
 										variant="success"
 										className="sign-in-sidebar-buttons animated-button">

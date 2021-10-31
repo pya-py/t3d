@@ -1,15 +1,24 @@
 .game-table-cells {
-    /* width: 70px;
-    height: 42px; */
     transform: skew(45deg);
     text-align: center;
-    /* font-size: 25px; */
     border-radius: 0;
     border: 2px solid black;
 }
 
-.game-table-cells:focus{
-    background-color: orange;
+/* .player-x-cell {
+
+    border: 2px solid dodgerblue;
+}
+.player-o-cell {
+
+    border: 2px solid darkred;
+} */
+
+.player-x-cell:focus{
+    background-color:dodgerblue
+}
+.player-o-cell:focus{
+    background-color:#ff0000;
 }
 .game-border-card {
     width: 100%;

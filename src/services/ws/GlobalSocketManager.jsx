@@ -33,7 +33,6 @@ const GlobalSocketManager = () => {
 	const message = useSelector((state) => state.message);
 	const [clientOnline, toggleClientOnline] = useState(true);
 	const dispatch = useDispatch();
-
 	const pack = useCallback((request, msg = null) => {
 		return JSON.stringify({
 			token: browserStorage.TOKEN(),
@@ -41,180 +40,202 @@ const GlobalSocketManager = () => {
 			msg,
 		});
 	}, []);
+	const [reconnectingTimerID, setReconnectingTimerID] = useState(null);
 
 	const iamSignedIn = me && me.userID;
 	const iamBusy = room && room.name;
-	const connect = useCallback(() => {
-		console.log("global websocket connect called -> new socket returned");
-		if (!iamSignedIn) return null; //to make sure just site user trigger this connection
-		return new Promise((resolve, reject) => {
-			try {
-				var socket = new WebSocket(
-					`${Routes.Server.WebSocketRoot}/${Routes.Server.wsGlobalRoute}`
-				);
-				socket.onopen = () => {
-					socket.send(pack("online")); //temp
-					resolve(socket);
-				};
+	const connect = useCallback(
+		(nextReconnectingTimeout = 5000) => {
+			console.log(
+				"global websocket connect called -> new socket returned"
+			);
+			if (!iamSignedIn) return null; //to make sure just site user trigger this connection
+			return new Promise((resolve, reject) => {
+				try {
+					var socket = new WebSocket(
+						`${Routes.Server.WebSocketRoot}/${Routes.Server.wsGlobalRoute}`
+					);
+					socket.onopen = () => {
+						socket.send(pack("online")); //temp
+						resolve(socket);
+					};
 
-				socket.onmessage = (response) => {
-					const { data } = response;
-					const { command, msg } = JSON.parse(data);
-					switch (command) {
-						case "ONLINE": {
-							const { players, games } = msg;
-							dispatch(UpdateStatistics(players, games)); //playing temp
-							console.log("in online: ", msg.room)
-							dispatch(EnterRoom(msg.room));
-							break;
-						}
-						case "NOT_AUTHORIZED": {
-							Sorry(
-								"نشست شما منقضی شده، لطفا دوباره وارد حساب کاربری خود شوید"
-							);
-							context.signOut();
-							break;
-						}
-						case "FIND_RESULT": {
-							//response from random game request
-							if (msg) {
-								console.log(msg)
-								dispatch(EnterRoom(msg));
-								socket.send(pack("online"));
-								dispatch(CloseRandomSearch());
-							} else {
-								//search again 5s later
-								// **********************
-								//time out must be set with rising time out time to prevent server getting fucked up
-								setTimeout(() => {
-									if (!iamBusy)
-										dispatch(ReapeatRandomSearch());
-								}, 5000);
+					socket.onmessage = (response) => {
+						const { data } = response;
+						const { command, msg } = JSON.parse(data);
+						switch (command) {
+							case "ONLINE": {
+								const { players, games } = msg;
+								dispatch(UpdateStatistics(players, games)); //playing temp
+								dispatch(EnterRoom(msg.room));
+								break;
 							}
-							break;
-						}
-						case "GAME_CANCELLED":{
-							context.cancelGame();
-							break;
-						}
-						case "FRIENDSHIP_REQUEST": {
-							//if (msg.askerID === opponentID) {
-							//if both mes are in game then ask immidiately
-							setIncommingFriendRequest(msg);
-							setShowFriendshipModal(true);
+							case "NOT_AUTHORIZED": {
+								Sorry(
+									"نشست شما منقضی شده، لطفا دوباره وارد حساب کاربری خود شوید"
+								);
+								context.signOut();
+								break;
+							}
+							case "FIND_RESULT": {
+								//response from random game request
+								const { found, stats } = msg;
+								if (found) {
+									dispatch(EnterRoom(found));
+									dispatch(CloseRandomSearch());
+								} else {
+									//search again 5s later
+									// **********************
+									//time out must be set with rising time out time to prevent server getting fucked up
+									setTimeout(() => {
+										if (!iamBusy)
+											dispatch(ReapeatRandomSearch());
+									}, 5000);
+								}
+								if (stats)
+									//double check if stats is sent by server, this is for avoiding further crashes
+									dispatch(
+										UpdateStatistics(
+											stats.players,
+											stats.games
+										)
+									);
 
-							/*else {
+								break;
+							}
+							case "GAME_CANCELLED": {
+								context.cancelGame();
+								break;
+							}
+							case "FRIENDSHIP_REQUEST": {
+								//if (msg.askerID === opponentID) {
+								//if both mes are in game then ask immidiately
+								setIncommingFriendRequest(msg);
+								setShowFriendshipModal(true);
+
+								/*else {
 								//if the friend request is comming from some one else then manage it differently
 								//...
 							}*/
-							break;
-						}
-						case "FRIENDSHIP_RESPONSE": {
-							const { answer, targetName } = msg;
-							//if(answer) dispatch(TriggerRecordUpdate());
-							if (answer) {
-								OK(`${targetName} درخواست دوستی شما را پذیرفت`);
-								setTimeout(() => {
-									//reload for changing friendship status in the game => delay is set for restin assure that database is updated
-									dispatch(ReloadRecords());
-								}, 2000);
-							} else
-								Attention(
-									`${targetName} درخواست دوستی شما را رد کرد`
-								);
-							dispatch(EndFriendRequest());
-							break;
-						}
-						case "TARGET_OFFLINE": {
-							//... while chatting or game request
-							Sorry(
-								"کاربر مورد نظر در حال حاضر آفلاین می باشد. لطفا بعدا تلاش کنید."
-							);
-							dispatch(EndFriendlyInvitation());
-							break;
-						}
-						case "YOUR_BUSY": {
-							Sorry(
-								"شما هنوز بازی اخیر خود را به اتمام نرسانده اید. پس از پایان آن دوباره تلاش کنید."
-							);
-							dispatch(EndFriendlyInvitation());
-							break;
-						}
-						case "TARGET_BUSY": {
-							//... while chatting or game request
-							Notify(
-								"در حال حاضر کاربر مشغول انجام بازی دیگری است و درخواست شما امکان پذیر نیست"
-							);
-							dispatch(EndFriendlyInvitation());
-							break;
-						}
-						case "FRIENDLY_GAME": {
-							// ... trigger and show responding form
-							const { askerID, askerName, gameType } = msg;
-							dispatch(
-								RecieveGameInvitation(
-									askerID,
-									askerName,
-									gameType
-								)
-							);
-							break;
-						}
-						case "INVITATION_ACCEPTED": {
-							// ... friend responded to your request
-							// ... if true -> room info has ben sent to you
-							// needed to check room state? done in server
-							dispatch(EndFriendlyInvitation());
-							context.redirectToGamePlay(msg); //msg -> room
-							break;
-						}
-						case "CHAT": {
-							dispatch(
-								RecieveMessageFrom(
-									msg.name,
-									msg.friendID,
-									msg.text
-								)
-							);
-
-							break;
-						}
-						default: {
-							//... whatever
-							break;
-						}
-					}
-					resolve(socket);
-				};
-
-				socket.onerror = (error) => {
-					socket.close();
-					reject(error);
-				};
-
-				socket.onclose = () => {
-					// reconnectr or what?
-					console.log("Reconnecting in  5 seconds");
-					setTimeout(() => {
-						(async () => {
-							try {
-								let socket = iamSignedIn
-									? await connect()
-									: null;
-								setSocketGlobal(socket);
-							} catch (err) {
-								console.log(err);
+								break;
 							}
-						})();
-					}, 5000);
-					resolve(null);
-					// this part needs editing ? maybe not
-				};
-			} catch (err) {
-				console.log(`global websocket errpr: ${err}`);
-			}
-		});
-	}, [dispatch, context, pack, iamSignedIn, iamBusy]);
+							case "FRIENDSHIP_RESPONSE": {
+								const { answer, targetName } = msg;
+								//if(answer) dispatch(TriggerRecordUpdate());
+								if (answer) {
+									OK(
+										`${targetName} درخواست دوستی شما را پذیرفت`
+									);
+									setTimeout(() => {
+										//reload for changing friendship status in the game => delay is set for restin assure that database is updated
+										dispatch(ReloadRecords());
+									}, 2000);
+								} else
+									Attention(
+										`${targetName} درخواست دوستی شما را رد کرد`
+									);
+								dispatch(EndFriendRequest());
+								break;
+							}
+							case "TARGET_OFFLINE": {
+								//... while chatting or game request
+								Sorry(
+									"کاربر مورد نظر در حال حاضر آفلاین می باشد. لطفا بعدا تلاش کنید."
+								);
+								dispatch(EndFriendlyInvitation());
+								break;
+							}
+							case "YOUR_BUSY": {
+								Sorry(
+									"شما هنوز بازی اخیر خود را به اتمام نرسانده اید. پس از پایان آن دوباره تلاش کنید."
+								);
+								dispatch(EndFriendlyInvitation());
+								break;
+							}
+							case "TARGET_BUSY": {
+								//... while chatting or game request
+								Notify(
+									"در حال حاضر کاربر مشغول انجام بازی دیگری است و درخواست شما امکان پذیر نیست"
+								);
+								dispatch(EndFriendlyInvitation());
+								break;
+							}
+							case "FRIENDLY_GAME": {
+								// ... trigger and show responding form
+								const { askerID, askerName, gameType } = msg;
+								dispatch(
+									RecieveGameInvitation(
+										askerID,
+										askerName,
+										gameType
+									)
+								);
+								break;
+							}
+							case "INVITATION_ACCEPTED": {
+								// ... friend responded to your request
+								// ... if true -> room info has ben sent to you
+								// needed to check room state? done in server
+								dispatch(EndFriendlyInvitation());
+								context.redirectToGamePlay(msg); //msg -> room
+								break;
+							}
+							case "CHAT": {
+								dispatch(
+									RecieveMessageFrom(
+										msg.name,
+										msg.friendID,
+										msg.text
+									)
+								);
+
+								break;
+							}
+							default: {
+								//... whatever
+								break;
+							}
+						}
+						resolve(socket);
+					};
+
+					socket.onerror = (error) => {
+						socket.close();
+						reject(error);
+					};
+
+					socket.onclose = () => {
+						// reconnectr or what?
+						console.log(
+							`Reconnecting to global socket in ${
+								nextReconnectingTimeout / 1000
+							} seconds`
+						);
+						const timerID = setTimeout(() => {
+							(async () => {
+								try {
+									let socket = iamSignedIn
+										? await connect(
+												nextReconnectingTimeout * 2
+										  )
+										: null;
+									setSocketGlobal(socket);
+								} catch (err) {
+									console.log(err);
+								}
+							})();
+						}, nextReconnectingTimeout);
+						setReconnectingTimerID(timerID);
+						resolve(null);
+						// this part needs editing ? maybe not
+					};
+				} catch (err) {
+					console.log(`global websocket errpr: ${err}`);
+				}
+			});
+		},
+		[dispatch, context, pack, iamSignedIn, iamBusy]
+	);
 
 	// EVENT NAME: PlayerUpdateEvent
 	// happens when player sign in status changes => set ups global socket connection and then if signed in=> reads number of online users in page
@@ -232,6 +253,11 @@ const GlobalSocketManager = () => {
 		}
 	}, [clientOnline, iamSignedIn, connect]);
 
+	useEffect(() => {
+		return () => {
+			reconnectingTimerID && clearTimeout(reconnectingTimerID);
+		}
+	}, [reconnectingTimerID]);
 	const { fullname } = me ? me : { fullname: null };
 	const {
 		friendRequestTarget,
@@ -247,7 +273,12 @@ const GlobalSocketManager = () => {
 				//is it necessary?
 				//completely making sure we're on right stage
 				if (!room.name && iamSignedIn && socketGlobal)
-					socketGlobal.send(pack("find", {gameType: room.type, scoreless: room.scoreless}));
+					socketGlobal.send(
+						pack("find", {
+							gameType: room.type,
+							scoreless: room.scoreless,
+						})
+					);
 			} else if (!room.name) {
 				//room --> {null,null} --> means room has been reset hand u need to remove
 				if (socketGlobal) socketGlobal.send(pack("close_game"));
@@ -286,7 +317,8 @@ const GlobalSocketManager = () => {
 					})
 				);
 		}
-	}, [ dispatch,
+	}, [
+		dispatch,
 		friendRequestTarget,
 		friendlyGameTarget,
 		acceptedGame,
