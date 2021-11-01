@@ -26,7 +26,7 @@ const BriefScoreboard = ({ timeRemaining, players, turn }) => {
             icon = <i className="fa fa-hourglass-end px-2" aria-hidden="true"></i>;
         }
         setTimeStamp(<div className={color}>{icon}{timeRemaining} : {players[turn].shape}</div>);
-    }, [timeRemaining, aThird]);
+    }, [timeRemaining, aThird, players, turn]);
 
     return (
         <Card.Header className="w-100 text-center">
