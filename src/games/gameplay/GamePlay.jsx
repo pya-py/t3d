@@ -206,13 +206,10 @@ class GamePlay extends Component {
 			console.log(err);
 			// **********************
 			//time out must be set with rising time out time to prevent server getting fucked up
-			setTimeout(
-				() => {
-					console.log("rconnecting from GamePlay");
-					this.forceConnectWS(nextJob);
-				},
-				nextJob ? 1000 : 3000
-			);
+			setTimeout(() => {
+				console.log("rconnecting from GamePlay");
+				this.forceConnectWS(nextJob);
+			}, 3000);
 			//if there is a next job --> then player is sending a move or something important and
 			//time out needs to be called quicker 'cause players have timeout in serimport { LoadPlayer } from './../../globals/redux/actions/player';
 			//time out needs to be called quicker 'cause players have timeout in server for sending moves
@@ -221,8 +218,8 @@ class GamePlay extends Component {
 
 	enableConnectionCheckTimer = () => {
 		return setInterval(() => {
-			if (window.navigator.onLine) {
-				if (!this.state.playerOnline) {
+			if (window.navigator.onLine) { 
+				if (!this.state.playerOnline) { // user comming bacvk online just now
 					//player JUST became online
 					this.setState({ playerOnline: true }); // toggle online status
 					this.forceConnectWS(null); // reconnect to gamePlayWebSocket
@@ -284,16 +281,16 @@ class GamePlay extends Component {
 					dimension
 				);
 				console.log(selectedCellButton.id, cell);
-				if (table[cell.floor][cell.row][cell.column] === null) {
-					this.forceConnectWS(() => {
-						this.state.socketGamePlay.send(
-							createSocketRequest(
-								"move",
-								room.name,
-								selectedCellButton.id
-							)
-						);
-					});
+				if (this.verifyAndApplyTheMove(cell, selectedCellButton)) {
+					//this.forceConnectWS(() => {
+					this.state.socketGamePlay.send(
+						createSocketRequest(
+							"move",
+							room.name,
+							selectedCellButton.id
+						)
+					);
+					//});
 				}
 			} catch (err) {
 				console.log(err);
@@ -507,50 +504,3 @@ class GamePlay extends Component {
 }
 
 export default withRouter(withReduxDashboard(GamePlay));
-
-//another way to check online / offline status :
-// initiateGameTimer = () => {
-//     setInterval(() => {
-//         if (window.navigator.onLine) {
-//             if (this.connectionLost) {
-//                 console.log("connected");
-//                 this.connectionLost = false;
-//                 this.forceConnectWS(null);
-//             }
-//         } else {
-//             console.log("dissconnected");
-//             this.connectionLost = true;
-//         }
-//         /*this.isOnline(
-//             () => {
-//                 if (this.connectionLost) {
-//                     console.log("connected");
-//                     this.connectionLost = false;
-//                     this.forceConnectWS(null);
-//                 }
-//             },
-//             () => {
-//                 console.log("dissconnected");
-//                 this.connectionLost = true;
-//             }
-//         );*/
-//     }, 1000);
-// };
-
-// /*    isOnline = (success, failure) => {
-//     var xhr = XMLHttpRequest
-//         ? new XMLHttpRequest()
-//         : new window.ActiveXObject("Microsoft.XMLHttp");
-//     xhr.onload = function () {
-//         if (success instanceof Function) {
-//             success();
-//         }
-//     };
-//     xhr.onerror = function () {
-//         if (failure instanceof Function) {
-//             failure();
-//         }
-//     };
-//      xhr.open("GET", "https://t3dweb.herokuapp.com/users", true);//edit this ******************************
-//      xhr.send();
-// }; */
