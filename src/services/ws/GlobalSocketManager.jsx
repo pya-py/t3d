@@ -19,6 +19,7 @@ import {
 	EmptyGameInvitations,
 } from "./../../globals/redux/actions/tools";
 import { EnterRoom } from "../../globals/redux/actions/game";
+import { LoadThisPlayer } from "./../../globals/redux/actions/player";
 const GlobalSocketManager = () => {
 	// I actually used .jsx format to make this Component EventBased
 	// On Each event called socket will do some specific operation
@@ -68,6 +69,8 @@ const GlobalSocketManager = () => {
 								const { players, games } = msg;
 								dispatch(UpdateStatistics(players, games)); //playing temp
 								dispatch(EnterRoom(msg.room));
+								msg.opponent &&
+									dispatch(LoadThisPlayer(msg.opponent));
 								break;
 							}
 							case "NOT_AUTHORIZED": {
@@ -83,6 +86,8 @@ const GlobalSocketManager = () => {
 								if (found) {
 									dispatch(EnterRoom(found));
 									dispatch(CloseRandomSearch());
+									msg.opponent &&
+										dispatch(LoadThisPlayer(msg.opponent));
 								} else {
 									//search again 5s later
 									// **********************
@@ -234,7 +239,7 @@ const GlobalSocketManager = () => {
 				}
 			});
 		},
-		[dispatch, context, pack, iamSignedIn, iamBusy]
+		[dispatch, pack, iamSignedIn, iamBusy]
 	);
 
 	// EVENT NAME: PlayerUpdateEvent
@@ -256,7 +261,7 @@ const GlobalSocketManager = () => {
 	useEffect(() => {
 		return () => {
 			reconnectingTimerID && clearTimeout(reconnectingTimerID);
-		}
+		};
 	}, [reconnectingTimerID]);
 	const { fullname } = me ? me : { fullname: null };
 	const {
