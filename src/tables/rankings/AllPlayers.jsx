@@ -25,6 +25,7 @@ const AllPlayers = ({ players }) => {
                                     (p) => p.userID === player.userID
                                 ) + 1
                             }
+                            playerID={player.userID}
                             name={player.fullname}
                             points={player.records.points}
                             wins={player.records.wins}

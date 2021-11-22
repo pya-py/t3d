@@ -42,7 +42,7 @@ const NoticeManager = () => {
 					await noticeServices.getAdvancedNotics();
 				if (status === Status.Successful) {
 					//return data.notices;
-					if (data.notices.length) setNotices(data.notices.reverse());
+					if (data.notices.length) setNotices([...data.notices.reverse()]);
 					//if all is empty
 					if (data.notices.length === 0) {
 						setNotices([
@@ -54,6 +54,7 @@ const NoticeManager = () => {
 					}
 				}
 			} catch (err) {
+				//put error message in notice side bar?
 				setNotices([
 					{
 						title: "خطا",

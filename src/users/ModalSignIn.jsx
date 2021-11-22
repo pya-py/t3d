@@ -1,14 +1,16 @@
 import { Button, Form, Modal, Row, Col } from "react-bootstrap";
 import { Component, Fragment } from "react";
 import userServices from "../services/http/userServices";
-import { withRouter } from "react-router-dom";
 import LoadingBar from "../commons/LoadingBar";
-import Configs, { browserStorage } from "../services/configs";
+import Configs, { browserStorage, Routes } from "../services/configs";
 import { Sorry } from "./../tools/notification";
+import GlobalContext from './../globals/state/GlobalContext';
 
 class ModalSignIn extends Component {
 	// *********************Objectives***********************
 	// 1. handle errors particularly
+	static contextType = GlobalContext;
+
 	state = {
 		showModal: false,
 		studentID: "",
@@ -28,13 +30,13 @@ class ModalSignIn extends Component {
 			const { status, data } = await userServices.signIn(user);
 			if (status === Configs.Status.Successful) {
 				browserStorage.save(data.token);
-				this.props.history.replace("/");
+				this.context.goTo(Routes.Client.Root);
 			}
 		} catch (err) {
 			// check nonserver errors
 			this.setState({ password: "" });
 			if (!Configs.Status.isErrorExpected(err))
-				Sorry(".ورود با مشکل رو به رو شد. لطفا دوباره تلاش کتنید.");
+				Sorry("ورود با مشکل مواجه شد. لطفا ارتباط اینترنت خود را بررسی کنید.");
 		}
 		this.setState({ loading: false });
 	};
@@ -134,4 +136,4 @@ class ModalSignIn extends Component {
 	}
 }
 
-export default withRouter(ModalSignIn);
+export default ModalSignIn;

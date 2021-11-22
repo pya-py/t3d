@@ -15,7 +15,7 @@ const NoticeSideBar = () => {
                 if (status === Configs.Status.Successful) {
                     //return data.notices;
                     
-                    if (data.notices.length) setNotices(data.notices.reverse());
+                    if (data.notices.length) setNotices([...data.notices.reverse()]);
                     //if all is empty
                     if(data.notices.length === 0) {
                         setNotices([{
@@ -25,6 +25,7 @@ const NoticeSideBar = () => {
                     }
                 }
             } catch (err) {
+                // show error message within 
                 setNotices([
                     {
                         title: "خطا",

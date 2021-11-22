@@ -70,14 +70,21 @@ const ProfilePanel = () => {
                             <li className="animated-button" >
                                 <NavLink
                                     className="nav-link link-dark"
-                                    to={Configs.Routes.Client.StManagement}>
+                                    to={Configs.Routes.Client.StudentManagement}>
                                     مدیریت دانشجویان
                                 </NavLink>
                             </li>
                             <li className="animated-button" >
                                 <NavLink
                                     className="nav-link link-dark"
-                                    to={Configs.Routes.Client.InfoEdit}>
+                                    to={Configs.Routes.Client.LeaguesManager}>
+                                    لیگ منیجر
+                                </NavLink>
+                            </li>
+                            <li className="animated-button" >
+                                <NavLink
+                                    className="nav-link link-dark"
+                                    to={Configs.Routes.Client.Documents}>
                                     توضیحات سایت
                                 </NavLink>
                             </li>

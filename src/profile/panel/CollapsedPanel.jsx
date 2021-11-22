@@ -46,12 +46,18 @@ const CollapsedPanel = () => {
 					</NavLink>
 					<NavLink
 						className="nav-link link-dark"
-						to={Configs.Routes.Client.StManagement}>
+						to={Configs.Routes.Client.StudentManagement}>
 						<i className="fa fa-cogs" aria-hidden="true"></i>
 					</NavLink>
 					<NavLink
 						className="nav-link link-dark"
-						to={Configs.Routes.Client.InfoEdit}>
+						to={Configs.Routes.Client.Leagues}>
+						لیگ منیجر
+					</NavLink>
+
+					<NavLink
+						className="nav-link link-dark"
+						to={Configs.Routes.Client.Documents}>
 						<i className="fa fa-cogs" aria-hidden="true"></i>
 					</NavLink>
 				</Fragment>

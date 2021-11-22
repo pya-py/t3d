@@ -4,9 +4,10 @@ import { SendFriendRequestTo } from "../globals/redux/actions/tools";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import userServices from "./../services/http/userServices";
-import Configs from "../services/configs";
+import Configs, { Status } from "../services/configs";
 import GameChatBox from "../chat/GameChatBox";
 import Record from "../profile/friendgames/Record";
+import { Sorry } from "../tools/notification";
 
 const PlayerInfoSideBar = (props) => {
 	const me = useSelector((state) => state.me);
@@ -37,6 +38,8 @@ const PlayerInfoSideBar = (props) => {
 					}
 				} catch (err) {
 					// handle error.
+			if (!Status.isErrorExpected(err))
+					Sorry("برقراری ارتباط با سرور موفقیت امیز نبود.لطفا از ارتباط اینترنتی خود اطمینان حاصل کنید.");
 					console.log(err);
 				}
 			})();

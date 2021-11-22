@@ -38,16 +38,20 @@ export const LoadInteractions = () => {
 					});
 					// dispatch friends here
 					// myChats key-value array: its keys are friendID that is relative to a special chat
-				} else throw new Error("null interaction response! means sth went wrong");
+				} else
+					throw new Error(
+						"null interaction response! means sth went wrong"
+					);
 			} else throw new Error("Error happened while forming chats list");
 		} catch (err) {
 			console.log(
 				`Loading chats interrupted cause of this error: ${err}`
 			);
 			//show proper message
-			Sorry(
-				"حین بارگذاری پیام ها مشکلی پیش آمد. لطفا لحظاتی بعد دوباره تلاش کنید"
-			);
+			if (!Status.isErrorExpected(err))
+				Sorry(
+					"حین بارگذاری پیام ها مشکلی پیش آمد. لطفا لحظاتی بعد دوباره تلاش کنید"
+				);
 			await dispatch({ type: "RESET_INTERACTIONS" });
 		}
 	};

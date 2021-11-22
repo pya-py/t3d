@@ -1,9 +1,10 @@
 import GamePlay from "./gameplay/GamePlay";
 import { useSelector } from "react-redux";
-import SingleGame from "./SingleGame";
+import RandomGame from "./RandomGame";
 import { Tab, Tabs, Card, Button, Row, Col, Container, Alert } from "react-bootstrap";
-import { Fragment, useEffect, useState } from "react";
-import CompetitionsMain from "./competitions/CompetitionsMain";
+import { Fragment, useState } from "react";
+import Leagues from "../leagues/Leagues";
+import SinglePlayer from './SinglePlayer';
 
 const GameDeck = () => {
 	const room = useSelector((state) => state.room);
@@ -81,13 +82,19 @@ const GameDeck = () => {
 								eventKey="randomGame"
 								disabled={Boolean(room.name)}
 								title="بازی تصادفی">
-								<SingleGame friendlyGame={false} />
+								<RandomGame />
 							</Tab>
 							<Tab
-								eventKey="competitions"
+								eventKey="leagues"
 								disabled={Boolean(room.name)}
-								title="مسابقات">
-								<CompetitionsMain />
+								title="لیگ ها">
+								<Leagues />
+							</Tab>
+							<Tab
+								eventKey="singleplayer"
+								disabled={Boolean(room.name)}
+								title="تک نفره">
+								<SinglePlayer />
 							</Tab>
 						</Tabs>
 					</Card.Body>

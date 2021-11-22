@@ -14,6 +14,9 @@ import ScoresTable from './../tables/scores/ScoresTable';
 import SignUp from '../users/SignUp';
 import Rankings from './../tables/rankings/Rankings';
 import StudentsManagement from '../profile/admin/StudentsManagement';
+import LeaguesManager from './../profile/admin/LeaguesManager';
+import LeagueLayout from './../layouts/LeagueLayout';
+
 const MainRouter = () => {
 	return (
 		<Switch>
@@ -23,21 +26,38 @@ const MainRouter = () => {
 						<Route path={Routes.Client.MyGamesAndFriends}>
 							<MyGamesAndFriends />
 						</Route>
-						<Route path={Routes.Client.Notices}>
-							<NoticeManager />
-						</Route>
-						<Route path={Routes.Client.StManagement}>
-							<StudentsManagement />
-						</Route>
 						<Route path={Routes.Client.ChatRoom}>
 							<ChatRoom />
 						</Route>
-
 						<Route exact path={Routes.Client.Profile}>
 							<AcountManager />
 						</Route>
 					</Switch>
 				</ProfilePanelLayout>
+			</Route>
+			<Route path={`${Routes.Client.Admin}/:path?`} exact>
+				<ProfilePanelLayout>
+					<Switch>
+						<Route path={Routes.Client.Notices}>
+							<NoticeManager />
+						</Route>
+						<Route path={Routes.Client.LeaguesManager}>
+							<LeaguesManager />
+						</Route>
+						<Route path={Routes.Client.StudentManagement}>
+							<StudentsManagement />
+						</Route>
+					</Switch>
+				</ProfilePanelLayout>
+			</Route>
+			<Route path={`${Routes.Client.League}/:path?`} exact>
+				<LeagueLayout>
+					<Switch>
+						<Route path={Routes.Client.League}>
+							<LeaguesManager />
+						</Route>
+					</Switch>
+				</LeagueLayout>
 			</Route>
 			<Route>
 				<MainLayout>

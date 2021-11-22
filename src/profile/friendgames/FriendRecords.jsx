@@ -21,7 +21,7 @@ import { Status } from "../../services/configs";
 const FriendRecords = ({ person, thisIsMe }) => {
 	const room = useSelector((state) => state.room);
 	const [gameType, setGameType] = useState(4);
-	const [avatar, setAvatar] = useState(null);//s
+	const [avatar, setAvatar] = useState(null); //s
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -33,9 +33,10 @@ const FriendRecords = ({ person, thisIsMe }) => {
 					);
 					if (status === Status.Successful) setAvatar(data.avatar);
 				} catch (err) {
-					Sorry(
-						"مشکلی در بارگذاری آواتار این شخص پیش آمد ... لطفا اتصال اینترنت خود را بررسی کنید."
-					);
+					if (!Status.isErrorExpected(err))
+						Sorry(
+							"مشکلی در بارگذاری آواتار این شخص پیش آمد ... لطفا اتصال اینترنت خود را بررسی کنید."
+						);
 					// use- no-avatar.png here too?
 					// in case server return wrong?
 				}

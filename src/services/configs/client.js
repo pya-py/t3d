@@ -1,23 +1,29 @@
 //client routes
 // Partial Routes
-const Profile = "/Profile",
-    ChatRoom = "ChatRoom",
-    MyGamesAndFriends = "GamesFriends",
-    Notices = "Notices",
-    StManagement = "StManagement",
-    InfoEdit = "InfoEdit";
+const Profile = "/profile",
+    Admin = "/admin",
+    ChatRoom = "chatroom",
+    MyGamesAndFriends = "games",
+    Notices = "notices",
+    StManagement = "students",
+    Documents = "documents",
+    Leagues = "leagues";
+
 module.exports = {
     Root: "/",
-    SignUp: "/SignUp",
-    SignIn: "/SignIn",
-    GameDeck: "/GameDeck",
-    Rankings: "/Rankings",
-    GameGuide: "/GameGuide",
-    ContactUs: "/ContacUs",
+    SignUp: "/register",
+    SignIn: "/login",
+    GameDeck: "/gamedeck",
+    Rankings: "/rankings",
+    GameGuide: "/guide",
+    ContactUs: "/contactme",
+    League: "/league",
     Profile,
+    Admin,
     ChatRoom: `${Profile}/${ChatRoom}`,
     MyGamesAndFriends: `${Profile}/${MyGamesAndFriends}`,
-    Notices: `${Profile}/${Notices}`,
-    StManagement: `${Profile}/${StManagement}`,
-    InfoEdit: `${Profile}/${InfoEdit}`
+    Notices: `${Admin}/${Notices}`,
+    StudentManagement: `${Admin}/${StManagement}`,
+    Documents: `${Admin}/${Documents}`,
+    LeaguesManager: `${Admin}/${Leagues}`
 };

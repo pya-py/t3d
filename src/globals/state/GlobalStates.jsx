@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { ResetMyPlayer, ResetOpponent } from "./../redux/actions/player";
 import { EnterRoom, ExitRoom } from "./../redux/actions/game";
 import { Sorry } from "./../../tools/notification";
+import { EnterLeague } from './../redux/actions/league';
 const GlobalStates = ({ children, history }) => {
 	const isDesktop = useMediaQuery({ query: "(min-width: 1200px)" });
 	const isSmartPhone = useMediaQuery({ query: "(max-width: 768px)" });
@@ -42,16 +43,25 @@ const GlobalStates = ({ children, history }) => {
 	const cancelGame = () => {
 		dispatch(ExitRoom());
 		history.push(Routes.Client.Root);
-		history.push(Routes.Client.GameDeck);
 		Sorry("بازی از سوی یکی از بازیکنان لغو شد.");
+		setTimeout(() => {
+			history.push(Routes.Client.GameDeck);
+		}, 500);
 	};
+
+	const openLeaguePage = (leagueID) => {
+		browserStorage.enter_league(leagueID);
+		dispatch(EnterLeague(leagueID));
+		history.push(Routes.Client.League);
+
+	}
 	const goTo = (destination) => {
 		history.push(destination);
 	};
 
 	return (
 		<GlobalContext.Provider
-			value={{ device, signOut, redirectToGamePlay, goTo, cancelGame }}>
+			value={{ device, signOut, redirectToGamePlay, goTo, cancelGame, openLeaguePage }}>
 			{children}
 		</GlobalContext.Provider>
 	);

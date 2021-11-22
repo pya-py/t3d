@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import LoadingBar from "../../commons/LoadingBar";
-import Configs from "../../services/configs";
+import Configs, { Status } from "../../services/configs";
 import gameServices from "../../services/http/gameServices";
 import { Card, Col, Nav, Row, Tab } from "react-bootstrap";
 import AllScores from "../../tables/scores/AllScores";
 import "../profile.css";
 import FriendRecords from "./FriendRecords";
 import { useSelector } from "react-redux";
+import { Sorry } from "../../tools/notification";
 
 const MyGamesAndFriends = () => {
 	const me = useSelector((state) => state.me);
@@ -36,9 +37,13 @@ const MyGamesAndFriends = () => {
 				setLoading(true); // use preloader here?
 				let serverResponse = await gameServices.getMyGames();
 				if (serverResponse.status === Configs.Status.Successful)
-					setMyGames(serverResponse.data.myGames.reverse());
+					setMyGames([...serverResponse.data.myGames.reverse()]);
 			} catch (err) {
 				console.log(err);
+				if (!Status.isErrorExpected(err))
+					Sorry(
+						"مشکلی حین بارگذاری لیست بازی ها پیش آمد. ارتباط اینترنتی خود را بررسی کنید."
+					);
 				setLoading(false);
 			}
 			setLoading(false);

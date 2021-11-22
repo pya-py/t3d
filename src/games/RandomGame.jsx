@@ -10,7 +10,7 @@ import {
 import { EnterRoom } from "../globals/redux/actions/game";
 import GlobalContext from "../globals/state/GlobalContext";
 import { Routes } from "../services/configs";
-const SingleGame = () => {
+const RandomGame = () => {
 	const [dimension, setDimension] = useState(4);
 	const [isScoreless, setScoreless] = useState(false);
 	const me = useSelector((state) => state.me);
@@ -145,4 +145,4 @@ const SingleGame = () => {
 	);
 };
 
-export default SingleGame;
+export default RandomGame;

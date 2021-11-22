@@ -33,14 +33,10 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(null, (error) => {
 	try {
-		const expectedErrors =
-			error.response &&
-			error.response.status >= Status.BadRequest && // >= 400
-			error.response.status < Status.InternalServerError; // < 500
-
 		//*****notice: */
 		//remove some oftheese errors... because they need to be costomized in every use in each components
 		// change to switch
+		
 		if (error.response.status === Status.BadRequest) {
 			Sorry(
 				"مشکلی در ارسال درخواست شما به سرور وجود داشت، لطفا دوباره تلاش کنید"
@@ -66,10 +62,13 @@ axios.interceptors.response.use(null, (error) => {
 			//redirect to sign in page !
 		} else if (error.response.status === Status.UnprocessableEntity) {
 			Sorry("ورودی شما با استانداردهای سایت مطابقت ندارد");
-		} else if (!expectedErrors) {
+		} else if (error.response.status === Status.InternalServerError) {
+			Sorry("مشکلی از سمت سرور پیش آمده است ... لطفا لحظاتی بعد دوباره تلاش کنید");
+		}
+		else if (!Status.isErrorExpected(error)) {
 			// console.log(error);
 			Sorry(
-				"مشکلی از سمت سرور پیش آمده است ... لطفا لحظاتی بعد دوباره تلاش کنید"
+				"خطای غیرمنتظره ای رخ داده است. اگر برای چندمین بار است که این پیغلم را می بینید، لطفا مشکل خود را باه ما اطلاع دهید."
 			);
 		}
 	} catch (err) {

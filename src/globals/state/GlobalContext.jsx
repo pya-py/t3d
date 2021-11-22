@@ -5,7 +5,8 @@ const GlobalContext = createContext({
     signOut: () => {},
     goTo: () => {},
     redirectToGamePlay: () => {},
-    cancelGame: () => {}
+    cancelGame: () => {},
+    openLeaguePage: () => {}
 });
 
 export default GlobalContext;

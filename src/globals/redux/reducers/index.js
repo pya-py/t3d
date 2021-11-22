@@ -7,6 +7,7 @@ import { toolsReducer } from "./tools";
 import { statisticsReducer } from "./statistics";
 import { messageReducer } from './message';
 import { interactionsReducer } from './interactions';
+import { leagueReducer } from './league';
 
 export const reducers = combineReducers({
     me: meReducer,
@@ -16,5 +17,6 @@ export const reducers = combineReducers({
     tools: toolsReducer,
     statistics: statisticsReducer,
     message: messageReducer,
-    interactions: interactionsReducer
+    interactions: interactionsReducer,
+    league: leagueReducer
 });
