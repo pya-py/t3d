@@ -1,55 +1,38 @@
-import { Component } from "react";
-import AllPlayers from "./AllPlayers";
-import userServices from "../../services/http/userServices";
-import LoadingBar from "../../commons/LoadingBar";
-import Configs, { Status } from "../../services/configs";
-import { Row } from "react-bootstrap";
-import { Sorry } from "../../tools/notification";
+import { Card } from "react-bootstrap";
+import SingleRankCard from "./SingleRankCard";
 
-class Rankings extends Component {
-	state = { players: [], loading: false };
-
-	componentDidMount() {
-		(async () => {
-			this.setState({ loading: true });
-			const { data, status } = await userServices.getAllPlayers();
-			if (status === Configs.Status.Successful) return data.players;
-			return [];
-		})()
-			.then((result) => {
-				let tempPlayers = [...result];
-				this.setState({
-					players: tempPlayers.sort(
-						//sort priorities: 1. more points 2. more wins 3. less loses
-						(p1, p2) =>
-							p2.records.points - p1.records.points ||
-							p2.records.wins - p1.records.wins ||
-							p1.records.loses - p2.records.loses
-					),
-					loading: false,
-				});
-			})
-			.catch((err) => {
-				//******* handle errors */
-				// console.log(err);
-				if (!Status.isErrorExpected(err))
-					Sorry(
-						"بارگذاری جدول رده بندی موفقیت آمیز نبود. لطفا ارتباط اینترنتی خود را بررسی کنید."
-					);
-				this.setState({ players: [], loading: false });
-			});
-	}
-	render() {
-		const { players, loading } = this.state;
-		return (
-			<Row className="mx-auto mt-3">
-				{loading ? <LoadingBar loading={loading} /> : null}
-				<Row className="w-100 mx-auto">
-					<AllPlayers players={players} />
-				</Row>
-			</Row>
-		);
-	}
-}
+const Rankings = ({ players, rankByProgress }) => {
+	return (
+		<Card border="dark" style={{ width: "100%", borderRadius: "5px" }}>
+			<Card.Header className="text-center">رده بندی</Card.Header>
+			<table className="table table-striped table-bordered table-hover text-center">
+				<thead className="bg-info">
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">نام بازیکن</th>
+						<th scope="col">امتیاز</th>
+						<th scope="col">تعداد برد</th>
+						<th scope="col">تعداد باخت</th>
+						<th scope="col">تعداد تساوی</th>
+					</tr>
+				</thead>
+				<tbody>
+					{players.map((player) => (
+						<SingleRankCard
+							key={player.userID}
+							rowNumber={
+								players.findIndex(
+									(p) => p.userID === player.userID
+								) + 1
+							}
+							playerID={player.userID}
+							name={player.fullname}
+							records={rankByProgress ? player.progress : player.records} />
+					))}
+				</tbody>
+			</table>
+		</Card>
+	);
+};
 
 export default Rankings;

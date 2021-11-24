@@ -1,18 +1,18 @@
 import { Card } from "react-bootstrap";
-import { useState, Fragment } from "react";
+import {  Fragment } from "react";
 import SingleMatchCard from "./SingleMatchCard";
 
-import "./scores.css";
-const MatchesTable = ({ matches }) => {
+import "./matches.css";
+const MatchesTable = ({ongoing}) => {
 	return (
 		<Fragment>
-			{Boolean(matches.length) ? (
-				matches.map((match) => (
+			{Boolean(ongoing.length) ? (
+				ongoing.map((match) => (
 					<SingleMatchCard
 						// key={match.gameID}
-
-						playerXName={match[0]}
-						playerOName={match[1]}></SingleMatchCard>
+						schedule={match.schedule}
+						playerX={match.players[0]}
+						playerO={match.players[1]} />
 				))
 			) : (
 				<Card className="bg-transparent mx-auto mt-3" border="danger">

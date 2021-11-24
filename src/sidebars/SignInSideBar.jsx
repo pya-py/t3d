@@ -78,7 +78,7 @@ class SignInSideBar extends Component {
 						</Row>
 						<Card.Footer className="bg-transparent border-primary">
 							<Row>
-								<Col lg={6}>
+								<Col className="text-right" lg={6}>
 									<Button
 										type="submit"
 										variant="success"

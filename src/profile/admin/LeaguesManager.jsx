@@ -18,6 +18,7 @@ const LeaguesManager = () => {
 		try {
 			setLoading(true);
 			const { status } = await gameServices.createLeague(
+				password, 
 				Mode,
 				title,
 				capacity,

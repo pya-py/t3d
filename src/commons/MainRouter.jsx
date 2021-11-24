@@ -10,9 +10,9 @@ import MainLayout from '../layouts/MainLayout';
 import GameDeck from './../games/GameDeck';
 import GameGuide from './../informations/GameGuide';
 import ContactUs from './../informations/ContactUs';
-import ScoresTable from './../tables/scores/ScoresTable';
+import ScoresTableContainer from './../tables/scores/ScoresTableContainer';
 import SignUp from '../users/SignUp';
-import Rankings from './../tables/rankings/Rankings';
+import RankingsContainer from '../tables/rankings/RankingsContainer';
 import StudentsManagement from '../profile/admin/StudentsManagement';
 import LeaguesManager from './../profile/admin/LeaguesManager';
 import LeagueLayout from './../layouts/LeagueLayout';
@@ -70,7 +70,7 @@ const MainRouter = () => {
 							<GameDeck />
 						</Route>
 						<Route path={Routes.Client.Rankings}>
-							<Rankings />
+							<RankingsContainer />
 						</Route>
 						<Route path={Routes.Client.GameGuide}>
 							<GameGuide />/
@@ -80,7 +80,7 @@ const MainRouter = () => {
 						</Route>
 
 						<Route path={Routes.Client.Root} exact>
-							<ScoresTable />
+							<ScoresTableContainer />
 						</Route>
 					</Switch>
 				</MainLayout>

@@ -19,15 +19,18 @@ const ProfilePanelLayout = ({ children }) => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		try {
-			setLoading(true);
-			dispatch(LoadMyPlayer());
-			dispatch(LoadInteractions());
-			// profile unmounted
-		} catch (err) {
+		// this form of dispatching is used to support preloaders
+		(async () => {
+			try {
+				setLoading(true);
+				await dispatch(LoadMyPlayer());
+				await dispatch(LoadInteractions());
+				// profile unmounted
+			} catch (err) {
+				setLoading(false);
+			}
 			setLoading(false);
-		}
-		setLoading(false);
+		})();
 
 		return () => {
 			// remove chat list from redux to save memory

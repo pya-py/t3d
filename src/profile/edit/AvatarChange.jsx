@@ -16,7 +16,7 @@ const AvatarChange = () => {
 		event.preventDefault();
 		setLoading(true);
 		try {
-			const { status } = await userServices.uploadAvatar(myAvatar);
+			const { status } = await userServices.uploadAvatar(password, myAvatar);
 			if (status === Configs.Status.Successful) {
 				OK("آواتار شما با موفقیت تغییر داده شد");
 			}

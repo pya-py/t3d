@@ -3,7 +3,7 @@ import LoadingBar from "../../commons/LoadingBar";
 import Configs, { Status } from "../../services/configs";
 import gameServices from "../../services/http/gameServices";
 import { Card, Col, Nav, Row, Tab } from "react-bootstrap";
-import AllScores from "../../tables/scores/AllScores";
+import ScoresTable from "../../tables/scores/ScoresTable";
 import "../profile.css";
 import FriendRecords from "./FriendRecords";
 import { useSelector } from "react-redux";
@@ -118,7 +118,7 @@ const MyGamesAndFriends = () => {
 											thisIsMe={true}
 										/>
 									)}
-									<AllScores scores={myGames} />
+									<ScoresTable scores={myGames} />
 								</Tab.Pane>
 								{friends.map((friend) => (
 									<Tab.Pane eventKey={friend.userID}>
@@ -135,7 +135,7 @@ const MyGamesAndFriends = () => {
 												selectedFriendIndex
 											}
 										/>
-										<AllScores
+										<ScoresTable
 											scores={myGames.filter(
 												(game) =>
 													friend.userID ===

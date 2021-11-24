@@ -3,7 +3,7 @@ import { browserStorage } from "../services/configs";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { LoadMyPlayer } from "../globals/redux/actions/player";
-import { ResetMyPlayer } from './../globals/redux/actions/player';
+import { ResetMyPlayer } from "./../globals/redux/actions/player";
 
 // auto-sign in if store sign in data was reset
 const AutoSignIn = () => {
@@ -12,11 +12,16 @@ const AutoSignIn = () => {
 	// tis way, every time player game ends ( opponent resets ), player records will update
 	const storageToken = browserStorage.TOKEN();
 	useEffect(() => {
-		if (storageToken) {
-			console.log(`auth called then `);
-			dispatch(LoadMyPlayer());
-		} else {
-			dispatch(ResetMyPlayer());
+		try {
+			(async () => {
+				if (storageToken) {
+					await dispatch(LoadMyPlayer());
+				} else {
+					await dispatch(ResetMyPlayer());
+				}
+			})();
+		} catch (err) {
+			console.log(err);
 		}
 	}, [storageToken, opponent, dispatch]);
 

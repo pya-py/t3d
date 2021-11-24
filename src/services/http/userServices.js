@@ -37,7 +37,7 @@ const userServices = {
 			`${Server.Root}/${Server.Users}/${Server.Private}/${Server.Credentials}/${Server.PasswordChange}`,
 			JSON.stringify(passwords)
 		),
-	uploadAvatar: (avatar) => {
+	uploadAvatar: (password, avatar) => {
 		let formData = new FormData();
 		formData.append("avatar", avatar);
 		return http.post(

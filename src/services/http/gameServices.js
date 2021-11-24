@@ -16,10 +16,10 @@ const gameServices = {
 			`${Server.Root}/${Server.Games}/${Server.Leagues}/${Server.LeaguesList}/${leagueID}`,
 			JSON.stringify({ teamID })
 		),
-	createLeague: (Mode, title, capacity, prize, deadline) =>
+	createLeague: (password, Mode, title, capacity, prize, deadline) =>
 		http.post(
 			`${Server.Root}/${Server.Games}/${Server.Leagues}/${Server.NewLeague}`,
-			JSON.stringify({ title, Mode, deadline, capacity, prize })
+			JSON.stringify({ password, title, Mode, deadline, capacity, prize })
 		),
 };
 
