@@ -73,7 +73,7 @@ class SignUp extends Component {
 			} catch (err) {
 				// console.log(err);
 				this.setState({ loading: false });
-				if (err.response.status === Configs.Status.Conflict) {
+				if (err && err.response && err.response.status === Configs.Status.Conflict) {
 					Attention(
 						"اگر رمز عبور خود را فراموش کرده اید، از گزینه بازیابی رمز عبور در صفحه ی ورود استفاده نمایید"
 					);

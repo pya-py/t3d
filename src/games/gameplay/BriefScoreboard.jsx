@@ -1,11 +1,11 @@
 import { Card, Col, Row } from "react-bootstrap";
 import { useState } from "react";
 import { useEffect } from "react";
-import { GameSetting } from "../../services/configs";
+import { T3DLogic } from './GameLogics';
 
 const BriefScoreboard = ({ timeRemaining, players, turn }) => {
     const [timeStamp, setTimeStamp] = useState(null);
-    const aThird = GameSetting.T3D.TurnTimeOut / 3;
+    const aThird = T3DLogic.Rules.TurnTimeOut / 3;
     useEffect(() => {
         let color = null,
             icon = null;

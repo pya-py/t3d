@@ -12,14 +12,19 @@ const LeaguesManager = () => {
 	const [prize, setPrize] = useState(50);
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState("");
+	const [dimension, setDimension] = useState(4);
+	const [isScoreless, setScoreless] = useState(false);
 
 	const create = async (event) => {
 		event.preventDefault();
 		try {
 			setLoading(true);
+
 			const { status } = await gameServices.createLeague(
-				password, 
+				password,
 				Mode,
+				isScoreless,
+				dimension,
 				title,
 				capacity,
 				prize
@@ -44,14 +49,32 @@ const LeaguesManager = () => {
 				border="success"
 				bg="transparent"
 				className="mx-auto notice-manager-card">
-				<Card.Header className="text-center">اطلاعیه جدید</Card.Header>
+				<Card.Header className="text-center">لیگ منیجر</Card.Header>
 				<Card.Body className="text-right">
-					<Row className="mt-3 justify-content-center">
+					<Row className="my-1">
+						<Form.Control
+							type="text"
+							className="account-info-textbox animated-textbox"
+							pattern="[آ-ی ]{3,}" // persian characters and space
+							onInput={(e) => e.target.setCustomValidity("")}
+							onInvalid={(e) =>
+								e.target.setCustomValidity(
+									"نام لیگ باید با حروف فارسی و با حداقل طول سه حرف باشد"
+								)
+							}
+							placeholder="نام لیگ"
+							value={title}
+							required="required"
+							onChange={(e) => setTitle(e.target.value)}
+						/>
+					</Row>
+					<hr />
+					<Row className="my-1 justify-content-center">
 						<Form.Label className="text-center">نوع لیگ</Form.Label>
 					</Row>
 					<hr />
-					<Row className="m-0 p-0">
-						<Col className="mt-3 text-center" xs={3}>
+					<Row className="m-0 p-0 justify-content-center">
+						<Col className="my-1 text-center" xs={3}>
 							<Button
 								variant={
 									Mode === Modes.Kickout
@@ -63,7 +86,7 @@ const LeaguesManager = () => {
 								حذفی
 							</Button>
 						</Col>
-						<Col className="mt-3 text-center" xs={3}>
+						<Col className="my-1 text-center" xs={3}>
 							<Button
 								variant={
 									Mode === Modes.Main
@@ -75,7 +98,7 @@ const LeaguesManager = () => {
 								امتیازی
 							</Button>
 						</Col>
-						<Col className="mt-3 text-center" xs={3}>
+						<Col className="my-1 text-center" xs={3}>
 							<Button
 								variant={
 									Mode === Modes.Championship
@@ -87,7 +110,7 @@ const LeaguesManager = () => {
 								قهرمانان
 							</Button>
 						</Col>
-						<Col className="mt-3 text-center" xs={3}>
+						<Col className="my-1 text-center" xs={3}>
 							<Button
 								variant={
 									Mode === Modes.Custom
@@ -101,43 +124,88 @@ const LeaguesManager = () => {
 						</Col>
 					</Row>
 					<hr />
-
-					<Row className="mt-3">
-						<Col className="mt-3 text-center" xs={2}>
-							<Form.Label className="text-center">
-								نام لیگ
-							</Form.Label>
-						</Col>
-
-						<Col>
-							<Form.Control
-								type="text"
-								className="account-info-textbox animated-textbox"
-								pattern="[آ-ی ]{3,}" // persian characters and space
-								onInput={(e) => e.target.setCustomValidity("")}
-								onInvalid={(e) =>
-									e.target.setCustomValidity(
-										"نام لیگ باید با حروف فارسی و با حداقل طول سه حرف باشد"
-									)
+					<Row className="my-1 justify-content-center">
+						<Form.Label className="text-center">
+							نوع بازی ها
+						</Form.Label>
+					</Row>
+					<hr />
+					<Row className="my-1 justify-content-center">
+						<Col className="my-1 text-center" xs={3}>
+							<Button
+								variant={
+									dimension === 3
+										? "success"
+										: "outline-secondary"
 								}
-								placeholder="نام لیگ"
-								value={title}
-								required="required"
-								onChange={(e) => setTitle(e.target.value)}
-							/>
+								onClick={() => setDimension(3)}
+								block>
+								3 * 3 * 3
+							</Button>
+						</Col>
+						<Col className="my-1 text-center" xs={3}>
+							<Button
+								variant={
+									dimension === 4
+										? "success"
+										: "outline-secondary"
+								}
+								onClick={() => setDimension(4)}
+								block>
+								4 * 4 * 4
+							</Button>
+						</Col>
+						<Col className="my-1 text-center" xs={3}>
+							<Button
+								variant={
+									dimension === 5
+										? "success"
+										: "outline-secondary"
+								}
+								block
+								onClick={() => setDimension(5)}>
+								5 * 5 * 5
+							</Button>
 						</Col>
 					</Row>
 					<hr />
-					<Row className="mt-3 justify-content-center">
+					<Row className="my-1  justify-content-center">
+						<Col className="my-1 text-center" xs={3}>
+							<Button
+								variant={
+									isScoreless
+										? "success"
+										: "outline-secondary"
+								}
+								onClick={() => setScoreless(true)}
+								block>
+								سرعتی
+							</Button>
+						</Col>
+						<Col className="my-1 text-center" xs={3}>
+							<Button
+								variant={
+									!isScoreless
+										? "success"
+										: "outline-secondary"
+								}
+								onClick={() => setScoreless(false)}
+								block>
+								امتیازی
+							</Button>
+						</Col>
+					</Row>
+					<hr />
+					<Row className="my-1 justify-content-center">
 						<Form.Label className="text-center">تنظیمات</Form.Label>
 					</Row>
 					<Row>
-						<Col className="mt-3 text-center">
+						<Col className="my-1 text-center">
 							<hr />
 
 							<Row className="justify-content-around">
 								<Form.Label className="text-center">
-									ظزفیت
+									ظرفیت
 								</Form.Label>
 							</Row>
 							<hr />
@@ -150,7 +218,7 @@ const LeaguesManager = () => {
 								onChange={(e) => setCapacity(e.target.value)}
 							/>
 						</Col>
-						<Col className="mt-3 text-center">
+						<Col className="my-1 text-center">
 							<hr />
 							<Row className="justify-content-around">
 								<Form.Label className="text-center">
@@ -172,7 +240,7 @@ const LeaguesManager = () => {
 				<Card.Footer className="p-1 m-0 mt-4">
 					<Row>
 						<Col lg={2} md={2} sm={4} xs={4}>
-							<Form.Label className="text-center w-100 mt-3">
+							<Form.Label className="text-center w-100 my-2">
 								رمزعبور فعلی
 							</Form.Label>
 						</Col>
@@ -196,7 +264,7 @@ const LeaguesManager = () => {
 							<Button
 								type="submit"
 								block
-								variant="info"
+								variant="primary"
 								className="mt-2 animated-button">
 								<i
 									className="fa fa-floppy-o px-2"

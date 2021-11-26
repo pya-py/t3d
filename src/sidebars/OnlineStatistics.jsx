@@ -16,7 +16,7 @@ const OnlineStatistics = () => {
                         </Card.Text>
                     </Col>
                     <Col>
-                        <Badge className="player-badge-font-size" variant="success" pill>
+                        <Badge className="player-badge-font-size" variant="info" pill>
                             {players}
                         </Badge>
                     </Col>
@@ -33,7 +33,7 @@ const OnlineStatistics = () => {
                         </Card.Text>
                     </Col>
                     <Col>
-                        <Badge className="player-badge-font-size" variant="success" pill>
+                        <Badge className="player-badge-font-size" variant="info" pill>
                             {games}
                         </Badge>
 

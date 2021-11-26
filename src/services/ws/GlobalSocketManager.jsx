@@ -68,9 +68,7 @@ const GlobalSocketManager = () => {
 							case "ONLINE": {
 								const { players, games } = msg;
 								dispatch(UpdateStatistics(players, games)); //playing temp
-								dispatch(EnterRoom(msg.room));
-								msg.opponent &&
-									dispatch(LoadThisPlayer(msg.opponent));
+								msg.room && msg.room.name && dispatch(EnterRoom(msg.room));
 								break;
 							}
 							case "NOT_AUTHORIZED": {
@@ -235,7 +233,7 @@ const GlobalSocketManager = () => {
 						// this part needs editing ? maybe not
 					};
 				} catch (err) {
-					console.log(`global websocket errpr: ${err}`);
+					console.log(`global websocket error: ${err}`);
 				}
 			});
 		},

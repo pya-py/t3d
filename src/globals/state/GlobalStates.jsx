@@ -4,8 +4,8 @@ import GlobalContext from "./GlobalContext";
 import { withRouter } from "react-router";
 import { browserStorage, Routes } from "../../services/configs";
 import { useDispatch } from "react-redux";
-import { ResetMyPlayer, ResetOpponent } from "./../redux/actions/player";
-import { EnterRoom, ExitRoom } from "./../redux/actions/game";
+import { ResetMyPlayer } from "./../redux/actions/player";
+import { CloseOngoingGame, EnterRoom } from "./../redux/actions/game";
 import { Sorry } from "./../../tools/notification";
 import { EnterLeague } from './../redux/actions/league';
 const GlobalStates = ({ children, history }) => {
@@ -41,7 +41,7 @@ const GlobalStates = ({ children, history }) => {
 	};
 
 	const cancelGame = () => {
-		dispatch(ExitRoom());
+		dispatch(CloseOngoingGame());
 		history.push(Routes.Client.Root);
 		Sorry("بازی از سوی یکی از بازیکنان لغو شد.");
 		setTimeout(() => {

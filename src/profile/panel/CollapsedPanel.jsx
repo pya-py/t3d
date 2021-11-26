@@ -51,7 +51,7 @@ const CollapsedPanel = () => {
 					</NavLink>
 					<NavLink
 						className="nav-link link-dark"
-						to={Configs.Routes.Client.Leagues}>
+						to={Configs.Routes.Client.LeaguesManager}>
 						لیگ منیجر
 					</NavLink>
 

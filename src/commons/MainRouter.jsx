@@ -16,7 +16,7 @@ import RankingsContainer from '../tables/rankings/RankingsContainer';
 import StudentsManagement from '../profile/admin/StudentsManagement';
 import LeaguesManager from './../profile/admin/LeaguesManager';
 import LeagueLayout from './../layouts/LeagueLayout';
-
+import SingleGamePlay from '../games/gameplay/SingleGamePlay';
 const MainRouter = () => {
 	return (
 		<Switch>
@@ -68,6 +68,9 @@ const MainRouter = () => {
 
 						<Route path={Routes.Client.GameDeck}>
 							<GameDeck />
+						</Route>
+						<Route path={Routes.Client.SingleGameplay}>
+							<SingleGamePlay />
 						</Route>
 						<Route path={Routes.Client.Rankings}>
 							<RankingsContainer />

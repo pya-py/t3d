@@ -1,4 +1,4 @@
-import { Button, Container, Modal, Row, Col, Alert } from "react-bootstrap";
+import { Button, Container, Modal, Row, Alert } from "react-bootstrap";
 import { useState, Fragment } from "react";
 
 const ModalContesters = ({ contesters }) => {

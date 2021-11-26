@@ -14,6 +14,7 @@ module.exports = {
     SignUp: "/register",
     SignIn: "/login",
     GameDeck: "/gamedeck",
+    SingleGameplay: "/single",
     Rankings: "/rankings",
     GameGuide: "/guide",
     ContactUs: "/contactme",

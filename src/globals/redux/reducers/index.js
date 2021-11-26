@@ -8,6 +8,7 @@ import { statisticsReducer } from "./statistics";
 import { messageReducer } from './message';
 import { interactionsReducer } from './interactions';
 import { leagueReducer } from './league';
+import { gameReducer } from "./game";
 
 export const reducers = combineReducers({
     me: meReducer,
@@ -18,5 +19,6 @@ export const reducers = combineReducers({
     statistics: statisticsReducer,
     message: messageReducer,
     interactions: interactionsReducer,
-    league: leagueReducer
+    league: leagueReducer,
+    game: gameReducer
 });
