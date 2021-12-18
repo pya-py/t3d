@@ -1,7 +1,7 @@
 import { Card, Col, Row } from "react-bootstrap";
 import { useState } from "react";
 import { useEffect } from "react";
-import { T3DLogic } from './GameLogics';
+import { T3DLogic } from "./GameLogics";
 
 const BriefScoreboard = ({ timeRemaining, players, turn }) => {
     const [timeStamp, setTimeStamp] = useState(null);
@@ -13,19 +13,32 @@ const BriefScoreboard = ({ timeRemaining, players, turn }) => {
             if (timeRemaining >= aThird) {
                 color = "text-success";
                 icon = (
-                    <i className="fa fa-hourglass-start px-2" aria-hidden="true"></i>
+                    <i
+                        className="fa fa-hourglass-start px-2"
+                        aria-hidden="true"
+                    ></i>
                 );
             } else {
                 color = "text-danger";
                 icon = (
-                    <i className="fa fa-hourglass-half px-2" aria-hidden="true"></i>
+                    <i
+                        className="fa fa-hourglass-half px-2"
+                        aria-hidden="true"
+                    ></i>
                 );
             }
         } else {
             color = "text-dark";
-            icon = <i className="fa fa-hourglass-end px-2" aria-hidden="true"></i>;
+            icon = (
+                <i className="fa fa-hourglass-end px-2" aria-hidden="true"></i>
+            );
         }
-        setTimeStamp(<div className={color}>{icon}{timeRemaining} : {players[turn].shape}</div>);
+        setTimeStamp(
+            <div className={color}>
+                {icon}
+                {timeRemaining} : {players[turn].shape}
+            </div>
+        );
     }, [timeRemaining, aThird, players, turn]);
 
     return (
@@ -35,7 +48,8 @@ const BriefScoreboard = ({ timeRemaining, players, turn }) => {
                     style={{
                         textAlign: "right",
                         color: players[1].color,
-                    }}>
+                    }}
+                >
                     {players[1].shape} : {players[1].score}
                 </Col>
                 <Col>{timeStamp}</Col>
@@ -43,7 +57,8 @@ const BriefScoreboard = ({ timeRemaining, players, turn }) => {
                     style={{
                         textAlign: "left",
                         color: players[0].color,
-                    }}>
+                    }}
+                >
                     {players[0].score} : {players[0].shape}
                 </Col>
             </Row>

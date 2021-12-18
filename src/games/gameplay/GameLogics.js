@@ -1,90 +1,20 @@
-import { Notify } from './../../tools/notification';
-const T3D_AI = {
-    Level: { Noob: 0, Ordinary: 1, Pro: 2 },
-    act: {
-        random: ({ table, dimension }) => {
-            let floor = 0,
-                row = 0,
-                column = 0;
-            do {
-                [floor, row, column] = [1, 2, 3].map(test => Math.floor(Math.random() * dimension));
-            } while (table[floor][row][column]);
-            return { floor, row, column };
-        },
-        noob: (lastmove, { table, dimension }) => {
-            if (lastmove) {
-                const { floor, row, column } = lastmove;
-                const playerInTheCell = table[floor][row][column];
-                let count = 0,
-                    emptyIndex = -1;
+import { Notify } from "./../../tools/notification";
 
-                for (var i = 0; i < dimension; i++) {
-                    if (table[floor][row][i] === playerInTheCell) count++; // inspect in a row
-                    else if (!table[floor][row][i]) emptyIndex = i;
-                }
-                if (emptyIndex >= 0 && count === dimension - 1) return { floor, row, column: emptyIndex };
-
-
-                for (i = 0, count = 0, emptyIndex = -1; i < dimension; i++) {
-                    if (table[floor][i][column] === playerInTheCell) count++; // inspect in a column
-                    else if (!table[floor][i][column]) emptyIndex = i;
-                }
-                if (emptyIndex >= 0 && count === dimension - 1) return { floor, row: emptyIndex, column };
-
-
-                for (i = 0, count = 0, emptyIndex = -1; i < dimension; i++) {
-                    if (table[i][row][column] === playerInTheCell) count++; // inspect in a altitude line
-                    else if (!table[i][row][column]) emptyIndex = i;
-                }
-                if (emptyIndex >= 0 && count === dimension - 1) return { floor: emptyIndex, row, column };
-
-
-                for (i = 0, count = 0, emptyIndex = -1; i < dimension; i++) {
-                    if (row === column && table[floor][i][i] === playerInTheCell) count++; // inspect in a 2D main diagonal line through the cell's floor
-                    else if (!table[floor][i][i]) emptyIndex = i;
-                }
-                if (emptyIndex >= 0 && count === dimension - 1) return { floor, row: emptyIndex, column: emptyIndex };
-
-
-                for (i = 0, count = 0, emptyIndex = -1; i < dimension; i++) {
-                    if (row === floor && row === column && table[i][i][i] === playerInTheCell) count++; // inspect in a 3D main diagonal line through the whole table
-                    else if (!table[i][i][i]) emptyIndex = i;
-                }
-                if (emptyIndex >= 0 && count === dimension - 1) return { floor: emptyIndex, row: emptyIndex, column: emptyIndex };
-
-
-                for (i = 0, count = 0, emptyIndex = -1; i < dimension; i++) {
-                    if (row + column + 1 === dimension && table[floor][i][dimension - i - 1] === playerInTheCell) count++; // inpect in a 2D side Diagonal line through the cell's floor
-                    else if (!table[floor][i][dimension - i - 1]) emptyIndex = i;
-                }
-                if (emptyIndex >= 0 && count === dimension - 1) return { floor, row: emptyIndex, column: dimension - emptyIndex - 1 };
-
-
-                for (i = 0, count = 0, emptyIndex = -1; i < dimension; i++) {
-                    if (row + column + 1 === dimension && row === floor && table[i][i][dimension - i - 1] === playerInTheCell)
-                        count++; // inspect in a 3D side diagonal line through the whole table
-                    else if (!table[i][i][dimension - i - 1]) emptyIndex = i;
-                }
-                if (emptyIndex >= 0 && count === dimension - 1) return { floor: emptyIndex, row: emptyIndex, column: dimension - emptyIndex - 1 };
-            }
-            return null;
-        }
-    }
-};
 export const T3DLogic = {
     Rules: { TurnTimeOut: 45 }, //secs
-    AI: T3D_AI,
     initiate: (dimension) => {
         let indexes = [];
         for (let i = 0; i < dimension; i++) indexes.push(i);
         return {
             empties: dimension * dimension * dimension,
-            table: indexes.map(() => indexes.map(() => indexes.map(() => null))),
-            myTurn: Math.floor(Math.random() * 2)
+            table: indexes.map(() =>
+                indexes.map(() => indexes.map(() => null))
+            ),
+            myTurn: Math.floor(Math.random() * 2),
         };
-
     },
-    getButtonCoordinates: (dim, { floor, row, column }) => floor * dim * dim + row * dim + column,
+    getButtonCoordinates: (dim, { floor, row, column }) =>
+        floor * dim * dim + row * dim + column,
     getCellCoordinates: (cellID, dimen) => {
         const cellFloor = Math.floor(cellID / (dimen * dimen));
         const onFloorId = cellID % (dimen * dimen);
@@ -104,7 +34,9 @@ export const T3DLogic = {
         //reset everything:
         onClose();
     },
-    inspectAreaAroundTheCell: ({ floor, row, column }, { players, table, dimension }, connectScoreLines) => {
+    inspectAreaAroundTheCell: ({ floor, row, column }, { players, table, dimension },
+        connectScoreLines
+    ) => {
         // inpect the table in all ways around a selected cell (new selected one), to update points and color the score routes
         // is it needed to write a inspectAll method ?
         const playerInTheCell = table[floor][row][column];
@@ -223,5 +155,5 @@ export const T3DLogic = {
                 dimension * (dimension - 1),
                 playerInTheCell - 1
             );
-    }
+    },
 };

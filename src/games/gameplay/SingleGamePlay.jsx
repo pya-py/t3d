@@ -4,6 +4,7 @@ import TableDesign from "./TableDesign";
 import GlobalContext from "../../globals/state/GlobalContext";
 import { T3DLogic } from "./GameLogics";
 import { Routes } from "../../services/configs";
+import ArtificialIntelligence from "./ArtificialIntelligence";
 
 class SingleGamePlay extends Component {
     static contextType = GlobalContext;
@@ -28,12 +29,11 @@ class SingleGamePlay extends Component {
         turn: 1, // after calling rescheduleDeadline in componentDidMount => turn ===0
         dimension: 4,
         table: null,
-        playerLastMove: null,
-        aiLastMove: null,
         empties: 64,
         myTurn: undefined, // change this
         timeRemaining: 0, //create a config
         deadlineID: null,
+        ai: null,
     };
 
     constructor() {
@@ -42,11 +42,18 @@ class SingleGamePlay extends Component {
     }
 
     componentDidMount() {
-        if (this.props.game) {
+        const { game } = this.props;
+        if (game) {
             this.cellButtons =
                 document.getElementsByClassName("game-table-cells"); // pay attension to searched className! may cause an error
-            const { dimension, table, myTurn, empties } = this.props.game;
-            this.setState({ table, myTurn, dimension, empties });
+            const { dimension, table, myTurn, empties } = game;
+            const ai = new ArtificialIntelligence(
+                Number(!myTurn),
+                table,
+                game.difficulty,
+                dimension
+            );
+            this.setState({ table, myTurn, dimension, empties, ai });
             this.rescheduleDeadline();
             setTimeout(() => {
                 this.updateGameScorebaord();
@@ -98,27 +105,17 @@ class SingleGamePlay extends Component {
 
     react = () => {
         try {
-            const { playerLastMove, aiLastMove, dimension, turn, myTurn } =
-                this.state;
-            console.log("start turn is with ai ");
-            const nextMove =
-                T3DLogic.AI.act.noob(playerLastMove, this.state) ||
-                T3DLogic.AI.act.noob(aiLastMove, this.state) ||
-                T3DLogic.AI.act.random(this.state);
-
+            const { table, dimension, turn, myTurn, ai } = this.state;
+            const nextMove = ai.reaction(table);
             if (nextMove && turn !== myTurn) {
-                if (
-                    this.verifyAndApplyTheMove(
-                        nextMove,
-                        this.cellButtons[
-                            T3DLogic.getButtonCoordinates(dimension, nextMove)
-                        ]
-                    )
-                ) {
-                    this.setState({
-                        aiLastMove: nextMove,
-                        // turn: myTurn,
-                    });
+                const verified = this.verifyAndApplyTheMove(
+                    nextMove,
+                    this.cellButtons[
+                        T3DLogic.getButtonCoordinates(dimension, nextMove)
+                    ]
+                );
+                if (verified) {
+                    ai.update(nextMove, ai.turn);
                 } else {
                     // sth went wrong (cell was full)
                 }
@@ -130,7 +127,7 @@ class SingleGamePlay extends Component {
         }
     };
     onEachCellClick = (event) => {
-        const { dimension, turn, myTurn } = this.state;
+        const { dimension, turn, myTurn, ai } = this.state;
         console.log(this.state);
         if (turn === myTurn) {
             try {
@@ -141,10 +138,7 @@ class SingleGamePlay extends Component {
                     dimension
                 );
                 if (this.verifyAndApplyTheMove(cell, selectedCellButton)) {
-                    this.setState({
-                        playerLastMove: { ...cell },
-                        // turn: (turn + 1) % 2,
-                    });
+                    ai.update(cell, myTurn);
                     // setTimeout(() => this.react(), 1000);
                 }
             } catch (err) {

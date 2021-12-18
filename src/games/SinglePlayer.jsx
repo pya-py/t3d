@@ -3,27 +3,27 @@ import { Fragment, useContext } from "react";
 import { InputGroup } from "react-bootstrap";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
-import { T3DLogic } from "./gameplay/GameLogics";
 import { useDispatch } from "react-redux";
 import { RegisterSinglePlayer } from "./../globals/redux/actions/game";
-import GlobalContext from './../globals/state/GlobalContext';
+import GlobalContext from "./../globals/state/GlobalContext";
 import { Routes } from "../services/configs";
+import ArtificialIntelligence from "./gameplay/ArtificialIntelligence";
 const SinglePlayer = () => {
     // This game is a game between a player and the artificial intelligense
     const [dimension, setDimension] = useState(4);
     const [isScoreless, setScoreless] = useState(false);
     const [difficulty, setDifficulty] = useState(1);
     const dispatch = useDispatch();
-	const context = useContext(GlobalContext);
+    const context = useContext(GlobalContext);
 
     const onStartSinglePlayerClick = async (event) => {
-		event.preventDefault();
+        event.preventDefault();
         try {
             await dispatch(
                 RegisterSinglePlayer(dimension, isScoreless, difficulty)
             );
-			context.goTo(Routes.Client.SingleGameplay);
-	    } catch (err) {
+            context.goTo(Routes.Client.SingleGameplay);
+        } catch (err) {
             console.log(err);
         }
     };
@@ -108,18 +108,28 @@ const SinglePlayer = () => {
                         <InputGroup.Radio
                             value="0"
                             name="difficulty"
-                            checked={difficulty === T3DLogic.AI.Level.Noob}
+                            checked={
+                                difficulty ===
+                                ArtificialIntelligence.LEVELS.Noob
+                            }
                             onChange={() =>
-                                setDifficulty(T3DLogic.AI.Level.Noob)
+                                setDifficulty(
+                                    ArtificialIntelligence.LEVELS.Noob
+                                )
                             }
                         />
                         <InputGroup.Text className="ml-5">راحت</InputGroup.Text>
                         <InputGroup.Radio
                             value="1"
                             name="difficulty"
-                            checked={difficulty === T3DLogic.AI.Level.Ordinary}
+                            checked={
+                                difficulty ===
+                                ArtificialIntelligence.LEVELS.Ordinary
+                            }
                             onChange={() =>
-                                setDifficulty(T3DLogic.AI.Level.Ordinary)
+                                setDifficulty(
+                                    ArtificialIntelligence.LEVELS.Ordinary
+                                )
                             }
                         />
                         <InputGroup.Text className="ml-5">
@@ -128,9 +138,11 @@ const SinglePlayer = () => {
                         <InputGroup.Radio
                             value="1"
                             name="difficulty"
-                            checked={difficulty === T3DLogic.AI.Level.Pro}
+                            checked={
+                                difficulty === ArtificialIntelligence.LEVELS.Pro
+                            }
                             onChange={() =>
-                                setDifficulty(T3DLogic.AI.Level.Pro)
+                                setDifficulty(ArtificialIntelligence.LEVELS.Pro)
                             }
                         />
                         <InputGroup.Text>سخت</InputGroup.Text>
